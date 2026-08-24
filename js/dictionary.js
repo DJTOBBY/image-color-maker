@@ -87,6 +87,48 @@ const DICTIONARY = [
     ],
     toneBias: ["sf", "dp"] },
 
+  // ===== 中国の時代・色(色韵 cncolor.art を参考) =====
+  { match: ["shang zhou", "商周", "五方正色"], ja: "商周", story: "五方正色 — 青赤黄白黒、方位と結びついた最古の色体系",
+    anchors: [
+      { h: 210, s: 45, l: 32, name: "東の青" },
+      { h: 0, s: 55, l: 40, name: "南の赤" },
+      { h: 48, s: 55, l: 48, name: "中央の黄" },
+      { h: 0, s: 0, l: 88, name: "西の白" },
+      { h: 0, s: 0, l: 15, name: "北の黒" },
+    ], toneBias: ["dp", "d"], matte: true, technique: "対照色相配色" },
+  { match: ["tang dynasty", "唐", "盛唐", "唐朝"], ja: "唐", story: "盛世華彩 — 琥珀黄と雨過天青の豊かな時代",
+    anchors: [
+      { h: 40, s: 60, l: 52, name: "琥珀黄" },
+      { h: 200, s: 30, l: 68, name: "雨過天青" },
+      { h: 355, s: 60, l: 42, name: "唐三彩の赤" },
+      { h: 45, s: 65, l: 55, name: "唐三彩の金" },
+    ], toneBias: ["dp", "s"] },
+  { match: ["song dynasty", "宋", "汝窯", "汝窑"], ja: "宋", story: "天青色の汝窯、白磁の定窯 — 素雅を極めた時代",
+    anchors: [
+      { h: 195, s: 25, l: 60, name: "天青色" },
+      { h: 40, s: 10, l: 90, name: "定窯の白" },
+      { h: 30, s: 15, l: 40, name: "素朴な灰茶" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "トーナル配色" },
+  { match: ["ming qing", "明清", "紫禁城", "故宮"], ja: "明清", story: "宮廷色彩の等級制度 — 黄は皇帝だけの色",
+    anchors: [
+      { h: 48, s: 70, l: 52, name: "明黄(皇帝の黄)" },
+      { h: 355, s: 65, l: 38, name: "宮墻の朱" },
+      { h: 220, s: 55, l: 30, name: "琺瑯の青" },
+      { h: 45, s: 60, l: 45, name: "金" },
+    ], toneBias: ["dp", "v"], sparkle: true },
+  { match: ["cinnabar", "朱砂", "朱草"], ja: "朱砂", story: "古代中国の辰砂 — 印と守りの赤",
+    anchors: [
+      { h: 8, s: 60, l: 40, name: "朱草" },
+      { h: 0, s: 0, l: 20, name: "墨" },
+      { h: 42, s: 45, l: 45, name: "青銅の金" },
+    ], toneBias: ["dp"], matte: true },
+  { match: ["cochineal", "胭脂", "胭脂虫"], ja: "胭脂", story: "コチニール虫から生まれた紅",
+    anchors: [
+      { h: 355, s: 55, l: 40, name: "胭脂虫の紅" },
+      { h: 340, s: 40, l: 65, name: "頬紅の淡紅" },
+      { h: 0, s: 0, l: 92, name: "白磁" },
+    ], toneBias: ["s", "sf"] },
+
   // ===== 世界の場所 =====
   { match: ["paris", "パリ"], ja: "パリ", story: "灰色の屋根とカフェの灯",
     anchors: [
@@ -807,10 +849,14 @@ function lookupColorWords(input) {
   const colors = hit(COLOR_WORDS);
   const kept = colors.filter(c => !colors.some(o => o !== c &&
     o.match.some(om => c.match.some(cm => om.length > cm.length && om.includes(cm)))));
+  // 「紫禁城」の「紫」のように、物語辞書の長い語の内部に埋もれた色字も除外する
+  const themeHits = DICTIONARY.flatMap(e => e.match.filter(m => raw.includes(m)));
+  const kept2 = kept.filter(c => !c.match.some(cm =>
+    themeHits.some(tm => tm.length > cm.length && tm.includes(cm))));
 
   const mods = hit(MODIFIERS);
   const shift = mods.reduce((a, m) => ({ dl: a.dl + m.dl, ds: a.ds + m.ds }), { dl: 0, ds: 0 });
-  return { colors: kept, shift };
+  return { colors: kept2, shift };
 }
 
 // 色語を、濃淡3段のアンカーを持つ辞書エントリに変換する

@@ -78,7 +78,9 @@ function techniqueDefaultHue(input) {
 
 // ---------- パレット生成 ----------
 // variant: 「別の配色を試す」で技法だけを差し替えるときの番号(0=辞書どおり)
-function generatePalette(input, count = 6, variant = 0) {
+// locked: 残したい色の配列 [{hex, name}]。指定するとその色は必ずパレットに含まれ、
+//         残りの枠だけが選び直される
+function generatePalette(input, count = 6, variant = 0, locked = []) {
   // 色語(青・BLUE など)があればパレットの主役に据える
   const cw = typeof lookupColorWords === "function"
     ? lookupColorWords(input) : { colors: [], shift: { dl: 0, ds: 0 } };
@@ -244,19 +246,55 @@ function generatePalette(input, count = 6, variant = 0) {
     }
   });
 
+  // 残したい色(ロック)があれば、それを軸に組み直す。
+  // ロック色の色相からトーン違いを足して候補を増やす — こうしないと候補が
+  // すぐ尽きて「再生成しても同じ色ばかり」になる
+  const lockedList = (locked || []).filter(l => l && /^#[0-9a-fA-F]{6}$/.test(l.hex));
+  if (lockedList.length && !techniqueMode) {
+    // 極端に暗い/濁ったトーン(dk・dkg・g)は入れない。
+    // 距離が大きいぶん選ばれやすく、テーマから浮いた「黒っぽい色」になりやすいため
+    const toneKeys = ["p", "lt", "sf", "b", "s", "d", "dp"];
+    for (const l of lockedList) {
+      const [lh, ls, ll] = rgbToHsl(...hexToRgb(l.hex));
+      if (ls < 12) continue; // 無彩色からトーン展開しても濁るだけ
+      for (const key of toneKeys) {
+        const t = PCCS.TONES[key];
+        // ロック色そのものと近すぎるものは足さない
+        if (Math.abs(t.cl - ll) < 12 && Math.abs(t.cs - ls) < 15) continue;
+        candidates.push({
+          h: lh, s: t.cs, l: t.cl,
+          name: `${l.name || "残した色"}の${t.ja}`,
+          from: l.name, derived: true, fromLocked: true,
+        });
+      }
+    }
+  }
+
   // 多様性を保ちながらcount色選ぶ(貪欲 max-min Lab距離)
   const withLab = candidates.map(c => ({ ...c, hex: hslToHex(c.h, c.s, c.l) }))
     .map(c => ({ ...c, lab: hexToLab(c.hex) }));
-  const picked = [withLab[0]];
-  while (picked.length < Math.min(count, withLab.length)) {
+
+  // ロック色は必ず残す。候補側の同じ色は重複するので除いておく
+  const lockedPicked = lockedList.map(l => ({
+    ...l, locked: true,
+    ...(([h, s, lg]) => ({ h, s, l: lg }))(rgbToHsl(...hexToRgb(l.hex))),
+    lab: hexToLab(l.hex),
+  }));
+  const lockedHexes = new Set(lockedPicked.map(l => l.hex.toLowerCase()));
+  const pool = withLab.filter(c => !lockedHexes.has(c.hex.toLowerCase()));
+
+  const picked = lockedPicked.length ? [...lockedPicked] : [pool.length ? pool[0] : withLab[0]];
+  while (picked.length < count) {
     let best = null, bestScore = -1;
-    for (const c of withLab) {
+    for (const c of pool) {
       if (picked.includes(c)) continue;
       // 色数が少ないほど「テーマ本来の色」を強く優先する。
       // (2〜3色では、対照性だけで選ぶとテーマの主役色が落ちてしまうため)
       const anchorBonus = count <= 3 ? 34 : count <= 4 ? 20 : 12;
+      // ロック色から機械的に作ったトーン違いは、テーマ本来の色が尽きたときの控え
+      const lockedPenalty = c.fromLocked ? 10 : 0;
       const score = Math.min(...picked.map(p => labDist(c.lab, p.lab)))
-        + (c.derived ? 0 : anchorBonus);
+        + (c.derived ? 0 : anchorBonus) - lockedPenalty;
     if (score > bestScore) { bestScore = score; best = c; }
     }
     if (!best) break;
@@ -283,7 +321,9 @@ function generatePalette(input, count = 6, variant = 0) {
   const colors = picked.map(c => {
     // 「青のティント」「もうひとつの隣」のような機械的な名前は、近い伝統色の名前に置き換える。
     // (技法を直接指定したときは「カマイユの基準色」等の名前自体が説明になるので触らない)
-    const plain = c.lead || MACHINE_NAME.test(c.name) || !!variantTechniqueKey;
+    // ロックした色は、そのとき気に入った名前のまま残す
+    const plain = !c.locked &&
+      (c.lead || MACHINE_NAME.test(c.name) || !!variantTechniqueKey);
     // 置き換える名前が無いと機械名が資料に残ってしまうので、そのときだけ許容距離を広げる
     const wa = typeof WaColor !== "undefined"
       ? WaColor.nearest(c.hex, plain ? 40 : 26, usedWaNames) : null;
@@ -296,6 +336,7 @@ function generatePalette(input, count = 6, variant = 0) {
     return {
       hex: c.hex, h: c.h, s: c.s, l: c.l,
       name, from: c.from,
+      locked: !!c.locked,
       pccs: PCCS.classify(c.h, c.s, c.l),
       wa: wa && wa.name === name ? null : wa,
     };

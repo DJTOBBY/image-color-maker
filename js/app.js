@@ -86,9 +86,16 @@ function renderSheet(palette, matches) {
   const mainColor = colors.find(c => !c.pccs.neutral);
   const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
 
-  const band = colors.map(c => `<div class="swatch" style="background:${c.hex}"></div>`).join("");
+  const band = colors.map(c =>
+    `<div class="swatch${c.locked ? " is-locked" : ""}" style="background:${c.hex}"></div>`).join("");
   const caption = colors.map(c => `
-    <div class="cap"><b>${esc(c.name)}</b>${c.hex.toUpperCase()}<br>${c.pccs.neutral ? esc(c.pccs.toneJa) : esc(c.pccs.label)}</div>
+    <div class="cap">
+      <button type="button" class="lock-btn no-print${c.locked ? " is-locked" : ""}"
+        data-hex="${esc(c.hex)}" data-name="${esc(c.name)}"
+        aria-pressed="${c.locked ? "true" : "false"}"
+        title="${c.locked ? "この色の固定をやめる" : "この色を残して他を作り直す"}">${LOCK_ICON(c.locked)}</button>
+      <b>${esc(c.name)}</b>${c.hex.toUpperCase()}<br>${c.pccs.neutral ? esc(c.pccs.toneJa) : esc(c.pccs.label)}
+    </div>
   `).join("");
 
   const rows = colors.map((c, i) => {
@@ -108,7 +115,7 @@ function renderSheet(palette, matches) {
       ? esc(c.pccs.toneJa)
       : `${c.pccs.hueNo}:${esc(c.pccs.hueSym)} ${esc(c.pccs.hueJa)} / ${esc(c.pccs.toneJa)}`;
     return `
-      <div class="bead-row">
+      <div class="bead-row${c.locked ? " is-locked" : ""}">
         <div class="color-cell">
           <div class="dot" style="background:${c.hex}"></div>
           <div class="color-meta">
@@ -175,6 +182,43 @@ function renderSheet(palette, matches) {
   $("#print-bar").hidden = false;
 }
 
+// 鍵のアイコン。絵文字は環境で見え方が変わるので、SVGで描いて開閉を確実に区別する
+const LOCK_ICON = (locked) => locked
+  ? `<svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-hidden="true">
+       <path d="M2.6 5.2V3.4a2.9 2.9 0 015.8 0v1.8" stroke="currentColor" stroke-width="1.3" fill="none"/>
+       <rect x="0.9" y="5.2" width="9.2" height="7.1" rx="1.3" fill="currentColor"/>
+     </svg>`
+  : `<svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-hidden="true">
+       <path d="M2.6 5.2V3.4a2.9 2.9 0 015.8 0" stroke="currentColor" stroke-width="1.3" fill="none"/>
+       <rect x="0.9" y="5.2" width="9.2" height="7.1" rx="1.3" fill="none"
+             stroke="currentColor" stroke-width="1.3"/>
+     </svg>`;
+
+// ---------- 残す色(ロック) ----------
+// キーはHEX。パレットを作り直しても、この色だけは必ず残る
+let lockedColors = new Map();
+
+function lockedList() {
+  return [...lockedColors.values()];
+}
+
+function toggleLock(hex, name) {
+  const key = hex.toLowerCase();
+  if (lockedColors.has(key)) lockedColors.delete(key);
+  else lockedColors.set(key, { hex, name });
+  updateVaryHint();
+}
+
+function updateVaryHint() {
+  const n = lockedColors.size;
+  const hint = $("#vary-hint");
+  if (!hint) return;
+  hint.textContent = n
+    ? `${n}色を残して、他の色だけを作り直します`
+    : "同じテーマのまま、配色技法だけを変えて提案します";
+  $("#unlock-btn").hidden = n === 0;
+}
+
 // ---------- イベント ----------
 async function run(variant = 0) {
   const input = $("#theme-input").value.trim();
@@ -184,7 +228,8 @@ async function run(variant = 0) {
   btn.disabled = true; btn.textContent = "配色中…";
   try {
     await BeadMatcher.load();
-    const palette = generatePalette(input, Number($("#color-count").value), variant);
+    const palette = generatePalette(
+      input, Number($("#color-count").value), variant, lockedList());
     const matches = BeadMatcher.match(palette.colors, {
       sparkle: palette.sparkle, matte: palette.matte, perColor: 3,
       inventory: currentInventory(),
@@ -209,16 +254,44 @@ document.addEventListener("DOMContentLoaded", () => {
   for (const name of EXAMPLES) {
     const chip = document.createElement("button");
     chip.className = "chip"; chip.textContent = name;
-    chip.addEventListener("click", () => { $("#theme-input").value = name; run(); });
+    chip.addEventListener("click", () => {
+      $("#theme-input").value = name;
+      lockedColors.clear(); updateVaryHint(); run(0);
+    });
     ex.appendChild(chip);
   }
-  $("#generate-btn").addEventListener("click", () => run(0));
-  $("#theme-input").addEventListener("keydown", e => { if (e.key === "Enter") run(0); });
+  // 作り直し(COLOR IT)のときは、前のテーマで残した色は引き継がない
+  const freshRun = () => { lockedColors.clear(); updateVaryHint(); run(0); };
+  $("#generate-btn").addEventListener("click", freshRun);
+  $("#theme-input").addEventListener("keydown", e => { if (e.key === "Enter") freshRun(); });
   // 別の配色を試す: テーマはそのままに、配色技法を次のものへ送る
   $("#vary-btn").addEventListener("click", () => {
     const current = window.__lastResult?.palette?.variant || 0;
     run(current + 1);
   });
+  // 鍵ボタン: 押した色を残す/残すのをやめる(パレットは描き直されるので委譲で拾う)
+  $("#result").addEventListener("click", e => {
+    const btn = e.target.closest(".lock-btn");
+    if (!btn) return;
+    toggleLock(btn.dataset.hex, btn.dataset.name);
+    // 押した見た目だけ即座に反映する(作り直しは「別の配色を試す」を押したとき)
+    const on = lockedColors.has(btn.dataset.hex.toLowerCase());
+    btn.classList.toggle("is-locked", on);
+    btn.innerHTML = LOCK_ICON(on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.title = on ? "この色の固定をやめる" : "この色を残して他を作り直す";
+    const idx = [...$("#result").querySelectorAll(".lock-btn")].indexOf(btn);
+    $("#result").querySelectorAll(".palette-band .swatch")[idx]?.classList.toggle("is-locked", on);
+    $("#result").querySelectorAll(".bead-row")[idx]?.classList.toggle("is-locked", on);
+  });
+
+  // 残した色をすべて解除する
+  $("#unlock-btn").addEventListener("click", () => {
+    lockedColors.clear();
+    updateVaryHint();
+    run(window.__lastResult?.palette?.variant || 0);
+  });
+
   $("#print-btn").addEventListener("click", () => window.print());
   $("#jpeg-btn").addEventListener("click", () => {
     if (window.__lastResult) JpegExport.exportJpeg(window.__lastResult.palette, window.__lastResult.matches);

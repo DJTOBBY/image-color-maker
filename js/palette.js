@@ -49,40 +49,77 @@ function labDist(a, b) {
 
 // ---------- 配色技法の解説(講座資料の用語) ----------
 const TECHNIQUES = {
+  "同一色相配色": "同一色相内の配色。良く調和するが、変化に乏しいため明度・彩度で差をつける。",
   "類似色相配色": "色相環で隣り合う色相でまとめる配色。似た色同士でまとまりやすく、分量に差をつけるのがコツ。",
+  "中差色相配色": "色相環で左右に90°の角度をもった色同士の配色。明快なコントラストをもった配色になる。",
   "対照色相配色": "色相環で120°〜180°離れた色相の組み合わせ。強いコントラストの個性的な配色。",
+  "補色配色": "色相環で180°の関係にある色同士の配色。非常に強いコントラストの個性的な配色。2色を混色すると灰色になる。",
   "対照トーン配色": "低彩度×高彩度、低明度×高明度など、対照的に離れたトーンの組み合わせ。闇に灯りが映えるようなコントラスト。",
   "ドミナントカラー配色": "同一色相でトーンに変化をつけ、ひとつの色相に支配させる配色。",
   "ドミナントトーン配色": "同一トーンで色相に変化をつける配色。トーンの気分が全体を支配する。",
   "トーン・オン・トーン配色": "同一色相でトーン違いを重ねる、おとなしく良く調和する濃淡配色。",
   "トーナル配色": "ダル(くすみ)トーン中心の中彩度配色。シックで調和のとれた大人の配色。",
   "色相のグラデーション": "色相をなだらかに変化させる配色。空や海の移ろいをそのまま写す。",
+  "トーンのグラデーション": "同一色相の中でトーンを秩序だって変化させる配色。",
   "ナチュラルハーモニー": "黄に近い色相を明るく、青紫に近い色相を暗く。自然界の見え方に沿った、最もなじみ深い調和。",
   "コンプレックスハーモニー": "自然の見えと逆に、黄寄りを暗く青寄りを明るく。違和感が新鮮で目を引く配色。",
-  "セパレーション": "色の境目に無彩色を挟んで引き締める技法。",
+  "セパレーション": "色の境目に明度差をつけた無彩色などを挟み込み、色を分ける方法。",
+  "リピテーション配色": "統一感の欠ける配色であっても、繰り返して使用することで秩序のある配色が得られる方法。",
   "カマイユ配色": "色相・明度・彩度ともに微妙な差でまとめる、デリケートで繊細な配色。",
+  "フォ・カマイユ配色": "フォは「偽の、偽りの」という意味。カマイユより、同一色相+類似色相の分だけやや変化に富んだ配色。",
 };
+
+// 技法モード専用: 入力文字列から決定的にひとつの色相(0-360)を選ぶ
+function techniqueDefaultHue(input) {
+  let h = 0;
+  for (const ch of input) h = (h * 31 + ch.codePointAt(0)) % 360;
+  return h;
+}
 
 // ---------- パレット生成 ----------
 function generatePalette(input, count = 6) {
   // 色語(青・BLUE など)があればパレットの主役に据える
   const cw = typeof lookupColorWords === "function"
     ? lookupColorWords(input) : { colors: [], shift: { dl: 0, ds: 0 } };
-  const colorEntries = cw.colors.map(c => colorWordEntry(c, cw.shift));
-  const themeEntries = [
-    ...(typeof trendLookup === "function" ? trendLookup(input) : []),
-    ...(typeof WaColor !== "undefined" ? WaColor.lookup(input) : []),
-    ...lookupTheme(input),
-  ];
-  // 同じ名前のエントリ(色語の「水色」と伝統色の「水色」など)は先勝ちでひとつに
-  const seen = new Set();
-  let entries = [...colorEntries, ...themeEntries].filter(e => {
-    if (seen.has(e.ja)) return false;
-    seen.add(e.ja);
-    return true;
-  });
-  const usedFallback = entries.length === 0;
-  if (usedFallback) entries = [hashFallback(input)];
+
+  // 配色技法そのものが指定されたら(「カマイユ 青」「セパレーション」等)、
+  // PCCS理論に沿って厳密にその技法だけでパレットを組み立てる
+  const techKey = typeof lookupTechniqueWord === "function" ? lookupTechniqueWord(input) : null;
+  const techniqueMode = !!techKey;
+  let colorEntries = cw.colors.map(c => colorWordEntry(c, cw.shift));
+  let themeEntries, entries, usedFallback;
+
+  if (techniqueMode) {
+    const baseHue = cw.colors.length ? cw.colors[0].h : techniqueDefaultHue(input);
+    const techEntry = buildTechniquePalette(techKey, baseHue);
+    // dark/pale などの修飾語があれば、確定色にも明度・彩度で反映する
+    if (cw.shift.dl || cw.shift.ds) {
+      techEntry.anchors = techEntry.anchors.map(a => ({
+        ...a,
+        l: Math.max(6, Math.min(96, a.l + cw.shift.dl)),
+        s: Math.max(0, Math.min(100, a.s + cw.shift.ds)),
+      }));
+    }
+    entries = [techEntry];
+    themeEntries = [];
+    colorEntries = []; // 技法モードではanchorsを直接使うため、色語側のanchorsは混ぜない
+    usedFallback = false;
+  } else {
+    themeEntries = [
+      ...(typeof trendLookup === "function" ? trendLookup(input) : []),
+      ...(typeof WaColor !== "undefined" ? WaColor.lookup(input) : []),
+      ...lookupTheme(input),
+    ];
+    // 同じ名前のエントリ(色語の「水色」と伝統色の「水色」など)は先勝ちでひとつに
+    const seen = new Set();
+    entries = [...colorEntries, ...themeEntries].filter(e => {
+      if (seen.has(e.ja)) return false;
+      seen.add(e.ja);
+      return true;
+    });
+    usedFallback = entries.length === 0;
+    if (usedFallback) entries = [hashFallback(input)];
+  }
 
   // アンカーとバイアスを集める
   const anchors = [];
@@ -96,6 +133,7 @@ function generatePalette(input, count = 6) {
     if (e.sparkle) sparkle = true;
     if (e.matte) matte = true;
     if (e.technique && !technique) technique = e.technique;
+    if (e.isTechnique) technique = e.ja; // 技法モードでは自動判定より常に優先
   }
   // 複数の言葉のシフトは平均し、強すぎる暗転・退色を防ぐ
   if (shiftCount > 1) { shift.dl /= shiftCount; shift.ds /= shiftCount; }
@@ -130,26 +168,29 @@ function generatePalette(input, count = 6) {
   }
   const complex = technique === "コンプレックスハーモニー";
 
-  // 候補色を増やす: アンカー + 技法に沿った展開
+  // 候補色を増やす: アンカー + 技法に沿った展開(技法モードは既に確定色なので展開しない)
   const candidates = anchors.map(a => ({ ...a }));
   const main = anchors[0];
-  const expansions = [
-    { h: main.h, s: main.s * 0.8, l: Math.min(88, main.l + 26), name: `${main.name}のティント` },
-    { h: main.h, s: main.s * 0.9, l: Math.max(14, main.l - 24), name: `${main.name}のシェード` },
-  ];
-  if (technique === "類似色相配色" || technique === "色相のグラデーション") {
+  const expansions = [];
+  if (!techniqueMode) {
     expansions.push(
-      { h: (main.h + 28) % 360, s: main.s, l: main.l + 8, name: "となりの色相" },
-      { h: (main.h + 332) % 360, s: main.s, l: main.l - 8, name: "もうひとつの隣" },
+      { h: main.h, s: main.s * 0.8, l: Math.min(88, main.l + 26), name: `${main.name}のティント` },
+      { h: main.h, s: main.s * 0.9, l: Math.max(14, main.l - 24), name: `${main.name}のシェード` },
     );
-  }
-  // 色語で色相を指定されているときは、補色を足すと「的確さ」が濁るので入れない
-  if (!colorEntries.length && (technique === "対照色相配色" || technique === "対照トーン配色")) {
-    expansions.push({ h: (main.h + 180) % 360, s: Math.min(85, main.s + 10), l: main.l, name: "対岸の色" });
-  }
-  if (technique === "対照トーン配色") {
-    // 闇に灯りが映えるように、シフトの影響を受けない明るいアクセントを保証する
-    expansions.push({ h: (main.h + 40) % 360, s: 62, l: 82, name: "灯りの色", noShift: true });
+    if (technique === "類似色相配色" || technique === "色相のグラデーション") {
+      expansions.push(
+        { h: (main.h + 28) % 360, s: main.s, l: main.l + 8, name: "となりの色相" },
+        { h: (main.h + 332) % 360, s: main.s, l: main.l - 8, name: "もうひとつの隣" },
+      );
+    }
+    // 色語で色相を指定されているときは、補色を足すと「的確さ」が濁るので入れない
+    if (!colorEntries.length && (technique === "対照色相配色" || technique === "対照トーン配色")) {
+      expansions.push({ h: (main.h + 180) % 360, s: Math.min(85, main.s + 10), l: main.l, name: "対岸の色" });
+    }
+    if (technique === "対照トーン配色") {
+      // 闇に灯りが映えるように、シフトの影響を受けない明るいアクセントを保証する
+      expansions.push({ h: (main.h + 40) % 360, s: 62, l: 82, name: "灯りの色", noShift: true });
+    }
   }
   for (const ex of expansions) candidates.push({ ...ex, from: main.from, derived: true });
 

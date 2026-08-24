@@ -252,12 +252,16 @@ function generatePalette(input, count = 6, variant = 0) {
     let best = null, bestScore = -1;
     for (const c of withLab) {
       if (picked.includes(c)) continue;
+      // 色数が少ないほど「テーマ本来の色」を強く優先する。
+      // (2〜3色では、対照性だけで選ぶとテーマの主役色が落ちてしまうため)
+      const anchorBonus = count <= 3 ? 34 : count <= 4 ? 20 : 12;
       const score = Math.min(...picked.map(p => labDist(c.lab, p.lab)))
-        + (c.derived ? 0 : 12); // 本来のアンカーを優先
+        + (c.derived ? 0 : anchorBonus);
     if (score > bestScore) { bestScore = score; best = c; }
     }
     if (!best) break;
-    if (bestScore < 9 && picked.length >= 5) break; // 5色に満たないうちは近い色も許容
+    // 指定色数に届くまでは近い色も許容する(2〜4色指定を必ず満たすため)
+    if (bestScore < 9 && picked.length >= Math.max(5, count)) break;
     picked.push(best);
   }
 

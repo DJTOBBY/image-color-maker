@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (sharedTheme) {
     $("#theme-input").value = sharedTheme;
     const n = Number(params.get("n"));
-    if (n >= 5 && n <= 8) $("#color-count").value = String(n);
+    if (n >= 2 && n <= 8) $("#color-count").value = String(n);
     run(Number(params.get("v")) || 0);
   }
 });

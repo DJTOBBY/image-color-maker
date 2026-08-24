@@ -217,7 +217,7 @@ const JpegExport = (() => {
     ctx.fillStyle = SOFT;
     ctx.font = `500 20px ${SANS}`;
     ctx.letterSpacing = "2px";
-    ctx.fillText("イメージカラーメーカー × TOHO BEADS", M, H - 46);
+    ctx.fillText("COLOR STORY PALETTE by TOHOBEADS", M, H - 46);
     ctx.textAlign = "right";
     ctx.fillText(new Date().toLocaleDateString("ja-JP"), W - M, H - 46);
     ctx.textAlign = "left";

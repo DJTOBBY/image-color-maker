@@ -40,7 +40,7 @@ def main():
     scripts = "\n".join(f"<script>\n{(ROOT / 'js' / f).read_text()}\n</script>" for f in JS_FILES)
 
     out = (
-        "<title>イメージカラーメーカー</title>\n"
+        "<title>COLOR STORY PALETTE by TOHOBEADS</title>\n"
         f"{fonts}\n<style>\n{css}\n</style>\n"
         f"{body}\n"
         f"<script>\n{data_js}\n</script>\n{scripts}\n"

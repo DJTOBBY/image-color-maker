@@ -20,7 +20,11 @@ body {
 /* ---------- 入力まわり ---------- */
 .site-header { text-align: center; padding: 48px 16px 8px; }
 .brand { font-family: var(--serif); font-size: 2rem; letter-spacing: 0.18em; }
-.tagline { color: var(--ink-soft); font-size: 0.85rem; margin-top: 6px; letter-spacing: 0.06em; }
+.brand-by {
+  color: var(--accent); font-size: 0.78rem; letter-spacing: 0.35em;
+  text-transform: uppercase; margin-top: 2px;
+}
+.tagline { color: var(--ink-soft); font-size: 0.85rem; margin-top: 10px; letter-spacing: 0.06em; }
 
 .controls { max-width: 720px; margin: 24px auto 8px; padding: 0 16px; }
 .input-row { display: flex; gap: 8px; }

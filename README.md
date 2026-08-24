@@ -1,4 +1,6 @@
-# イメージカラーメーカー
+# COLOR STORY PALETTE by TOHOBEADS
+
+(開発名: イメージカラーメーカー)
 
 「TOKYO NIGHT」「SETOUCHI SEA」「KYOTO AUTUMN」のような**場所・記憶・物語のことば**を、
 5〜8色のカラーパレットと**トーホービーズの実品番**に翻訳する静的Webアプリ。

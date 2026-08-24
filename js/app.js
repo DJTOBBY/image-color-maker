@@ -157,7 +157,7 @@ function renderSheet(palette, matches) {
     </div>
 
     <div class="sheet-footer">
-      <span>イメージカラーメーカー × TOHO BEADS</span>
+      <span>COLOR STORY PALETTE by TOHOBEADS</span>
       <span>${today}</span>
     </div>`;
 

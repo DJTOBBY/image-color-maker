@@ -107,6 +107,56 @@ const DECADES = {
     ], toneBias: ["g", "ltg"], matte: true, technique: "トーナル配色" },
 };
 
+// 世紀単位の歴史パレット(1400年代〜1910年代)。storyに色彩史の背景を添える
+const CENTURIES = {
+  1400: { ja: "15世紀・初期ルネサンス", story: "ラピスラズリを砕いたウルトラマリンは金より高価で、聖母の衣にだけ許された青だった",
+    colors: [
+      { hex: "#26428B", name: "ウルトラマリン" },
+      { hex: "#C7391F", name: "辰砂の朱" },
+      { hex: "#C9A227", name: "金箔" },
+      { hex: "#6B6B3A", name: "緑土(テールヴェルト)" },
+      { hex: "#EDE3CF", name: "象牙の地" },
+    ], toneBias: ["dp"], sparkle: true },
+  1500: { ja: "16世紀・盛期ルネサンス", story: "ティツィアーノの赤とヴェネツィア派の黄金 — 油彩が色に深みを与えた世紀",
+    colors: [
+      { hex: "#8B1E2D", name: "ティツィアーノの赤" },
+      { hex: "#B87F33", name: "ヴェネツィアの金褐" },
+      { hex: "#2F5D3A", name: "ドレープの深緑" },
+      { hex: "#D8D3C8", name: "真珠の灰" },
+    ], toneBias: ["dp", "dk"] },
+  1600: { ja: "17世紀・バロック", story: "カラヴァッジョとレンブラント — 闇(キアロスクーロ)が光を生んだ世紀",
+    colors: [
+      { hex: "#2B1D12", name: "闇の焦茶" },
+      { hex: "#B07A24", name: "レンブラントの金褐" },
+      { hex: "#7E1F1F", name: "深紅のドレープ" },
+      { hex: "#E8C87A", name: "蝋燭の光" },
+    ], toneBias: ["dkg", "dk"], technique: "対照トーン配色" },
+  1700: { ja: "18世紀・ロココ", story: "ポンパドゥール夫人のパステルとセーヴル磁器の青 — 宮廷が甘い色に染まった世紀",
+    colors: [
+      { hex: "#E8A0AE", name: "ローズ・ポンパドゥール" },
+      { hex: "#A9C8E8", name: "セーヴルの空色" },
+      { hex: "#B5C99A", name: "ピスタチオ" },
+      { hex: "#F2E7D3", name: "クリーム" },
+      { hex: "#CBA135", name: "金彩" },
+    ], toneBias: ["p", "lt"], technique: "ドミナントトーン配色" },
+  1800: { ja: "19世紀", story: "1856年、パーキンの合成染料モーヴが誕生 — 色が貴族から大衆のものになった世紀",
+    colors: [
+      { hex: "#915C83", name: "パーキンのモーヴ" },
+      { hex: "#732636", name: "ヴィクトリアンボルドー" },
+      { hex: "#2E4A34", name: "ビリヤードの深緑" },
+      { hex: "#A8C4DD", name: "印象派の空色" },
+      { hex: "#8A6D4F", name: "セピア" },
+    ], toneBias: ["d", "dp"], matte: true },
+  1900: { ja: "1900年代・ベルエポック", story: "ミュシャとアールヌーヴォー — 曲線と黄金、ポスターが街を飾った時代",
+    colors: [
+      { hex: "#C29B40", name: "ミュシャの金褐" },
+      { hex: "#C48A8A", name: "くすんだ薔薇" },
+      { hex: "#77743B", name: "オリーブ" },
+      { hex: "#2E6E63", name: "孔雀の青緑" },
+      { hex: "#EFE6D0", name: "アイボリー" },
+    ], toneBias: ["sf", "d"] },
+};
+
 const ERAS = [
   { match: ["y2k"], ja: "Y2K", story: "ミレニアムの光沢 — シルバーとベビーカラー",
     colors: [
@@ -142,10 +192,16 @@ function trendLookup(input) {
   const entries = [];
   const lower = input.toLowerCase();
 
-  // 西暦(1920〜2029)
-  const yearMatch = lower.match(/(19[2-9]\d|20[0-2]\d)/);
+  // 西暦(1400〜2029)
+  const yearMatch = lower.match(/(1[4-9]\d\d|20[0-2]\d)/);
   if (yearMatch) {
     const year = Number(yearMatch[1]);
+    if (year < 1920) {
+      // 世紀単位の歴史パレット(1900-1919はベルエポック)
+      const cent = CENTURIES[year >= 1900 ? 1900 : Math.floor(year / 100) * 100];
+      if (cent) entries.push(trendEntryFromColors(cent.ja, cent.story, cent.colors, cent));
+      return entries;
+    }
     if (PANTONE_COY[year]) {
       entries.push(trendEntryFromColors(
         `${year}年のトレンド`,

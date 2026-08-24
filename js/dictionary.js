@@ -327,6 +327,37 @@ const DICTIONARY = [
       { h: 45, s: 25, l: 90, name: "生成り" },
     ], toneBias: ["dp", "s"] },
 
+  // ===== 日本の時代 =====
+  { match: ["heian", "平安", "王朝", "十二単"], ja: "平安", story: "王朝の襲の色目 — 季節を色で重ねた美学",
+    anchors: [
+      { h: 345, s: 55, l: 72, name: "紅梅" },
+      { h: 85, s: 45, l: 60, name: "萌黄" },
+      { h: 48, s: 70, l: 55, name: "山吹" },
+      { h: 265, s: 35, l: 60, name: "藤紫" },
+      { h: 45, s: 25, l: 92, name: "白の単衣" },
+    ], toneBias: ["sf", "lt"], technique: "類似色相配色" },
+  { match: ["momoyama", "桃山", "安土桃山"], ja: "桃山", story: "金碧障壁画 — 金地に濃彩が咲いた時代",
+    anchors: [
+      { h: 45, s: 60, l: 55, name: "金箔の地" },
+      { h: 140, s: 45, l: 28, name: "狩野派の松" },
+      { h: 225, s: 60, l: 35, name: "群青" },
+      { h: 355, s: 70, l: 45, name: "緋" },
+    ], toneBias: ["dp"], sparkle: true, technique: "対照トーン配色" },
+  { match: ["edo", "江戸", "粋"], ja: "江戸", story: "四十八茶百鼠 — 奢侈禁止令が育てた粋の美学",
+    anchors: [
+      { h: 220, s: 55, l: 28, name: "藍" },
+      { h: 18, s: 50, l: 38, name: "団十郎茶" },
+      { h: 90, s: 8, l: 55, name: "利休鼠" },
+      { h: 0, s: 0, l: 25, name: "墨" },
+    ], toneBias: ["g", "d"], matte: true, technique: "トーナル配色" },
+  { match: ["meiji", "明治", "ハイカラ", "文明開化"], ja: "明治", story: "文明開化 — 煉瓦とガス灯と海老茶袴",
+    anchors: [
+      { h: 12, s: 50, l: 42, name: "煉瓦色" },
+      { h: 340, s: 40, l: 32, name: "海老茶袴" },
+      { h: 230, s: 40, l: 30, name: "書生の紺" },
+      { h: 45, s: 50, l: 70, name: "ガス灯の色" },
+    ], toneBias: ["d", "dp"], matte: true },
+
   // ===== 日本の街 =====
   { match: ["asakusa", "浅草"], ja: "浅草", story: "雷門の朱と提灯の灯",
     anchors: [

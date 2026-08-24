@@ -34,6 +34,35 @@ const PANTONE_COY = {
 };
 
 const DECADES = {
+  1920: { ja: "1920年代", story: "アールデコとジャズエイジ — 黒と金の狂騒",
+    colors: [
+      { hex: "#16161A", name: "タキシードの黒" },
+      { hex: "#C9A227", name: "アールデコの金" },
+      { hex: "#E8D9B0", name: "シャンパン" },
+      { hex: "#1E6B52", name: "エメラルド" },
+    ], toneBias: ["dkg", "dp"], sparkle: true, technique: "対照トーン配色" },
+  1930: { ja: "1930年代", story: "銀幕のハリウッド — バイアスドレスの光沢",
+    colors: [
+      { hex: "#D9C289", name: "シャンパンゴールド" },
+      { hex: "#C0C2C9", name: "銀幕のシルバー" },
+      { hex: "#C79098", name: "ダスティローズ" },
+      { hex: "#24344D", name: "ミッドナイトブルー" },
+    ], toneBias: ["ltg", "g"], sparkle: true },
+  1940: { ja: "1940年代", story: "ユーティリティの時代 — カーキと勝利の赤",
+    colors: [
+      { hex: "#7A6A45", name: "カーキ" },
+      { hex: "#2C3A5B", name: "ネイビー" },
+      { hex: "#B22234", name: "ビクトリーレッド" },
+      { hex: "#C9B99B", name: "ユーティリティベージュ" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "トーナル配色" },
+  1950: { ja: "1950年代", story: "フィフティーズ — ダイナーとニュールックの甘い色",
+    colors: [
+      { hex: "#D2374A", name: "チェリーレッド" },
+      { hex: "#9FD9C3", name: "ミントグリーン" },
+      { hex: "#F4C6CE", name: "ペールピンク" },
+      { hex: "#4FB6C6", name: "ダイナーターコイズ" },
+      { hex: "#F4EAD5", name: "クリーム" },
+    ], toneBias: ["lt", "b"] },
   1960: { ja: "1960年代", story: "サイケデリック・ポップの時代",
     colors: [
       { hex: "#ED6D00", name: "ポップオレンジ" },
@@ -113,8 +142,8 @@ function trendLookup(input) {
   const entries = [];
   const lower = input.toLowerCase();
 
-  // 西暦(1960〜2029)
-  const yearMatch = lower.match(/(19[6-9]\d|20[0-2]\d)/);
+  // 西暦(1920〜2029)
+  const yearMatch = lower.match(/(19[2-9]\d|20[0-2]\d)/);
   if (yearMatch) {
     const year = Number(yearMatch[1]);
     if (PANTONE_COY[year]) {
@@ -130,10 +159,12 @@ function trendLookup(input) {
   }
 
   // 年代表記(90s / 90年代 / 1970s など)
-  const decMatch = lower.match(/(?:19|20)?([6-9]0|10|20)\s*(?:s|'s|年代)/);
+  const decMatch = lower.match(/(19|20)?([2-9]0|10)\s*(?:s|'s|年代)/);
   if (decMatch) {
-    let d = Number(decMatch[1]);
-    d = d >= 60 ? 1900 + d : 2000 + d;
+    let d = Number(decMatch[2]);
+    if (decMatch[1] === "19") d += 1900;
+    else if (decMatch[1] === "20") d += 2000;
+    else d += (d >= 30 ? 1900 : 2000); // 「30〜90年代」単独は20世紀、「10・20年代」は21世紀と解釈
     const dec = DECADES[d];
     if (dec) { entries.push(trendEntryFromColors(dec.ja, dec.story, dec.colors, dec)); return entries; }
   }

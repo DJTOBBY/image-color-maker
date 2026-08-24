@@ -972,8 +972,13 @@ function lookupColorWords(input) {
   const colors = hit(COLOR_WORDS);
   const kept = colors.filter(c => !colors.some(o => o !== c &&
     o.match.some(om => c.match.some(cm => om.length > cm.length && om.includes(cm)))));
-  // 「紫禁城」の「紫」のように、物語辞書の長い語の内部に埋もれた色字も除外する
-  const themeHits = DICTIONARY.flatMap(e => e.match.filter(m => raw.includes(m)));
+  // 「紫禁城」の「紫」、「青丹」の「青」のように、
+  // 物語辞書や伝統色名の長い語の内部に埋もれた色字は色語として拾わない
+  const themeHits = [
+    ...DICTIONARY.flatMap(e => e.match.filter(m => raw.includes(m))),
+    ...(typeof WACOLORS !== "undefined"
+      ? WACOLORS.map(w => w.name).filter(n => n.length >= 2 && raw.includes(n)) : []),
+  ];
   const kept2 = kept.filter(c => !c.match.some(cm =>
     themeHits.some(tm => tm.length > cm.length && tm.includes(cm))));
 

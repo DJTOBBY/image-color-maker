@@ -193,7 +193,7 @@ async function run(variant = 0) {
     renderSheet(palette, matches);
     window.__lastResult = { palette, matches };
     // 技法を直接指定したときは「別の配色」を出せないので隠す
-    $("#vary-btn").hidden = !palette.canVary;
+    $("#vary-bar").hidden = !palette.canVary;
     // このパレットのシェアリンクをURLに反映する(variantも共有できるように)
     const params = new URLSearchParams({ t: input, n: String(palette.colors.length) });
     if (variant) params.set("v", String(variant));

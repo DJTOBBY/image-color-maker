@@ -269,9 +269,10 @@ function generatePalette(input, count = 6, variant = 0) {
   const colors = picked.map(c => {
     const wa = typeof WaColor !== "undefined"
       ? WaColor.nearest(c.hex, 26, usedWaNames) : null;
-    // 「青のティント」のような機械的な名前は、近い伝統色の名前に置き換える
-    const plain = c.lead || /(のティント|のシェード)$/.test(c.name);
-    const name = (colorEntries.length && plain && wa) ? wa.name : c.name;
+    // 「青のティント」「中庸に染めた色」のような機械的な名前は、近い伝統色の名前に置き換える。
+    // (技法を直接指定したときは「カマイユの基準色」等の名前自体が説明になるので触らない)
+    const plain = c.lead || /(のティント|のシェード)$/.test(c.name) || !!variantTechniqueKey;
+    const name = ((colorEntries.length || variantTechniqueKey) && plain && wa) ? wa.name : c.name;
     if (wa) usedWaNames.add(wa.name);
     return {
       hex: c.hex, h: c.h, s: c.s, l: c.l,

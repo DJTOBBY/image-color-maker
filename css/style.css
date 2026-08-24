@@ -71,6 +71,15 @@ button.primary:hover { background: #000; }
 .mybeads .inv-only { display: block; margin-top: 6px; cursor: pointer; }
 #inventory-count { color: var(--accent); }
 
+/* 別の配色を試す(資料の上に置く) */
+.vary-bar {
+  max-width: 860px; margin: 28px auto -8px; padding: 0 16px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+/* display:flex が hidden 属性を上書きしてしまうのを防ぐ */
+.vary-bar[hidden] { display: none; }
+.vary-hint { font-size: 0.75rem; color: var(--ink-soft); }
+
 .print-bar { text-align: center; margin: 8px 0 40px; }
 .print-bar .hint {
   display: block; margin: 8px auto 0; color: var(--ink-soft); font-size: 0.75rem; max-width: 560px;

@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 DIST.mkdir(exist_ok=True)
 
-JS_FILES = ["pccs.js", "techniques.js", "palette.js", "wacolor.js", "trend.js",
-            "associations.js", "dictionary.js", "match.js", "export.js", "app.js"]
+JS_FILES = ["pccs.js", "techniques.js", "palette.js", "wacolor-data.js", "wacolor.js",
+            "trend.js", "associations.js", "dictionary.js", "match.js", "export.js", "app.js"]
 
 
 def main():

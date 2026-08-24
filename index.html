@@ -26,7 +26,7 @@
       <option value="7">7色</option>
       <option value="8">8色</option>
     </select>
-    <button id="generate-btn" class="primary">翻訳する</button>
+    <button id="generate-btn" class="primary">COLOR IT</button>
   </div>
   <div class="examples" id="examples">
     <span>試してみる:</span>
@@ -45,13 +45,17 @@
   </details>
 </section>
 
+<div class="vary-bar no-print" id="vary-bar" hidden>
+  <button id="vary-btn" class="primary">別の配色を試す</button>
+  <span class="vary-hint">同じテーマのまま、配色技法だけを変えて提案します</span>
+</div>
+
 <main id="result" class="sheet" hidden>
   <!-- ここにJSが資料を描画する -->
 </main>
 
 <div class="print-bar no-print" id="print-bar" hidden>
-  <button id="vary-btn" class="primary">別の配色を試す</button>
-  <button id="print-btn" class="primary secondary">PDFとして保存 / 印刷</button>
+  <button id="print-btn" class="primary">PDFとして保存 / 印刷</button>
   <button id="jpeg-btn" class="primary secondary">Instagram用JPEG</button>
   <button id="share-btn" class="primary secondary">シェアリンクをコピー</button>
   <span class="hint">PDF: ブラウザの印刷画面で「PDFとして保存」。色が出ない場合は「背景のグラフィック」をON。
@@ -66,6 +70,7 @@
 <script src="js/pccs.js"></script>
 <script src="js/techniques.js"></script>
 <script src="js/palette.js"></script>
+<script src="js/wacolor-data.js"></script>
 <script src="js/wacolor.js"></script>
 <script src="js/trend.js"></script>
 <script src="js/associations.js"></script>

@@ -1,9 +1,13 @@
 /* 日本の伝統色辞書
    - 入力語として「蘇芳」「瑠璃」などを受け付ける
    - 生成した色に最も近い伝統色名を逆引きして資料に添える
+
+   WACOLORS_CORE は手で選んだ定番101色。これに wacolor-data.js
+   (i-iro.com 由来の日本266色+世界704色、マンセル値つき)を統合して
+   WACOLORS を組み立てる。名前が重複する場合は定番側を優先する。
 */
 
-const WACOLORS = [
+const WACOLORS_CORE = [
   // 桜・紅・赤系
   { name: "桜色", kana: "さくらいろ", hex: "#fef4f4" },
   { name: "薄紅", kana: "うすべに", hex: "#f0908d" },
@@ -114,6 +118,24 @@ const WACOLORS = [
   { name: "漆黒", kana: "しっこく", hex: "#0d0015" },
 ];
 
+/* 定番101色に i-iro.com 由来のデータを統合する。
+   名前が重複する場合は、読みが定着している定番側(WACOLORS_CORE)を優先。
+   wacolor-data.js が無い環境でも定番だけで動くようにしてある。 */
+const WACOLORS = (() => {
+  const merged = WACOLORS_CORE.map(w => ({ ...w, jp: true }));
+  const seen = new Set(merged.map(w => w.name));
+  const extra = [
+    ...(typeof WACOLORS_JP !== "undefined" ? WACOLORS_JP.map(w => ({ ...w, jp: true })) : []),
+    ...(typeof WACOLORS_WORLD !== "undefined" ? WACOLORS_WORLD.map(w => ({ ...w, jp: false })) : []),
+  ];
+  for (const w of extra) {
+    if (seen.has(w.name)) continue;
+    seen.add(w.name);
+    merged.push(w);
+  }
+  return merged;
+})();
+
 // 襲の色目(平安の季節配色)。テーマ語としてヒットすると配色ごと使われる
 const KASANE = [
   { match: ["白梅", "梅"], ja: "梅がさね", season: "春", story: "襲の色目・梅 — 表は白、裏に紅",
@@ -140,16 +162,22 @@ const WaColor = (() => {
     if (!labCache) labCache = WACOLORS.map(w => ({ ...w, lab: hexToLab(w.hex) }));
     return labCache;
   }
-  // 最も近い伝統色を返す(遠すぎる場合はnull)。excludeで既出の色名を避ける
+  // 最も近い伝統色を返す(遠すぎる場合はnull)。excludeで既出の色名を避ける。
+  // トーホービーズの資料としての一貫性のため、まず日本の伝統色だけで探し、
+  // 十分に近い色が無いときだけ海外の色名まで広げる。
   function nearest(hex, maxDist = 26, exclude = null) {
     const lab = hexToLab(hex);
-    let best = null, bestD = Infinity;
-    for (const w of ensureLab()) {
-      if (exclude && exclude.has(w.name)) continue;
-      const d = labDist(lab, w.lab);
-      if (d < bestD) { bestD = d; best = w; }
-    }
-    return bestD <= maxDist ? best : null;
+    const search = (jpOnly) => {
+      let best = null, bestD = Infinity;
+      for (const w of ensureLab()) {
+        if (jpOnly && w.jp === false) continue;
+        if (exclude && exclude.has(w.name)) continue;
+        const d = labDist(lab, w.lab);
+        if (d < bestD) { bestD = d; best = w; }
+      }
+      return bestD <= maxDist ? best : null;
+    };
+    return search(true) || search(false);
   }
 
   // テーマ語として伝統色・襲の色目を解決し、辞書エントリ形式で返す
@@ -169,12 +197,20 @@ const WaColor = (() => {
         break; // 襲はひとつで十分
       }
     }
-    for (const w of WACOLORS) {
-      if (w.name !== "白" && w.name !== "黒" && w.name !== "青" && w.name !== "紫" && w.name !== "緑"
-          && input.includes(w.name)) {
+    // 1000色近くを走査するため、誤マッチを避ける:
+    // 1文字の色名(赤・茶など)と、色語(COLOR_WORDS)が担当する名前は拾わない
+    const colorWordNames = typeof COLOR_WORDS !== "undefined"
+      ? new Set(COLOR_WORDS.flatMap(c => c.match)) : new Set();
+    let hits = WACOLORS.filter(w =>
+      w.name.length >= 2 && !colorWordNames.has(w.name) && input.includes(w.name));
+    // 「桜」と「桜色」のように包含関係があるときは長い名前だけを残す
+    hits = hits.filter(w => !hits.some(o => o !== w &&
+      o.name.length > w.name.length && o.name.includes(w.name)));
+    for (const w of hits.slice(0, 3)) {
+      {
         const [h, s, l] = rgbToHsl(...hexToRgb(w.hex));
         entries.push({
-          ja: w.name, story: `伝統色「${w.name}(${w.kana})」の記憶`,
+          ja: w.name, story: `伝統色「${w.name}${w.kana ? `(${w.kana})` : ""}」の記憶`,
           anchors: [{ h, s, l, name: w.name }],
           toneBias: ["dp", "sf"],
         });

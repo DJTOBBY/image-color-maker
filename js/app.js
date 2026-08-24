@@ -245,6 +245,11 @@ document.addEventListener("DOMContentLoaded", () => {
     updateInventoryCount();
   });
 
+  // PWA: アプリとしてインストールできるようにする
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+
   BeadMatcher.load(); // 先読み
 
   // シェアリンク(?t=テーマ&n=色数)で開かれたら自動生成する

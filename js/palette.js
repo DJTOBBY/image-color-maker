@@ -197,7 +197,9 @@ function generatePalette(input, count = 6) {
 
   // 明→暗に並べ、PCCS分類を付ける
   picked.sort((a, b) => b.l - a.l);
-  const usedWaNames = new Set();
+  // 元からある固有名(利休鼠など)を先に予約し、伝統色名の置換と衝突しないようにする
+  const usedWaNames = new Set(
+    picked.filter(c => !/(のティント|のシェード)$/.test(c.name)).map(c => c.name));
   const colors = picked.map(c => {
     const wa = typeof WaColor !== "undefined"
       ? WaColor.nearest(c.hex, 26, usedWaNames) : null;
@@ -221,6 +223,16 @@ function generatePalette(input, count = 6) {
     const toneKinds = new Set(chroma.map(c => c.pccs.toneKey)).size;
     if ((technique === "ドミナントカラー配色" || technique === "トーン・オン・トーン配色") && spreadNow >= 70) {
       technique = toneKinds <= 3 ? "ドミナントトーン配色" : "対照色相配色";
+    }
+  }
+
+  // 複数の辞書ソースが同じ固有名(利休鼠など)を別々のアンカーとして持ち込むことがあるため、
+  // 最終防波堤として名前の重複を解消する
+  {
+    const seenNames = new Set();
+    for (const c of colors) {
+      if (seenNames.has(c.name)) c.name = `もう一つの${c.name}`;
+      seenNames.add(c.name);
     }
   }
 

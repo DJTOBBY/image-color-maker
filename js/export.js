@@ -8,6 +8,86 @@ const JpegExport = (() => {
   const SERIF = '"Shippori Mincho", "Hiragino Mincho ProN", serif';
   const SANS = '"Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", sans-serif';
 
+  // ---- 実物写真の計測色でビーズの連を描く ----
+  function mix(hex, target, amount) {
+    const [r, g, b] = hexToRgb(hex);
+    const [tr, tg, tb] = hexToRgb(target);
+    return rgbToHex(
+      Math.round(r + (tr - r) * amount),
+      Math.round(g + (tg - g) * amount),
+      Math.round(b + (tb - b) * amount));
+  }
+  function luminance(hex) {
+    const [r, g, b] = hexToRgb(hex);
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+  function drawBeadStrand(ctx, cx, cy, bead, count = 6, r = 13) {
+    const palette = (bead.p && bead.p.length ? bead.p : [[bead.hex, 100]])
+      .filter(([, w]) => w >= 4);
+    const sorted = [...palette].sort((a, b) => luminance(b[0]) - luminance(a[0]));
+    const light = sorted[0][0];
+    const dark = sorted[sorted.length - 1][0];
+    // 面積比に応じて本体色の並びを作る(擬似乱数は品番から決める=毎回同じ絵)
+    let seed = 0;
+    for (const ch of bead.code) seed = (seed * 31 + ch.charCodeAt(0)) % 9973;
+    const total = palette.reduce((a, [, w]) => a + w, 0);
+    const bodies = [];
+    for (let i = 0; i < count; i++) {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      let pick = (seed / 2147483648) * total;
+      let hex = palette[0][0];
+      for (const [c, w] of palette) { pick -= w; if (pick <= 0) { hex = c; break; } }
+      bodies.push(hex);
+    }
+    const startX = cx - ((count - 1) * (r * 2 + 2)) / 2;
+    bodies.forEach((hex, i) => {
+      const x = startX + i * (r * 2 + 2);
+      // 本体
+      ctx.beginPath(); ctx.arc(x, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = hex; ctx.fill();
+      // 下側の陰(写真の暗部の色)
+      ctx.beginPath(); ctx.arc(x + r * 0.25, cy + r * 0.3, r * 0.62, 0, Math.PI * 2);
+      ctx.fillStyle = mix(hex, dark, 0.45); ctx.globalAlpha = 0.5; ctx.fill();
+      ctx.globalAlpha = 1;
+      // 上側のハイライト(写真の明部の色)
+      ctx.beginPath(); ctx.arc(x - r * 0.3, cy - r * 0.35, r * 0.38, 0, Math.PI * 2);
+      ctx.fillStyle = mix(hex, light, 0.75); ctx.globalAlpha = 0.85; ctx.fill();
+      ctx.globalAlpha = 1;
+      // 輪郭
+      ctx.beginPath(); ctx.arc(x, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0,0,0,0.12)"; ctx.stroke();
+    });
+  }
+
+  // カタログ(CORS開放)の実物写真を読み込む。失敗・タイムアウトはnull
+  function loadPhoto(url, timeoutMs = 4000) {
+    return new Promise(res => {
+      const img = new Image();
+      const timer = setTimeout(() => res(null), timeoutMs);
+      img.crossOrigin = "anonymous";
+      img.onload = () => { clearTimeout(timer); res(img); };
+      img.onerror = () => { clearTimeout(timer); res(null); };
+      img.src = url;
+    });
+  }
+
+  // 実物写真をカバーフィットで角丸枠に描く
+  function drawPhotoStrip(ctx, img, cx, cy, w, h) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 8);
+    ctx.clip();
+    const scale = Math.max(w / img.width, h / img.height);
+    const sw = w / scale, sh = h / scale;
+    ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 2, sw, sh,
+      cx - w / 2, cy - h / 2, w, h);
+    ctx.restore();
+    ctx.beginPath();
+    ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 8);
+    ctx.strokeStyle = "rgba(0,0,0,0.1)";
+    ctx.stroke();
+  }
+
   function fitFont(ctx, text, family, weight, startPx, maxWidth) {
     let px = startPx;
     do {
@@ -20,6 +100,11 @@ const JpegExport = (() => {
 
   async function render(palette, matches) {
     await document.fonts.ready;
+    // 各色の第一候補の実物写真を先に読み込む(無い品番はnull=計測色のビーズ描画)
+    const photos = await Promise.all((palette.colors).map((c, i) => {
+      const first = matches[i] && matches[i][0];
+      return first && first.bead.photo ? loadPhoto(first.bead.photo) : Promise.resolve(null);
+    }));
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
@@ -98,9 +183,14 @@ const JpegExport = (() => {
       const pccsLabel = c.pccs.neutral ? c.pccs.toneJa : `${c.pccs.hueNo}:${c.pccs.hueSym} ${c.pccs.toneJa}`;
       const waLabel = c.wa ? ` ≒${c.wa.name}` : "";
       ctx.fillText(`${c.hex.toUpperCase()}  ${pccsLabel}${waLabel}`, M + 92, y + 26);
-      // ビーズ品番(右寄せ)
+      // ビーズ品番(右寄せ)と実物写真(写真が無い品番は計測色でビーズを描く)
       const first = matches[i] && matches[i][0];
       if (first) {
+        if (photos[i]) {
+          drawPhotoStrip(ctx, photos[i], 640, y, 220, Math.min(52, rowH * 0.58));
+        } else {
+          drawBeadStrand(ctx, 640, y, first.bead, 6, Math.min(15, rowH * 0.17));
+        }
         ctx.textAlign = "right";
         ctx.fillStyle = INK;
         ctx.font = `700 27px ${SANS}`;

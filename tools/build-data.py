@@ -63,6 +63,8 @@ def main():
             "size": rep["size"],
             "finish": rep["finish"],
             "hex": ps["m"],
+            # 実物写真の色構成(上位4色と面積比)。JPEG書き出しのビーズ描画に使う
+            "p": [[c, w] for c, w in (ps.get("p") or [])[:4]],
             "h": ps.get("h"), "s": ps.get("s"), "l": ps.get("l"),
             "colorJa": rep["colorJa"],
             "shapes": sorted({b["shapeJa"] for b in items}, key=shape_rank),
@@ -75,6 +77,11 @@ def main():
         if cat:
             entry["family"] = cat["color"]["family"]
             entry["catalogHex"] = cat["color"]["hex"]
+        # CORS開放されているカタログ(GitHub Pages)の実物写真。Canvas描画=JPEG出力に使える
+        cat_exact = catalog.get(code)
+        if cat_exact and cat_exact.get("swatch"):
+            entry["photo"] = ("https://djtobby.github.io/toho-beads-catalog/official/"
+                              + cat_exact["swatch"])
         out.append(entry)
 
     OUT.write_text(json.dumps({"beads": out}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

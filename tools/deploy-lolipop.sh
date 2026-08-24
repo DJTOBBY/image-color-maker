@@ -13,8 +13,15 @@ mkdir -p dist/palette
 cp index.html dist/palette/
 rm -rf dist/palette/css dist/palette/js dist/palette/data
 cp -R css js data dist/palette/
+cp tools/htaccess-palette dist/palette/.htaccess
 
-echo "palette.tohobeads.jp へ転送します(SSHパスワードを入力してください)"
+# キャッシュバスター: JS/CSS/データの参照にビルド番号を付ける
+# (ロリポップはJS/CSSを1週間キャッシュするため、URLを変えて確実に更新を届ける)
+STAMP=$(date +%Y%m%d%H%M%S)
+sed -i '' -E "s|(href=\"css/[^\"?]+)\"|\1?v=${STAMP}\"|g; s|(src=\"js/[^\"?]+)\"|\1?v=${STAMP}\"|g" dist/palette/index.html
+sed -i '' -E "s|(fetch\(\"data/[^\"?]+)\"|\1?v=${STAMP}\"|g" dist/palette/js/match.js
+
+echo "palette.tohobeads.jp へ転送します"
 rsync -avz --delete \
   --exclude ".DS_Store" \
   -e "ssh -p 2222" \

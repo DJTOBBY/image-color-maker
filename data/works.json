@@ -1,0 +1,11 @@
+{
+  "_readme": "作品事例。images/ フォルダに写真を置いて、以下の形式で追加してください。keywords がテーマ入力に含まれると資料に表示されます。",
+  "_example": {
+    "title": "夜の帳のブレスレット",
+    "image": "images/yoru-bracelet.jpg",
+    "keywords": ["夜", "night", "tokyo"],
+    "beads": ["49", "88", "981"],
+    "note": "ミッドナイトブルー基調にラスターで灯りを散らした作品"
+  },
+  "works": []
+}

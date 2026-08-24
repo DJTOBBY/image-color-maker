@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イメージカラーメーカー — 場所と記憶を、ビーズの色に。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <h1 class="brand">イメージカラーメーカー</h1>
+  <p class="tagline">場所・記憶・物語を、5〜8色とトーホービーズの実品番に翻訳する</p>
+</header>
+
+<section class="controls no-print">
+  <div class="input-row">
+    <input id="theme-input" type="text" placeholder="例: TOKYO NIGHT / 京都 秋 / DESERT SUNSET"
+           autocomplete="off" spellcheck="false">
+    <select id="color-count">
+      <option value="5">5色</option>
+      <option value="6" selected>6色</option>
+      <option value="7">7色</option>
+      <option value="8">8色</option>
+    </select>
+    <button id="generate-btn" class="primary">翻訳する</button>
+  </div>
+  <div class="examples" id="examples">
+    <span>試してみる:</span>
+  </div>
+  <details class="mybeads">
+    <summary>手持ちビーズ(在庫リスト)<span id="inventory-count"></span></summary>
+    <textarea id="inventory-input" rows="3"
+      placeholder="持っている品番をスペース・改行・カンマ区切りで入力(例: 1 25 49F 332 PF558)。自動保存されます。"></textarea>
+    <label class="inv-only">
+      <input type="checkbox" id="inventory-only"> 手持ちのビーズだけでマッチングする
+    </label>
+  </details>
+</section>
+
+<main id="result" class="sheet" hidden>
+  <!-- ここにJSが資料を描画する -->
+</main>
+
+<div class="print-bar no-print" id="print-bar" hidden>
+  <button id="print-btn" class="primary">PDFとして保存 / 印刷</button>
+  <button id="jpeg-btn" class="primary secondary">Instagram用JPEG</button>
+  <span class="hint">PDF: ブラウザの印刷画面で「PDFとして保存」。色が出ない場合は「背景のグラフィック」をON。
+    JPEG: 1080×1350(フィード4:5)の画像カードを書き出します</span>
+</div>
+
+<footer class="site-footer no-print">
+  <p>色データ: TOHO BEADS FINDER(実物写真の計測色)+ トーホービーズカタログ /
+     配色理論: PCCS・配色技法(ビーズワークのためのカラーディプロマ講座に準拠)</p>
+</footer>
+
+<script src="js/pccs.js"></script>
+<script src="js/palette.js"></script>
+<script src="js/wacolor.js"></script>
+<script src="js/trend.js"></script>
+<script src="js/associations.js"></script>
+<script src="js/dictionary.js"></script>
+<script src="js/match.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

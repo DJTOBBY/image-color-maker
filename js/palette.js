@@ -267,16 +267,31 @@ function generatePalette(input, count = 6, variant = 0) {
 
   // 明→暗に並べ、PCCS分類を付ける
   picked.sort((a, b) => b.l - a.l);
+  // 色を機械的に展開したときの仮の名前。物語を語らないので、伝統色名に置き換える対象
+  const MACHINE_NAME = /(のティント|のシェード)$|^(となりの色相|もうひとつの隣|対岸の色|灯りの色|無題の色)$/;
+  // 伝統色に該当が無いほど鮮烈な色のための、最後の名付け。
+  // PCCSの色相とトーンの言葉で呼ぶ(「冴えた青」など)
+  const fallbackName = (c) => {
+    const p = PCCS.classify(c.h, c.s, c.l);
+    if (p.neutral) return p.toneJa;
+    const word = (p.words && p.words[0]) || "";
+    return `${word}${p.hueJa}`;
+  };
   // 元からある固有名(利休鼠など)を先に予約し、伝統色名の置換と衝突しないようにする
   const usedWaNames = new Set(
-    picked.filter(c => !/(のティント|のシェード)$/.test(c.name)).map(c => c.name));
+    picked.filter(c => !MACHINE_NAME.test(c.name)).map(c => c.name));
   const colors = picked.map(c => {
-    const wa = typeof WaColor !== "undefined"
-      ? WaColor.nearest(c.hex, 26, usedWaNames) : null;
-    // 「青のティント」「中庸に染めた色」のような機械的な名前は、近い伝統色の名前に置き換える。
+    // 「青のティント」「もうひとつの隣」のような機械的な名前は、近い伝統色の名前に置き換える。
     // (技法を直接指定したときは「カマイユの基準色」等の名前自体が説明になるので触らない)
-    const plain = c.lead || /(のティント|のシェード)$/.test(c.name) || !!variantTechniqueKey;
-    const name = ((colorEntries.length || variantTechniqueKey) && plain && wa) ? wa.name : c.name;
+    const plain = c.lead || MACHINE_NAME.test(c.name) || !!variantTechniqueKey;
+    // 置き換える名前が無いと機械名が資料に残ってしまうので、そのときだけ許容距離を広げる
+    const wa = typeof WaColor !== "undefined"
+      ? WaColor.nearest(c.hex, plain ? 40 : 26, usedWaNames) : null;
+    let name = c.name;
+    if (!techniqueMode && plain) {
+      // 伝統色名が無ければPCCSの言葉で名付け、機械的な仮の名前は資料に残さない
+      name = wa ? wa.name : (MACHINE_NAME.test(c.name) ? fallbackName(c) : c.name);
+    }
     if (wa) usedWaNames.add(wa.name);
     return {
       hex: c.hex, h: c.h, s: c.s, l: c.l,

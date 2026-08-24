@@ -131,6 +131,7 @@ function generatePalette(input, count = 6) {
   const toneCycle = toneBias.length ? toneBias : ["sf"];
   candidates.forEach((c, i) => {
     if (c.locked) return; // トレンドの記録色などは原色のまま守る
+    const l0 = c.l; // 補正前の明度(名前の付け直し判定に使う)
     if (c.s > 18) {
       const tone = toneCycle[i % toneCycle.length];
       const pulled = PCCS.pullToTone(c.s, c.l, tone, c.derived ? 0.35 : 0.45);
@@ -143,6 +144,11 @@ function generatePalette(input, count = 6) {
       c.l = Math.max(5, Math.min(95, c.l + shift.dl));
     }
     if (c.s > 12) c.l = PCCS.naturalHarmony(c.h, c.l, 7, complex);
+    // 元の色から大きく変わったのに名前が元のまま、というズレを防ぐ
+    if (!c.derived && !/[夜宵闇暁淡薄]/.test(c.name)) {
+      if (c.l - l0 <= -15) c.name = `宵の${c.name}`;
+      else if (c.l - l0 >= 15) c.name = `淡い${c.name}`;
+    }
   });
 
   // 多様性を保ちながらcount色選ぶ(貪欲 max-min Lab距離)

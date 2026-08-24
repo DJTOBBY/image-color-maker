@@ -140,11 +140,12 @@ const WaColor = (() => {
     if (!labCache) labCache = WACOLORS.map(w => ({ ...w, lab: hexToLab(w.hex) }));
     return labCache;
   }
-  // 最も近い伝統色を返す(遠すぎる場合はnull)
-  function nearest(hex, maxDist = 26) {
+  // 最も近い伝統色を返す(遠すぎる場合はnull)。excludeで既出の色名を避ける
+  function nearest(hex, maxDist = 26, exclude = null) {
     const lab = hexToLab(hex);
     let best = null, bestD = Infinity;
     for (const w of ensureLab()) {
+      if (exclude && exclude.has(w.name)) continue;
       const d = labDist(lab, w.lab);
       if (d < bestD) { bestD = d; best = w; }
     }

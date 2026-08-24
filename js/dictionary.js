@@ -5,6 +5,41 @@
    sparkle/matte: ビーズの加工の好み(ラスター・オーロラ系 / ツヤケシ系)
 */
 
+/* 基本の色語。入力に含まれるとパレットの「主役」になり、
+   他のテーマ語はその色相から離れた色を落として脇役にまわる。 */
+const COLOR_WORDS = [
+  { match: ["red", "レッド", "赤", "紅"], ja: "赤", h: 0, s: 75, l: 48 },
+  { match: ["pink", "ピンク", "桃色"], ja: "ピンク", h: 340, s: 70, l: 72 },
+  { match: ["orange", "オレンジ", "橙"], ja: "オレンジ", h: 28, s: 82, l: 55 },
+  { match: ["yellow", "イエロー", "黄色", "黄"], ja: "黄", h: 50, s: 85, l: 58 },
+  { match: ["lime", "ライム", "黄緑"], ja: "黄緑", h: 85, s: 60, l: 55 },
+  { match: ["green", "グリーン", "緑"], ja: "緑", h: 140, s: 52, l: 42 },
+  { match: ["turquoise", "teal", "ターコイズ", "青緑"], ja: "ターコイズ", h: 180, s: 58, l: 48 },
+  { match: ["cyan", "sky blue", "シアン", "水色", "空色"], ja: "水色", h: 196, s: 62, l: 68 },
+  { match: ["blue", "ブルー", "青", "藍"], ja: "青", h: 218, s: 68, l: 45 },
+  { match: ["navy", "ネイビー", "紺"], ja: "紺", h: 225, s: 58, l: 26 },
+  { match: ["indigo", "インディゴ", "青紫"], ja: "青紫", h: 258, s: 50, l: 42 },
+  { match: ["purple", "violet", "パープル", "バイオレット", "紫"], ja: "紫", h: 288, s: 45, l: 45 },
+  { match: ["brown", "ブラウン", "茶色", "茶"], ja: "茶", h: 25, s: 45, l: 35 },
+  { match: ["beige", "ベージュ"], ja: "ベージュ", h: 35, s: 35, l: 76 },
+  { match: ["white", "ホワイト", "白"], ja: "白", h: 40, s: 8, l: 95 },
+  { match: ["gray", "grey", "グレー", "灰色"], ja: "グレー", h: 220, s: 5, l: 58 },
+  { match: ["black", "ブラック", "黒"], ja: "黒", h: 225, s: 12, l: 12 },
+  { match: ["gold", "ゴールド", "金色", "金"], ja: "金", h: 45, s: 65, l: 52 },
+  { match: ["silver", "シルバー", "銀色", "銀"], ja: "銀", h: 220, s: 8, l: 72 },
+];
+
+/* 色の強さ・明るさを変える修飾語 */
+const MODIFIERS = [
+  { match: ["dark", "ダーク", "暗い"], dl: -18, ds: 0 },
+  { match: ["deep", "ディープ", "深い", "濃い"], dl: -14, ds: 12 },
+  { match: ["light", "ライト", "明るい"], dl: 16, ds: -6 },
+  { match: ["pale", "ペール", "淡い", "薄い"], dl: 20, ds: -22 },
+  { match: ["vivid", "ビビッド", "鮮やか"], dl: 0, ds: 25 },
+  { match: ["dusty", "smoky", "くすんだ", "スモーキー"], dl: -4, ds: -25 },
+  { match: ["bright", "ブライト"], dl: 10, ds: 12 },
+];
+
 const DICTIONARY = [
   // ===== 日本の場所 =====
   { match: ["tokyo", "東京", "トーキョー"], ja: "東京", story: "眠らない街の残像",
@@ -318,6 +353,15 @@ const DICTIONARY = [
     ],
     toneBias: ["dkg"], technique: "セパレーション" },
 
+  { match: ["japan blue", "ジャパンブルー", "藍染", "阿波藍"], ja: "ジャパンブルー",
+    story: "明治のお雇い外国人が「この国は藍色に染まっている」と驚いた、日本の青",
+    anchors: [
+      { h: 218, s: 55, l: 28, name: "藍" },
+      { h: 210, s: 40, l: 45, name: "縹(はなだ)" },
+      { h: 200, s: 30, l: 65, name: "瓶覗(かめのぞき)" },
+      { h: 225, s: 45, l: 15, name: "褐色(かちいろ)" },
+      { h: 45, s: 20, l: 92, name: "晒しの生成り" },
+    ], toneBias: ["dp", "d"], matte: true, technique: "トーン・オン・トーン配色" },
   { match: ["japan", "nippon", "ジャパン", "日本"], ja: "日本", story: "藍と朱、金と墨の国",
     anchors: [
       { h: 220, s: 55, l: 28, name: "藍" },
@@ -749,6 +793,46 @@ function lookupTheme(input) {
   const filtered = hits.filter(h =>
     !hits.some(o => o !== h && o.token.length > h.token.length && o.token.includes(h.token)));
   return filtered.map(h => h.entry);
+}
+
+// 入力に含まれる色語・修飾語を拾う。色語はパレットの主役になる
+function lookupColorWords(input) {
+  const raw = input.trim();
+  const lower = raw.toLowerCase().replace(/[_\-]+/g, " ");
+  const hit = (list) => list.filter(e => e.match.some(m => /^[a-z ]+$/.test(m)
+    ? new RegExp(`(^|[^a-z])${m.replace(/ /g, "\\s*")}([^a-z]|$)`).test(lower)
+    : raw.includes(m)));
+
+  // 「青緑」が「青」「緑」も拾ってしまうので、長い語のヒットを優先する
+  const colors = hit(COLOR_WORDS);
+  const kept = colors.filter(c => !colors.some(o => o !== c &&
+    o.match.some(om => c.match.some(cm => om.length > cm.length && om.includes(cm)))));
+
+  const mods = hit(MODIFIERS);
+  const shift = mods.reduce((a, m) => ({ dl: a.dl + m.dl, ds: a.ds + m.ds }), { dl: 0, ds: 0 });
+  return { colors: kept, shift };
+}
+
+// 色語を、濃淡3段のアンカーを持つ辞書エントリに変換する
+function colorWordEntry(cw, shift) {
+  const l = Math.max(8, Math.min(94, cw.l + shift.dl));
+  const s = Math.max(0, Math.min(100, cw.s + shift.ds));
+  const mono = s < 15;
+  return {
+    ja: cw.ja, story: `${cw.ja}を主役に`,
+    isColorWord: true, hue: cw.h,
+    // 修飾語はここで反映済みなので、あとから全体シフトを重ねない
+    anchors: (mono ? [
+      { h: cw.h, s, l, name: cw.ja },
+      { h: cw.h, s, l: Math.min(96, l + 22), name: `明るい${cw.ja}` },
+      { h: cw.h, s, l: Math.max(6, l - 26), name: `暗い${cw.ja}` },
+    ] : [
+      { h: cw.h, s, l, name: cw.ja },
+      { h: cw.h, s: Math.max(12, s - 22), l: Math.min(92, l + 22), name: `淡い${cw.ja}` },
+      { h: cw.h, s: Math.min(100, s + 6), l: Math.max(10, l - 20), name: `深い${cw.ja}` },
+    ]).map(a => ({ ...a, noShift: true })),
+    toneBias: [],
+  };
 }
 
 // 辞書に無い言葉のフォールバック: 文字列から色相を決める

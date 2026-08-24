@@ -65,11 +65,22 @@ const TECHNIQUES = {
 
 // ---------- パレット生成 ----------
 function generatePalette(input, count = 6) {
-  let entries = [
+  // 色語(青・BLUE など)があればパレットの主役に据える
+  const cw = typeof lookupColorWords === "function"
+    ? lookupColorWords(input) : { colors: [], shift: { dl: 0, ds: 0 } };
+  const colorEntries = cw.colors.map(c => colorWordEntry(c, cw.shift));
+  const themeEntries = [
     ...(typeof trendLookup === "function" ? trendLookup(input) : []),
     ...(typeof WaColor !== "undefined" ? WaColor.lookup(input) : []),
     ...lookupTheme(input),
   ];
+  // 同じ名前のエントリ(色語の「水色」と伝統色の「水色」など)は先勝ちでひとつに
+  const seen = new Set();
+  let entries = [...colorEntries, ...themeEntries].filter(e => {
+    if (seen.has(e.ja)) return false;
+    seen.add(e.ja);
+    return true;
+  });
   const usedFallback = entries.length === 0;
   if (usedFallback) entries = [hashFallback(input)];
 
@@ -79,7 +90,7 @@ function generatePalette(input, count = 6) {
   let shift = { dl: 0, ds: 0 }, shiftCount = 0;
   let sparkle = false, matte = false, technique = null;
   for (const e of entries) {
-    for (const a of (e.anchors || [])) anchors.push({ ...a, from: e.ja });
+    for (const a of (e.anchors || [])) anchors.push({ ...a, from: e.ja, lead: !!e.isColorWord });
     for (const t of (e.toneBias || [])) if (!toneBias.includes(t)) toneBias.push(t);
     if (e.shift) { shift.dl += e.shift.dl || 0; shift.ds += e.shift.ds || 0; shiftCount++; }
     if (e.sparkle) sparkle = true;
@@ -90,6 +101,20 @@ function generatePalette(input, count = 6) {
   if (shiftCount > 1) { shift.dl /= shiftCount; shift.ds /= shiftCount; }
   shift.dl = Math.max(-24, Math.min(24, shift.dl));
   shift.ds = Math.max(-24, Math.min(24, shift.ds));
+  // 色語が指定されたら、その色相から遠すぎる色は落とす(「JAPAN BLUE」に桃色が混ざらないように)
+  if (colorEntries.length) {
+    const leadHues = colorEntries.map(e => e.hue);
+    const near = anchors.filter(a => a.lead || a.s < 18 ||
+      leadHues.some(h => PCCS.hueDist(a.h, h) <= 100));
+    if (near.length >= 2) anchors.splice(0, anchors.length, ...near);
+    // 主役の色語を先頭に(mainとして技法や展開の基準になる)
+    anchors.sort((a, b) => (b.lead ? 1 : 0) - (a.lead ? 1 : 0));
+    // 修飾語(dark/淡い など)はテーマ側の色にも効かせる
+    shift.dl += cw.shift.dl; shift.ds += cw.shift.ds;
+    shift.dl = Math.max(-28, Math.min(28, shift.dl));
+    shift.ds = Math.max(-28, Math.min(28, shift.ds));
+  }
+
   if (anchors.length === 0) anchors.push({ h: 220, s: 30, l: 50, name: "無題の色", from: input });
 
   // 技法を決める(辞書指定がなければアンカーの色相分布から)
@@ -118,7 +143,8 @@ function generatePalette(input, count = 6) {
       { h: (main.h + 332) % 360, s: main.s, l: main.l - 8, name: "もうひとつの隣" },
     );
   }
-  if (technique === "対照色相配色" || technique === "対照トーン配色") {
+  // 色語で色相を指定されているときは、補色を足すと「的確さ」が濁るので入れない
+  if (!colorEntries.length && (technique === "対照色相配色" || technique === "対照トーン配色")) {
     expansions.push({ h: (main.h + 180) % 360, s: Math.min(85, main.s + 10), l: main.l, name: "対岸の色" });
   }
   if (technique === "対照トーン配色") {
@@ -145,7 +171,8 @@ function generatePalette(input, count = 6) {
     }
     if (c.s > 12) c.l = PCCS.naturalHarmony(c.h, c.l, 7, complex);
     // 元の色から大きく変わったのに名前が元のまま、というズレを防ぐ
-    if (!c.derived && !/[夜宵闇暁淡薄]/.test(c.name)) {
+    // (色語から作った「淡い青」などは既に名前が明暗を語っているので触らない)
+    if (!c.derived && !c.lead && !/[夜宵闇暁淡薄深明暗]/.test(c.name)) {
       if (c.l - l0 <= -15) c.name = `宵の${c.name}`;
       else if (c.l - l0 >= 15) c.name = `淡い${c.name}`;
     }
@@ -170,12 +197,21 @@ function generatePalette(input, count = 6) {
 
   // 明→暗に並べ、PCCS分類を付ける
   picked.sort((a, b) => b.l - a.l);
-  const colors = picked.map(c => ({
-    hex: c.hex, h: c.h, s: c.s, l: c.l,
-    name: c.name, from: c.from,
-    pccs: PCCS.classify(c.h, c.s, c.l),
-    wa: typeof WaColor !== "undefined" ? WaColor.nearest(c.hex) : null,
-  }));
+  const usedWaNames = new Set();
+  const colors = picked.map(c => {
+    const wa = typeof WaColor !== "undefined"
+      ? WaColor.nearest(c.hex, 26, usedWaNames) : null;
+    // 「青のティント」のような機械的な名前は、近い伝統色の名前に置き換える
+    const plain = c.lead || /(のティント|のシェード)$/.test(c.name);
+    const name = (colorEntries.length && plain && wa) ? wa.name : c.name;
+    if (wa) usedWaNames.add(wa.name);
+    return {
+      hex: c.hex, h: c.h, s: c.s, l: c.l,
+      name, from: c.from,
+      pccs: PCCS.classify(c.h, c.s, c.l),
+      wa: wa && wa.name === name ? null : wa,
+    };
+  });
 
   // 技法ラベルを実際の色相・トーン分布と突き合わせて補正する
   const chroma = colors.filter(c => !c.pccs.neutral);

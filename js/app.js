@@ -1,8 +1,18 @@
 /* 画面制御と資料シートの描画 */
 
-const EXAMPLES = [
+const EXAMPLE_POOL = [
   "TOKYO NIGHT", "SETOUCHI SEA", "KYOTO AUTUMN",
   "DESERT SUNSET", "FOREST FOLKLORE", "NEW ENGLAND",
+  "雨の紫陽花", "花火の夜", "純喫茶クリームソーダ",
+  "大正ロマン", "STAINED GLASS", "人魚の午後",
+  "金沢 雪", "HAWAII SUNSET", "魔法の図書館",
+  "JAZZ MIDNIGHT", "クリスマスの朝", "Y2K TOKYO",
+  "2016 SPRING", "紅葉がさね", "エーゲ海の夏",
+];
+// 定番2つ+ランダム4つで毎回すこし変える
+const EXAMPLES = [
+  ...EXAMPLE_POOL.slice(0, 2),
+  ...EXAMPLE_POOL.slice(2).sort(() => Math.random() - 0.5).slice(0, 4),
 ];
 
 const $ = sel => document.querySelector(sel);

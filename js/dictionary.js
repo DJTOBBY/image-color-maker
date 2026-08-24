@@ -318,6 +318,15 @@ const DICTIONARY = [
     ],
     toneBias: ["dkg"], technique: "セパレーション" },
 
+  { match: ["japan", "nippon", "ジャパン", "日本"], ja: "日本", story: "藍と朱、金と墨の国",
+    anchors: [
+      { h: 220, s: 55, l: 28, name: "藍" },
+      { h: 355, s: 70, l: 45, name: "朱" },
+      { h: 45, s: 60, l: 52, name: "金" },
+      { h: 0, s: 0, l: 22, name: "墨" },
+      { h: 45, s: 25, l: 90, name: "生成り" },
+    ], toneBias: ["dp", "s"] },
+
   // ===== 日本の街 =====
   { match: ["asakusa", "浅草"], ja: "浅草", story: "雷門の朱と提灯の灯",
     anchors: [

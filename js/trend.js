@@ -153,7 +153,17 @@ function trendLookup(input) {
         PANTONE_COY[year]));
     } else {
       const dec = DECADES[Math.floor(year / 10) * 10];
-      if (dec) entries.push(trendEntryFromColors(dec.ja, dec.story, dec.colors, dec));
+      if (dec) {
+        // 同じ年代でも年ごとに主役の色と明暗を少し変える(世界観は年代のまま)
+        const offset = year % dec.colors.length;
+        const rotated = [...dec.colors.slice(offset), ...dec.colors.slice(0, offset)];
+        const entry = trendEntryFromColors(`${year}年(${dec.ja})`, dec.story, rotated, dec);
+        const dl = ((year % 7) - 3) * 1.5; // -4.5〜+4.5の明度ゆらぎ
+        entry.anchors.forEach((a, i) => {
+          a.l = Math.max(8, Math.min(92, a.l + dl + (i % 2 ? -2 : 2)));
+        });
+        entries.push(entry);
+      }
     }
     return entries;
   }

@@ -21,9 +21,10 @@ FINDER_ORIGIN = "https://toho-beads-finder.tohobeads.chatgpt.site"
 OUT = Path(__file__).resolve().parent.parent / "data" / "beads.json"
 
 # 代表シェイプの優先順(パレット資料に載せる1点を選ぶ)
+# 前方一致で判定する(「特大ビーズ(4mm)」のような括弧付きバリエーションを吸収)
 SHAPE_PRIORITY = [
-    "丸小ビーズ", "特小ビーズ", "丸大ビーズ", "丸中ビーズ",
-    "ベストビーズ", "Aiko(ベストビーズ、TB)", "トレジャービーズ",
+    "丸小ビーズ", "特小ビーズ", "丸大ビーズ", "丸中ビーズ", "特大ビーズ",
+    "ベストビーズ", "Aiko", "トレジャービーズ",
 ]
 
 
@@ -34,10 +35,10 @@ def fetch(url):
 
 
 def shape_rank(shape):
-    try:
-        return SHAPE_PRIORITY.index(shape)
-    except ValueError:
-        return len(SHAPE_PRIORITY)
+    for i, prefix in enumerate(SHAPE_PRIORITY):
+        if shape.startswith(prefix):
+            return i
+    return len(SHAPE_PRIORITY)
 
 
 def main():

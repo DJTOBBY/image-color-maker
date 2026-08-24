@@ -31,6 +31,10 @@ const BeadMatcher = (() => {
   const SPARKLE_RE = /ラスター|オーロラ|メッキ|金彩|玉虫|パール|ブロンズ|サニー/;
   const MATTE_RE = /ツヤケシ/;
 
+  // 一般的な丸ビーズ(丸小・丸大・丸中・特小・特大)を優先する
+  const ROUND_RE = /^(丸小|丸大|丸中|特小|特大)ビーズ/;
+  function isRound(b) { return (b.shapes || [b.shape]).some(s => ROUND_RE.test(s)); }
+
   // パレットの各色に近いビーズを探す(品番は重複させない)
   // inventory: 手持ち品番のSet。inventoryOnly=true なら手持ちだけから選ぶ
   function match(colors, { sparkle = false, matte = false, perColor = 3,
@@ -51,10 +55,19 @@ const BeadMatcher = (() => {
           if (inventory && inventory.has(b.code)) d -= 3; // 手持ちを少し優遇
           return { bead: b, d, owned: inventory ? inventory.has(b.code) : false };
         })
-        .sort((a, b) => a.d - b.d)
-        .slice(0, perColor);
-      if (ranked.length) usedCodes.add(ranked[0].bead.code);
-      return ranked;
+        .sort((a, b) => a.d - b.d);
+
+      // 丸ビーズを中心に選び、他の形は「明らかに近い」時だけ最後の1枠に添える
+      const rounds = ranked.filter(r => isRound(r.bead));
+      const others = ranked.filter(r => !isRound(r.bead));
+      const picks = rounds.slice(0, perColor);
+      while (picks.length < perColor && others.length) picks.push(others.shift());
+      if (picks.length === perColor && others.length &&
+          others[0].d + 3 < picks[perColor - 1].d && !isRound(others[0].bead)) {
+        picks[perColor - 1] = others[0];
+      }
+      if (picks.length) usedCodes.add(picks[0].bead.code);
+      return picks;
     });
   }
 

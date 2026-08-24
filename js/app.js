@@ -181,6 +181,9 @@ async function run() {
     });
     renderSheet(palette, matches);
     window.__lastResult = { palette, matches };
+    // このパレットのシェアリンクをURLに反映する
+    const params = new URLSearchParams({ t: input, n: String(palette.colors.length) });
+    history.replaceState(null, "", `${location.pathname}?${params}`);
     $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
   } finally {
     btn.disabled = false; btn.textContent = "翻訳する";
@@ -202,6 +205,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.__lastResult) JpegExport.exportJpeg(window.__lastResult.palette, window.__lastResult.matches);
   });
 
+  // シェアリンクのコピー
+  $("#share-btn").addEventListener("click", async () => {
+    const btn = $("#share-btn");
+    try {
+      await navigator.clipboard.writeText(location.href);
+      btn.textContent = "コピーしました";
+    } catch (_) {
+      prompt("このリンクをコピーしてください", location.href);
+    }
+    setTimeout(() => { btn.textContent = "シェアリンクをコピー"; }, 2000);
+  });
+
   // 在庫リスト: localStorage に自動保存
   const inv = $("#inventory-input");
   inv.value = localStorage.getItem(INV_KEY) || "";
@@ -212,4 +227,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   BeadMatcher.load(); // 先読み
+
+  // シェアリンク(?t=テーマ&n=色数)で開かれたら自動生成する
+  const params = new URLSearchParams(location.search);
+  const sharedTheme = params.get("t");
+  if (sharedTheme) {
+    $("#theme-input").value = sharedTheme;
+    const n = Number(params.get("n"));
+    if (n >= 5 && n <= 8) $("#color-count").value = String(n);
+    run();
+  }
 });

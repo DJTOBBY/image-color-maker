@@ -145,6 +145,9 @@ const TECHNIQUE_STORY = {
   toneGradation: "同じ色相の中を、明度で下りていく",
 };
 
+// 「別の配色を試す」用の技法サイクル(全15技法)
+const TECHNIQUE_CYCLE = TECHNIQUE_WORDS.map(t => t.key);
+
 // 技法モードでパレットのアンカーを生成する(既存のcolorEntriesがあればその色相を基準に使う)
 function buildTechniquePalette(techKey, baseHue) {
   const anchors = TECHNIQUE_BUILDERS[techKey](baseHue);

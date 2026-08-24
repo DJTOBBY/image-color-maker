@@ -176,14 +176,15 @@ function renderSheet(palette, matches) {
 }
 
 // ---------- イベント ----------
-async function run() {
+async function run(variant = 0) {
   const input = $("#theme-input").value.trim();
   if (!input) return;
-  const btn = $("#generate-btn");
-  btn.disabled = true; btn.textContent = "翻訳中…";
+  const btn = variant ? $("#vary-btn") : $("#generate-btn");
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "配色中…";
   try {
     await BeadMatcher.load();
-    const palette = generatePalette(input, Number($("#color-count").value));
+    const palette = generatePalette(input, Number($("#color-count").value), variant);
     const matches = BeadMatcher.match(palette.colors, {
       sparkle: palette.sparkle, matte: palette.matte, perColor: 3,
       inventory: currentInventory(),
@@ -191,12 +192,15 @@ async function run() {
     });
     renderSheet(palette, matches);
     window.__lastResult = { palette, matches };
-    // このパレットのシェアリンクをURLに反映する
+    // 技法を直接指定したときは「別の配色」を出せないので隠す
+    $("#vary-btn").hidden = !palette.canVary;
+    // このパレットのシェアリンクをURLに反映する(variantも共有できるように)
     const params = new URLSearchParams({ t: input, n: String(palette.colors.length) });
+    if (variant) params.set("v", String(variant));
     history.replaceState(null, "", `${location.pathname}?${params}`);
     $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
   } finally {
-    btn.disabled = false; btn.textContent = "翻訳する";
+    btn.disabled = false; btn.textContent = label;
   }
 }
 
@@ -208,8 +212,13 @@ document.addEventListener("DOMContentLoaded", () => {
     chip.addEventListener("click", () => { $("#theme-input").value = name; run(); });
     ex.appendChild(chip);
   }
-  $("#generate-btn").addEventListener("click", run);
-  $("#theme-input").addEventListener("keydown", e => { if (e.key === "Enter") run(); });
+  $("#generate-btn").addEventListener("click", () => run(0));
+  $("#theme-input").addEventListener("keydown", e => { if (e.key === "Enter") run(0); });
+  // 別の配色を試す: テーマはそのままに、配色技法を次のものへ送る
+  $("#vary-btn").addEventListener("click", () => {
+    const current = window.__lastResult?.palette?.variant || 0;
+    run(current + 1);
+  });
   $("#print-btn").addEventListener("click", () => window.print());
   $("#jpeg-btn").addEventListener("click", () => {
     if (window.__lastResult) JpegExport.exportJpeg(window.__lastResult.palette, window.__lastResult.matches);
@@ -245,6 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#theme-input").value = sharedTheme;
     const n = Number(params.get("n"));
     if (n >= 5 && n <= 8) $("#color-count").value = String(n);
-    run();
+    run(Number(params.get("v")) || 0);
   }
 });

@@ -77,7 +77,8 @@ function techniqueDefaultHue(input) {
 }
 
 // ---------- パレット生成 ----------
-function generatePalette(input, count = 6) {
+// variant: 「別の配色を試す」で技法だけを差し替えるときの番号(0=辞書どおり)
+function generatePalette(input, count = 6, variant = 0) {
   // 色語(青・BLUE など)があればパレットの主役に据える
   const cw = typeof lookupColorWords === "function"
     ? lookupColorWords(input) : { colors: [], shift: { dl: 0, ds: 0 } };
@@ -155,6 +156,23 @@ function generatePalette(input, count = 6) {
 
   if (anchors.length === 0) anchors.push({ h: 220, s: 30, l: 50, name: "無題の色", from: input });
 
+  // 「別の配色を試す」: テーマの色相・物語はそのままに、配色技法だけを差し替える。
+  // テーマが持つ主役の色相を基準に、技法のルールで色を組み直す。
+  let variantTechniqueKey = null;
+  if (!techniqueMode && variant > 0 && typeof TECHNIQUE_CYCLE !== "undefined") {
+    variantTechniqueKey = TECHNIQUE_CYCLE[(variant - 1) % TECHNIQUE_CYCLE.length];
+    const chromaAnchors = anchors.filter(a => a.s > 15);
+    const baseHue = (chromaAnchors[0] || anchors[0]).h;
+    const rebuilt = buildTechniquePalette(variantTechniqueKey, baseHue);
+    // 色相の関係は技法どおりに保ちつつ、トーン(渋さ・淡さ)はテーマの気配を継がせたいので、
+    // lockedを外して通常のトーン補正パスを通す
+    const revoiced = rebuilt.anchors.map(({ locked, ...a }) => a);
+    // テーマの無彩色(墨・生成りなど)は「らしさ」の骨格なので残す
+    const neutrals = anchors.filter(a => a.s <= 15).slice(0, 2);
+    anchors.splice(0, anchors.length, ...revoiced, ...neutrals);
+    technique = rebuilt.ja;
+  }
+
   // 技法を決める(辞書指定がなければアンカーの色相分布から)
   if (!technique) {
     const hues = anchors.filter(a => a.s > 12).map(a => a.h);
@@ -172,7 +190,14 @@ function generatePalette(input, count = 6) {
   const candidates = anchors.map(a => ({ ...a }));
   const main = anchors[0];
   const expansions = [];
-  if (!techniqueMode) {
+  if (variantTechniqueKey && anchors.length < count) {
+    // 技法の色相関係は壊さず、明度違い(同一色相)だけで色数を補う
+    for (const a of anchors.filter(x => x.s > 15).slice(0, 3)) {
+      expansions.push({ h: a.h, s: a.s * 0.7, l: Math.min(90, a.l + 24), name: `${a.name}のティント` });
+      expansions.push({ h: a.h, s: a.s * 0.9, l: Math.max(12, a.l - 22), name: `${a.name}のシェード` });
+    }
+  }
+  if (!techniqueMode && !variantTechniqueKey) {
     expansions.push(
       { h: main.h, s: main.s * 0.8, l: Math.min(88, main.l + 26), name: `${main.name}のティント` },
       { h: main.h, s: main.s * 0.9, l: Math.max(14, main.l - 24), name: `${main.name}のシェード` },
@@ -283,7 +308,9 @@ function generatePalette(input, count = 6) {
   return {
     input, entries, usedFallback, colors,
     technique, techniqueNote: TECHNIQUES[technique] || "",
-    moodWords, sparkle, matte,
+    moodWords, sparkle, matte, variant,
+    // 「別の配色を試す」が使えるのは、技法を直接指定していない通常のテーマのとき
+    canVary: !techniqueMode,
     associations: typeof paletteAssociations === "function" ? paletteAssociations(colors) : [],
     story: entries.map(e => e.story).filter(Boolean).join("、"),
   };

@@ -203,7 +203,7 @@ const CATEGORIES = [
       "g"
     ],
     "matte": true,
-    "technique": "トーンオントーン配色"
+    "technique": "トーン・オン・トーン配色"
   },
   {
     "key": "waterfall",
@@ -616,7 +616,7 @@ const CATEGORIES = [
       "p",
       "lt"
     ],
-    "technique": "トーングラデーション"
+    "technique": "トーンのグラデーション"
   },
   {
     "key": "mountain",
@@ -788,7 +788,7 @@ const CATEGORIES = [
       "dkg"
     ],
     "matte": true,
-    "technique": "セパレーション配色"
+    "technique": "セパレーション"
   },
   {
     "key": "shrine",
@@ -914,7 +914,7 @@ const CATEGORIES = [
       "ltg"
     ],
     "matte": true,
-    "technique": "トーンオントーン配色"
+    "technique": "トーン・オン・トーン配色"
   },
   {
     "key": "cloud",
@@ -953,7 +953,7 @@ const CATEGORIES = [
       "p",
       "lt"
     ],
-    "technique": "トーングラデーション"
+    "technique": "トーンのグラデーション"
   },
   {
     "key": "storm",
@@ -1075,7 +1075,7 @@ const CATEGORIES = [
       "p"
     ],
     "matte": true,
-    "technique": "フォカマイユ配色"
+    "technique": "フォ・カマイユ配色"
   },
   {
     "key": "ceramic",
@@ -1241,7 +1241,7 @@ const CATEGORIES = [
       "dk",
       "v"
     ],
-    "technique": "セパレーション配色"
+    "technique": "セパレーション"
   },
   {
     "key": "glass",

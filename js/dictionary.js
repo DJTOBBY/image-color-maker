@@ -948,13 +948,6 @@ const DICTIONARY = [
       { h: 20, s: 22, l: 42, name: "陰の褐" },
       { h: 44, s: 20, l: 88, name: "余白の生成り" },
     ], toneBias: ["ltg", "d"], matte: true, technique: "トーナル配色" },
-  { match: ["nostalgia", "郷愁", "ノスタルジー", "懐かしい"], ja: "郷愁", story: "戻れない場所の色",
-    anchors: [
-      { h: 30, s: 42, l: 58, name: "夕陽の飴色" },
-      { h: 200, s: 22, l: 52, name: "遠い水の青" },
-      { h: 355, s: 30, l: 62, name: "色褪せた紅" },
-      { h: 42, s: 26, l: 82, name: "障子の白" },
-    ], toneBias: ["sf", "ltg"], matte: true },
   { match: ["silence", "静寂", "しじま", "静けさ"], ja: "静寂", story: "音のない場所",
     anchors: [
       { h: 210, s: 6, l: 92, name: "白の静けさ" },
@@ -975,21 +968,21 @@ const DICTIONARY = [
       { h: 356, s: 66, l: 52, name: "こみあげる紅" },
       { h: 320, s: 30, l: 72, name: "ためらいの藤" },
       { h: 44, s: 30, l: 92, name: "白磁" },
-    ], toneBias: ["lt", "sf"], technique: "トーングラデーション" },
+    ], toneBias: ["lt", "sf"], technique: "トーンのグラデーション" },
   { match: ["prayer", "祈り", "いのり"], ja: "祈り", story: "捧げるための色",
     anchors: [
       { h: 42, s: 18, l: 92, name: "浄衣の白" },
       { h: 46, s: 60, l: 56, name: "燈明の金" },
       { h: 222, s: 42, l: 28, name: "夜の藍" },
       { h: 12, s: 46, l: 44, name: "香の朱" },
-    ], toneBias: ["dp", "p"], technique: "セパレーション配色" },
+    ], toneBias: ["dp", "p"], technique: "セパレーション" },
   { match: ["dream", "夢", "ゆめ"], ja: "夢", story: "輪郭のさだまらないもの",
     anchors: [
       { h: 275, s: 38, l: 80, name: "藤の霞" },
       { h: 196, s: 42, l: 82, name: "水色のもや" },
       { h: 336, s: 34, l: 84, name: "うすい桃" },
       { h: 230, s: 24, l: 62, name: "遠のく青" },
-    ], toneBias: ["p", "lt"], sparkle: true, technique: "トーンオントーン配色" },
+    ], toneBias: ["p", "lt"], sparkle: true, technique: "トーン・オン・トーン配色" },
   { match: ["solitude", "孤独", "ひとり"], ja: "孤独", story: "誰もいない部屋",
     anchors: [
       { h: 218, s: 20, l: 30, name: "沈む青" },
@@ -1017,14 +1010,14 @@ const DICTIONARY = [
       { h: 224, s: 46, l: 26, name: "制服の紺" },
       { h: 44, s: 24, l: 92, name: "証書の白" },
       { h: 46, s: 54, l: 62, name: "金の箔押し" },
-    ], toneBias: ["p", "dk"], technique: "セパレーション配色" },
+    ], toneBias: ["p", "dk"], technique: "セパレーション" },
   { match: ["wedding", "結婚式", "婚礼", "ブライダル"], ja: "結婚式", story: "白と金の一日",
     anchors: [
       { h: 42, s: 16, l: 95, name: "白無垢の白" },
       { h: 46, s: 58, l: 60, name: "祝いの金" },
       { h: 4, s: 62, l: 48, name: "紅の差し色" },
       { h: 120, s: 22, l: 60, name: "青葉の緑" },
-    ], toneBias: ["p", "v"], sparkle: true, technique: "セパレーション配色" },
+    ], toneBias: ["p", "v"], sparkle: true, technique: "セパレーション" },
 
   { match: ["cat", "猫", "ねこ"], ja: "猫", story: "三毛の背中",
     anchors: [
@@ -1032,14 +1025,14 @@ const DICTIONARY = [
       { h: 40, s: 16, l: 92, name: "腹の白" },
       { h: 30, s: 12, l: 18, name: "斑の黒" },
       { h: 52, s: 70, l: 62, name: "瞳の金" },
-    ], toneBias: ["d", "dk"], matte: true, technique: "セパレーション配色" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "セパレーション" },
   { match: ["butterfly", "蝶", "ちょう", "アゲハ"], ja: "蝶", story: "揚羽の紋",
     anchors: [
       { h: 46, s: 78, l: 62, name: "揚羽の黄" },
       { h: 25, s: 14, l: 14, name: "翅の黒" },
       { h: 205, s: 62, l: 52, name: "縁の瑠璃" },
       { h: 350, s: 52, l: 58, name: "後翅の紅" },
-    ], toneBias: ["v", "dk"], sparkle: true, technique: "セパレーション配色" },
+    ], toneBias: ["v", "dk"], sparkle: true, technique: "セパレーション" },
   { match: ["fox", "狐", "きつね"], ja: "狐", story: "狐色の毛並み",
     anchors: [
       { h: 24, s: 62, l: 50, name: "狐色" },
@@ -1067,7 +1060,7 @@ const DICTIONARY = [
       { h: 280, s: 30, l: 80, name: "傘のうす紫" },
       { h: 340, s: 26, l: 84, name: "触手の淡紅" },
       { h: 210, s: 40, l: 40, name: "沈む海の青" },
-    ], toneBias: ["p", "lt"], sparkle: true, technique: "トーンオントーン配色" },
+    ], toneBias: ["p", "lt"], sparkle: true, technique: "トーン・オン・トーン配色" },
   { match: ["goldfish", "金魚", "きんぎょ"], ja: "金魚", story: "水鉢の朱",
     anchors: [
       { h: 8, s: 78, l: 52, name: "金魚の朱" },
@@ -1081,7 +1074,7 @@ const DICTIONARY = [
       { h: 150, s: 30, l: 16, name: "夜の草むら" },
       { h: 222, s: 34, l: 22, name: "暮れきった藍" },
       { h: 90, s: 40, l: 40, name: "残光の緑" },
-    ], toneBias: ["dkg", "b"], sparkle: true, technique: "セパレーション配色" },
+    ], toneBias: ["dkg", "b"], sparkle: true, technique: "セパレーション" },
   { match: ["mushroom", "きのこ", "キノコ", "茸"], ja: "きのこ", story: "落葉の下のかたち",
     anchors: [
       { h: 26, s: 34, l: 40, name: "傘の茶" },
@@ -1117,7 +1110,7 @@ const DICTIONARY = [
       { h: 24, s: 44, l: 40, name: "濃い紅茶" },
       { h: 40, s: 30, l: 92, name: "ミルクの白" },
       { h: 34, s: 26, l: 82, name: "泡の淡褐" },
-    ], toneBias: ["ltg", "sf"], matte: true, technique: "トーングラデーション" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "トーンのグラデーション" },
 
   { match: ["kogarashi", "木枯らし", "木枯し", "こがらし"], ja: "木枯らし", story: "葉を落とす風",
     anchors: [
@@ -1132,7 +1125,7 @@ const DICTIONARY = [
       { h: 200, s: 26, l: 56, name: "動かない海" },
       { h: 276, s: 24, l: 54, name: "暮れの紫" },
       { h: 42, s: 34, l: 86, name: "薄れる光" },
-    ], toneBias: ["sf", "ltg"], matte: true, technique: "トーンオントーン配色" },
+    ], toneBias: ["sf", "ltg"], matte: true, technique: "トーン・オン・トーン配色" },
 
   { match: ["embroidery", "刺繍", "刺繡", "ししゅう"], ja: "刺繍", story: "糸で描く",
     anchors: [
@@ -1140,21 +1133,21 @@ const DICTIONARY = [
       { h: 350, s: 60, l: 50, name: "紅の糸" },
       { h: 214, s: 50, l: 40, name: "藍の糸" },
       { h: 46, s: 62, l: 58, name: "金糸" },
-    ], toneBias: ["v", "p"], sparkle: true, technique: "セパレーション配色" },
+    ], toneBias: ["v", "p"], sparkle: true, technique: "セパレーション" },
   { match: ["ukiyoe", "浮世絵", "うきよえ"], ja: "浮世絵", story: "版木を重ねた色",
     anchors: [
       { h: 214, s: 48, l: 38, name: "藍摺の青" },
       { h: 4, s: 58, l: 48, name: "紅の唇" },
       { h: 44, s: 34, l: 84, name: "地の生成り" },
       { h: 26, s: 14, l: 20, name: "墨の輪郭" },
-    ], toneBias: ["dp", "sf"], matte: true, technique: "セパレーション配色" },
+    ], toneBias: ["dp", "sf"], matte: true, technique: "セパレーション" },
   { match: ["genji", "源氏物語", "げんじものがたり"], ja: "源氏物語", story: "十二単の襲",
     anchors: [
       { h: 288, s: 34, l: 44, name: "藤の紫" },
       { h: 344, s: 44, l: 78, name: "紅梅のかさね" },
       { h: 108, s: 26, l: 38, name: "青朽葉" },
       { h: 46, s: 56, l: 58, name: "蒔絵の金" },
-    ], toneBias: ["sf", "dp"], matte: true, technique: "トーンオントーン配色" },
+    ], toneBias: ["sf", "dp"], matte: true, technique: "トーン・オン・トーン配色" },
   { match: ["manyoshu", "万葉集", "まんようしゅう"], ja: "万葉集", story: "古代の草木の色",
     anchors: [
       { h: 296, s: 30, l: 40, name: "紫草の紫" },
@@ -1175,21 +1168,21 @@ const DICTIONARY = [
       { h: 40, s: 16, l: 94, name: "エプロンの白" },
       { h: 350, s: 62, l: 46, name: "ハートの紅" },
       { h: 130, s: 34, l: 34, name: "庭の深緑" },
-    ], toneBias: ["lt", "v"], technique: "セパレーション配色" },
+    ], toneBias: ["lt", "v"], technique: "セパレーション" },
   { match: ["art deco", "アールデコ"], ja: "アールデコ", story: "直線と金の1920年代",
     anchors: [
       { h: 30, s: 12, l: 12, name: "黒漆" },
       { h: 44, s: 62, l: 58, name: "金の装飾" },
       { h: 168, s: 44, l: 34, name: "深い翡翠" },
       { h: 40, s: 20, l: 90, name: "象牙の白" },
-    ], toneBias: ["dk", "v"], sparkle: true, technique: "セパレーション配色" },
+    ], toneBias: ["dk", "v"], sparkle: true, technique: "セパレーション" },
   { match: ["minimal", "ミニマル", "ミニマリズム"], ja: "ミニマル", story: "削ぎ落とした先",
     anchors: [
       { h: 40, s: 8, l: 94, name: "白" },
       { h: 210, s: 5, l: 62, name: "灰" },
       { h: 30, s: 8, l: 26, name: "黒に近い墨" },
       { h: 36, s: 14, l: 80, name: "生成り" },
-    ], toneBias: ["p", "ltg"], matte: true, technique: "トーングラデーション" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "トーンのグラデーション" },
   { match: ["natural", "ナチュラル", "生成り"], ja: "ナチュラル", story: "染めないままの色",
     anchors: [
       { h: 40, s: 26, l: 86, name: "生成りの布" },
@@ -1210,7 +1203,7 @@ const DICTIONARY = [
       { h: 48, s: 82, l: 62, name: "副冠の黄" },
       { h: 140, s: 32, l: 38, name: "細い葉の緑" },
       { h: 200, s: 16, l: 76, name: "冬の光" },
-    ], toneBias: ["p", "v"], technique: "セパレーション配色" },
+    ], toneBias: ["p", "v"], technique: "セパレーション" },
   { match: ["tulip", "チューリップ"], ja: "チューリップ", story: "並んで咲く原色",
     anchors: [
       { h: 352, s: 74, l: 54, name: "赤いチューリップ" },
@@ -1249,7 +1242,7 @@ const DICTIONARY = [
       { h: 214, s: 62, l: 44, name: "扉の青" },
       { h: 38, s: 44, l: 72, name: "陽に灼けた砂" },
       { h: 190, s: 40, l: 62, name: "地中海の水色" },
-    ], toneBias: ["p", "v"], technique: "セパレーション配色" },
+    ], toneBias: ["p", "v"], technique: "セパレーション" },
   { match: ["nigeria", "ナイジェリア"], ja: "ナイジェリア", story: "藍染とブロンズ",
     anchors: [
       { h: 222, s: 46, l: 28, name: "アディレの藍" },
@@ -1277,7 +1270,7 @@ const DICTIONARY = [
       { h: 28, s: 82, l: 54, name: "オレンジの実" },
       { h: 200, s: 52, l: 46, name: "タイルの青" },
       { h: 356, s: 62, l: 44, name: "フラメンコの紅" },
-    ], toneBias: ["v", "p"], technique: "セパレーション配色" },
+    ], toneBias: ["v", "p"], technique: "セパレーション" },
   { match: ["bali", "バリ", "バリ島"], ja: "バリ", story: "棚田と寺院の石",
     anchors: [
       { h: 96, s: 44, l: 46, name: "棚田の緑" },
@@ -1312,7 +1305,7 @@ const DICTIONARY = [
       { h: 198, s: 46, l: 58, name: "氷河の青" },
       { h: 108, s: 40, l: 44, name: "牧草の緑" },
       { h: 358, s: 70, l: 46, name: "十字の赤" },
-    ], toneBias: ["b", "p"], technique: "セパレーション配色" },
+    ], toneBias: ["b", "p"], technique: "セパレーション" },
   { match: ["austria", "オーストリア", "ウィーン"], ja: "オーストリア", story: "宮廷の黄と深い緑",
     anchors: [
       { h: 44, s: 58, l: 68, name: "宮殿の淡黄" },
@@ -1347,14 +1340,14 @@ const DICTIONARY = [
       { h: 42, s: 18, l: 92, name: "白樺の白" },
       { h: 118, s: 24, l: 34, name: "針葉樹の緑" },
       { h: 268, s: 20, l: 76, name: "白夜の淡い紫" },
-    ], toneBias: ["p", "sf"], matte: true, technique: "トーンオントーン配色" },
+    ], toneBias: ["p", "sf"], matte: true, technique: "トーン・オン・トーン配色" },
   { match: ["netherlands", "holland", "オランダ", "デルフト"], ja: "オランダ", story: "デルフトの青と王室の橙",
     anchors: [
       { h: 218, s: 62, l: 40, name: "デルフトの青" },
       { h: 42, s: 20, l: 94, name: "白磁の地" },
       { h: 26, s: 84, l: 54, name: "王室の橙" },
       { h: 100, s: 32, l: 44, name: "牧草の緑" },
-    ], toneBias: ["v", "p"], technique: "セパレーション配色" },
+    ], toneBias: ["v", "p"], technique: "セパレーション" },
   { match: ["belgium", "ベルギー", "ブリュッセル"], ja: "ベルギー", story: "琥珀とレースと石畳",
     anchors: [
       { h: 38, s: 66, l: 52, name: "ビールの琥珀" },
@@ -1368,14 +1361,14 @@ const DICTIONARY = [
       { h: 42, s: 18, l: 94, name: "タイルの白" },
       { h: 16, s: 54, l: 46, name: "屋根の赤煉瓦" },
       { h: 348, s: 48, l: 30, name: "ポートワインの深紅" },
-    ], toneBias: ["v", "dp"], technique: "セパレーション配色" },
+    ], toneBias: ["v", "dp"], technique: "セパレーション" },
   { match: ["spain", "スペイン", "マドリード"], ja: "スペイン", story: "闘牛と黄土",
     anchors: [
       { h: 354, s: 72, l: 44, name: "情熱の赤" },
       { h: 44, s: 70, l: 56, name: "黄土の金" },
       { h: 30, s: 12, l: 18, name: "黒衣の墨" },
       { h: 42, s: 18, l: 92, name: "石灰の白" },
-    ], toneBias: ["v", "dk"], technique: "セパレーション配色" },
+    ], toneBias: ["v", "dk"], technique: "セパレーション" },
   { match: ["turkey", "トルコ", "イズニック", "イスタンブール"], ja: "トルコ", story: "イズニックの青と赤",
     anchors: [
       { h: 210, s: 62, l: 42, name: "イズニックの藍" },
@@ -1403,7 +1396,7 @@ const DICTIONARY = [
       { h: 42, s: 20, l: 94, name: "アオザイの白" },
       { h: 6, s: 64, l: 42, name: "漆の朱" },
       { h: 162, s: 38, l: 38, name: "翡翠" },
-    ], toneBias: ["p", "dp"], technique: "セパレーション配色" },
+    ], toneBias: ["p", "dp"], technique: "セパレーション" },
   { match: ["nepal", "ネパール", "タルチョ"], ja: "ネパール", story: "祈りの旗とヒマラヤ",
     anchors: [
       { h: 214, s: 58, l: 46, name: "タルチョの青" },
@@ -1417,7 +1410,7 @@ const DICTIONARY = [
       { h: 206, s: 58, l: 62, name: "映る空の青" },
       { h: 350, s: 56, l: 48, name: "アグアヨの紅" },
       { h: 44, s: 62, l: 56, name: "織りの黄" },
-    ], toneBias: ["p", "v"], technique: "セパレーション配色" },
+    ], toneBias: ["p", "v"], technique: "セパレーション" },
   { match: ["mexico", "メキシコ", "タラベラ"], ja: "メキシコ", story: "マリーゴールドとタイル",
     anchors: [
       { h: 30, s: 88, l: 54, name: "マリーゴールドの橙" },
@@ -1438,14 +1431,14 @@ const DICTIONARY = [
       { h: 42, s: 18, l: 94, name: "旗の白" },
       { h: 354, s: 62, l: 38, name: "タンゴの深紅" },
       { h: 44, s: 44, l: 56, name: "パンパの金" },
-    ], toneBias: ["lt", "dk"], technique: "セパレーション配色" },
+    ], toneBias: ["lt", "dk"], technique: "セパレーション" },
   { match: ["jamaica", "ジャマイカ"], ja: "ジャマイカ", story: "カリブの緑と黄",
     anchors: [
       { h: 140, s: 58, l: 34, name: "島の緑" },
       { h: 48, s: 84, l: 58, name: "陽の黄" },
       { h: 186, s: 60, l: 54, name: "カリブの海" },
       { h: 30, s: 14, l: 16, name: "旗の黒" },
-    ], toneBias: ["v", "b"], technique: "セパレーション配色" },
+    ], toneBias: ["v", "b"], technique: "セパレーション" },
   { match: ["ireland", "アイルランド"], ja: "アイルランド", story: "エメラルドの島",
     anchors: [
       { h: 138, s: 46, l: 34, name: "エメラルドの牧草" },
@@ -1501,7 +1494,7 @@ const DICTIONARY = [
       { h: 42, s: 24, l: 92, name: "麻布の生成り" },
       { h: 214, s: 52, l: 44, name: "刺繍の青" },
       { h: 130, s: 40, l: 38, name: "刺繍の緑" },
-    ], toneBias: ["v", "p"], technique: "セパレーション配色" },
+    ], toneBias: ["v", "p"], technique: "セパレーション" },
   { match: ["croatia", "クロアチア", "アドリア"], ja: "クロアチア", story: "アドリア海と赤い瓦",
     anchors: [
       { h: 196, s: 62, l: 48, name: "アドリア海の碧" },
@@ -1530,6 +1523,395 @@ const DICTIONARY = [
       { h: 220, s: 58, l: 36, name: "青花の藍" },
       { h: 158, s: 40, l: 40, name: "翡翠" },
     ], toneBias: ["v", "dp"], technique: "対照色相配色" },
+  // ===== 素材・質感 =====
+  // ビーズの加工(ラメ・ツヤケシ)と直結する言葉。
+  // 布や金属の手ざわりを、色とツヤの指定に翻訳する。
+  { match: ["linen", "リネン", "亜麻布"], ja: "リネン", story: "洗いざらしの手ざわり",
+    anchors: [
+      { h: 42, s: 30, l: 88, name: "生成りの亜麻" }, { h: 40, s: 22, l: 70, name: "使いこんだ麻" },
+      { h: 36, s: 16, l: 48, name: "織り目の影" }, { h: 44, s: 20, l: 94, name: "陽にさらした白" },
+    ], toneBias: ["ltg", "p"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["denim", "デニム", "ジーンズ"], ja: "デニム", story: "藍が落ちてゆく段階",
+    anchors: [
+      { h: 218, s: 42, l: 30, name: "生デニムの藍" }, { h: 212, s: 34, l: 54, name: "色落ちの青" },
+      { h: 206, s: 24, l: 76, name: "アタリの白茶" }, { h: 40, s: 46, l: 62, name: "ステッチの黄" },
+    ], toneBias: ["dp", "sf"], matte: true, technique: "トーンのグラデーション" },
+  { match: ["corduroy", "コーデュロイ", "コール天"], ja: "コーデュロイ", story: "畝のある起毛",
+    anchors: [
+      { h: 26, s: 42, l: 38, name: "畝の茶" }, { h: 30, s: 30, l: 58, name: "毛足の明るみ" },
+      { h: 60, s: 20, l: 32, name: "谷の影" }, { h: 38, s: 34, l: 76, name: "毛羽の淡さ" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "同一色相配色" },
+  { match: ["velvet", "ベルベット", "ビロード", "天鵞絨"], ja: "ベルベット", story: "光を吸う毛並み",
+    anchors: [
+      { h: 340, s: 46, l: 24, name: "ビロードの臙脂" }, { h: 344, s: 40, l: 44, name: "毛並みの照り" },
+      { h: 280, s: 30, l: 20, name: "沈む紫の影" }, { h: 44, s: 52, l: 52, name: "縁の金" },
+    ], toneBias: ["dk", "dp"], sparkle: true, technique: "同一色相配色" },
+  { match: ["silk", "シルク", "絹"], ja: "シルク", story: "見る角度で変わる艶",
+    anchors: [
+      { h: 44, s: 34, l: 88, name: "生成りの絹" }, { h: 36, s: 44, l: 72, name: "光の当たる面" },
+      { h: 216, s: 16, l: 62, name: "翻った影" }, { h: 340, s: 24, l: 82, name: "玉虫の紅" },
+    ], toneBias: ["p", "lt"], sparkle: true, technique: "フォ・カマイユ配色" },
+  { match: ["tweed", "ツイード"], ja: "ツイード", story: "何色も混ぜて一色に見せる",
+    anchors: [
+      { h: 30, s: 20, l: 42, name: "杢の茶" }, { h: 140, s: 18, l: 38, name: "混ざる緑" },
+      { h: 220, s: 16, l: 44, name: "混ざる青" }, { h: 42, s: 30, l: 78, name: "白の粒" },
+    ], toneBias: ["d", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["lace", "レース"], ja: "レース", story: "透きとおる網目",
+    anchors: [
+      { h: 42, s: 22, l: 95, name: "レースの白" }, { h: 38, s: 28, l: 84, name: "生成りの糸" },
+      { h: 220, s: 10, l: 72, name: "透ける影" }, { h: 44, s: 34, l: 90, name: "縁のかがり" },
+    ], toneBias: ["p", "ltg"], technique: "カマイユ配色" },
+  { match: ["cashmere", "カシミア", "カシミヤ"], ja: "カシミア", story: "空気を含んだ柔らかさ",
+    anchors: [
+      { h: 30, s: 22, l: 78, name: "杏色の毛" }, { h: 24, s: 18, l: 58, name: "落ち着いた駱駝" },
+      { h: 200, s: 8, l: 84, name: "淡い霜" }, { h: 20, s: 14, l: 36, name: "襟の影" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["suede", "スエード"], ja: "スエード", story: "毛羽立った革",
+    anchors: [
+      { h: 28, s: 34, l: 44, name: "スエードの褐" }, { h: 34, s: 26, l: 64, name: "撫でた明るみ" },
+      { h: 20, s: 22, l: 26, name: "沈んだ縁" }, { h: 40, s: 22, l: 80, name: "起毛の白け" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "同一色相配色" },
+  { match: ["pearl finish", "パール", "真珠"], ja: "パール", story: "内側から滲む虹",
+    anchors: [
+      { h: 40, s: 24, l: 93, name: "真珠の白" }, { h: 330, s: 22, l: 86, name: "干渉の紅" },
+      { h: 190, s: 24, l: 84, name: "干渉の青" }, { h: 46, s: 30, l: 76, name: "巻きの照り" },
+    ], toneBias: ["p", "lt"], sparkle: true, technique: "フォ・カマイユ配色" },
+  { match: ["metallic", "メタリック", "金属"], ja: "メタリック", story: "面で光を返す",
+    anchors: [
+      { h: 44, s: 56, l: 58, name: "金の照り" }, { h: 210, s: 8, l: 74, name: "銀の面" },
+      { h: 24, s: 10, l: 26, name: "陰の鈍色" }, { h: 40, s: 22, l: 92, name: "ハイライト" },
+    ], toneBias: ["b", "dk"], sparkle: true, technique: "セパレーション" },
+  { match: ["matte", "マット", "つや消し", "ツヤケシ"], ja: "マット", story: "光を返さない肌",
+    anchors: [
+      { h: 36, s: 14, l: 76, name: "白亜" }, { h: 30, s: 12, l: 52, name: "灰みの砂" },
+      { h: 210, s: 8, l: 34, name: "鈍い炭" }, { h: 44, s: 18, l: 88, name: "粉のような白" },
+    ], toneBias: ["ltg", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["tortoiseshell", "べっ甲", "鼈甲"], ja: "べっ甲", story: "琥珀と焦茶のまだら",
+    anchors: [
+      { h: 36, s: 74, l: 52, name: "べっ甲の飴色" }, { h: 24, s: 52, l: 28, name: "斑の焦茶" },
+      { h: 44, s: 60, l: 70, name: "透ける明るみ" }, { h: 20, s: 34, l: 16, name: "濃い縁" },
+    ], toneBias: ["d", "dk"], sparkle: true, technique: "同一色相配色" },
+  { match: ["marble", "大理石", "マーブル"], ja: "大理石", story: "石に走る筋",
+    anchors: [
+      { h: 40, s: 10, l: 94, name: "石の白" }, { h: 210, s: 10, l: 64, name: "灰の筋" },
+      { h: 30, s: 14, l: 40, name: "深い筋" }, { h: 150, s: 12, l: 78, name: "緑がかった斑" },
+    ], toneBias: ["p", "ltg"], technique: "セパレーション" },
+  { match: ["brass", "真鍮", "しんちゅう"], ja: "真鍮", story: "使うほど深くなる金",
+    anchors: [
+      { h: 44, s: 58, l: 56, name: "磨いた真鍮" }, { h: 38, s: 42, l: 38, name: "くすんだ地" },
+      { h: 60, s: 20, l: 24, name: "経年の陰" }, { h: 48, s: 64, l: 74, name: "当たりの照り" },
+    ], toneBias: ["d", "s"], sparkle: true, technique: "同一色相配色" },
+  { match: ["rust", "錆", "さび"], ja: "錆", story: "時間が作る色",
+    anchors: [
+      { h: 18, s: 52, l: 42, name: "赤錆" }, { h: 32, s: 38, l: 58, name: "浮いた粉" },
+      { h: 200, s: 12, l: 36, name: "残る鉄" }, { h: 40, s: 24, l: 76, name: "剥げた地" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["woodgrain", "木目", "きめ"], ja: "木目", story: "年輪の濃淡",
+    anchors: [
+      { h: 32, s: 34, l: 62, name: "白木の膚" }, { h: 26, s: 40, l: 38, name: "年輪の濃い筋" },
+      { h: 36, s: 28, l: 78, name: "削りたての白" }, { h: 20, s: 26, l: 24, name: "節の黒" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "同一色相配色" },
+
+  // ===== 宝石・誕生石 =====
+  // 誕生石は1月から12月まで。贈りものの配色として使えるように。
+  { match: ["garnet", "ガーネット", "柘榴石"], ja: "ガーネット", story: "一月の石、柘榴の実",
+    anchors: [
+      { h: 348, s: 62, l: 28, name: "ガーネットの深紅" }, { h: 354, s: 58, l: 46, name: "透ける紅" },
+      { h: 340, s: 30, l: 16, name: "石の芯" }, { h: 8, s: 40, l: 70, name: "縁の照り" },
+    ], toneBias: ["dp", "dk"], sparkle: true, technique: "同一色相配色" },
+  { match: ["amethyst", "アメジスト", "紫水晶"], ja: "アメジスト", story: "二月の石、紫の結晶",
+    anchors: [
+      { h: 278, s: 44, l: 46, name: "アメジストの紫" }, { h: 286, s: 32, l: 72, name: "淡い紫の層" },
+      { h: 264, s: 40, l: 26, name: "濃い芯" }, { h: 300, s: 18, l: 90, name: "結晶の白" },
+    ], toneBias: ["dp", "p"], sparkle: true, technique: "トーンのグラデーション" },
+  { match: ["aquamarine", "アクアマリン", "藍玉"], ja: "アクアマリン", story: "三月の石、海の水",
+    anchors: [
+      { h: 186, s: 46, l: 70, name: "アクアマリンの碧" }, { h: 194, s: 38, l: 86, name: "薄氷の水色" },
+      { h: 200, s: 44, l: 48, name: "深みの青" }, { h: 40, s: 14, l: 95, name: "光の白" },
+    ], toneBias: ["lt", "p"], sparkle: true, technique: "トーン・オン・トーン配色" },
+  { match: ["diamond", "ダイヤモンド", "ダイヤ", "金剛石"], ja: "ダイヤモンド", story: "四月の石、無色の輝き",
+    anchors: [
+      { h: 210, s: 10, l: 96, name: "無色の白" }, { h: 200, s: 22, l: 82, name: "青い閃光" },
+      { h: 44, s: 26, l: 88, name: "黄の閃光" }, { h: 220, s: 14, l: 46, name: "カットの陰" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "セパレーション" },
+  { match: ["emerald", "エメラルド", "翠玉"], ja: "エメラルド", story: "五月の石、深い緑",
+    anchors: [
+      { h: 158, s: 62, l: 32, name: "エメラルドの緑" }, { h: 150, s: 44, l: 54, name: "透ける翠" },
+      { h: 168, s: 48, l: 18, name: "石の奥" }, { h: 140, s: 24, l: 84, name: "縁の淡緑" },
+    ], toneBias: ["dp", "v"], sparkle: true, technique: "同一色相配色" },
+  { match: ["moonstone", "ムーンストーン", "月長石"], ja: "ムーンストーン", story: "六月の石、月のかげろう",
+    anchors: [
+      { h: 40, s: 12, l: 92, name: "乳白の地" }, { h: 206, s: 34, l: 78, name: "浮かぶ青い光" },
+      { h: 44, s: 18, l: 74, name: "淡い金の翳り" }, { h: 220, s: 14, l: 56, name: "沈む影" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "フォ・カマイユ配色" },
+  { match: ["ruby", "ルビー", "紅玉"], ja: "ルビー", story: "七月の石、燃える紅",
+    anchors: [
+      { h: 352, s: 76, l: 38, name: "ルビーの紅" }, { h: 358, s: 60, l: 56, name: "透ける火" },
+      { h: 340, s: 44, l: 18, name: "石の影" }, { h: 6, s: 40, l: 82, name: "縁の光" },
+    ], toneBias: ["v", "dp"], sparkle: true, technique: "同一色相配色" },
+  { match: ["peridot", "ペリドット", "橄欖石"], ja: "ペリドット", story: "八月の石、若い黄緑",
+    anchors: [
+      { h: 76, s: 54, l: 50, name: "ペリドットの黄緑" }, { h: 84, s: 40, l: 72, name: "透ける若草" },
+      { h: 66, s: 44, l: 30, name: "深みの緑" }, { h: 54, s: 30, l: 88, name: "光の抜け" },
+    ], toneBias: ["b", "lt"], sparkle: true, technique: "同一色相配色" },
+  { match: ["sapphire", "サファイア", "蒼玉"], ja: "サファイア", story: "九月の石、夜の青",
+    anchors: [
+      { h: 220, s: 66, l: 32, name: "サファイアの青" }, { h: 212, s: 48, l: 54, name: "透ける碧" },
+      { h: 232, s: 50, l: 16, name: "石の芯" }, { h: 200, s: 24, l: 84, name: "縁の光" },
+    ], toneBias: ["dp", "dk"], sparkle: true, technique: "同一色相配色" },
+  { match: ["opal", "オパール", "蛋白石"], ja: "オパール", story: "十月の石、遊色の虹",
+    anchors: [
+      { h: 42, s: 26, l: 90, name: "乳白の地" }, { h: 176, s: 48, l: 64, name: "遊色の青緑" },
+      { h: 326, s: 40, l: 72, name: "遊色の紅" }, { h: 48, s: 62, l: 66, name: "遊色の金" },
+    ], toneBias: ["p", "b"], sparkle: true, technique: "リピテーション配色" },
+  { match: ["topaz", "トパーズ", "黄玉"], ja: "トパーズ", story: "十一月の石、蜜の黄",
+    anchors: [
+      { h: 40, s: 76, l: 56, name: "トパーズの黄" }, { h: 32, s: 60, l: 74, name: "透ける蜜" },
+      { h: 28, s: 52, l: 34, name: "深みの琥珀" }, { h: 48, s: 34, l: 90, name: "光の抜け" },
+    ], toneBias: ["b", "s"], sparkle: true, technique: "同一色相配色" },
+  { match: ["lapis", "lapis lazuli", "ラピスラズリ"], ja: "ラピスラズリ", story: "十二月の石、金の粒を抱く青",
+    anchors: [
+      { h: 224, s: 62, l: 34, name: "瑠璃の青" }, { h: 44, s: 68, l: 58, name: "黄鉄鉱の金" },
+      { h: 218, s: 44, l: 18, name: "石の深み" }, { h: 40, s: 16, l: 88, name: "方解石の白" },
+    ], toneBias: ["dp", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["onyx", "オニキス", "縞瑪瑙"], ja: "オニキス", story: "黒と白の縞",
+    anchors: [
+      { h: 30, s: 8, l: 10, name: "オニキスの黒" }, { h: 40, s: 10, l: 92, name: "縞の白" },
+      { h: 210, s: 6, l: 44, name: "境の灰" }, { h: 30, s: 12, l: 24, name: "艶の返り" },
+    ], toneBias: ["dkg", "p"], sparkle: true, technique: "セパレーション" },
+  { match: ["crystal", "水晶", "クリスタル"], ja: "水晶", story: "透きとおる六角柱",
+    anchors: [
+      { h: 200, s: 8, l: 94, name: "水晶の無色" }, { h: 210, s: 18, l: 78, name: "面の反射" },
+      { h: 44, s: 10, l: 86, name: "温かい抜け" }, { h: 220, s: 12, l: 52, name: "内包の影" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "カマイユ配色" },
+  { match: ["tourmaline", "トルマリン", "電気石"], ja: "トルマリン", story: "一本の石に二色",
+    anchors: [
+      { h: 336, s: 56, l: 58, name: "ピンクトルマリン" }, { h: 116, s: 44, l: 42, name: "グリーントルマリン" },
+      { h: 40, s: 18, l: 90, name: "境の透明" }, { h: 320, s: 34, l: 28, name: "深みの紅紫" },
+    ], toneBias: ["v", "dp"], sparkle: true, technique: "補色配色" },
+
+  // ===== 星座 =====
+  // 十二星座。誕生石と組み合わせて贈りものの配色に。
+  { match: ["aries", "牡羊座", "おひつじ座"], ja: "牡羊座", story: "口火を切る赤",
+    anchors: [
+      { h: 4, s: 74, l: 48, name: "衝動の赤" }, { h: 22, s: 78, l: 58, name: "跳ねる橙" },
+      { h: 44, s: 20, l: 92, name: "白の余白" }, { h: 350, s: 46, l: 26, name: "沈める深紅" },
+    ], toneBias: ["v", "b"], technique: "ドミナントカラー配色" },
+  { match: ["taurus", "牡牛座", "おうし座"], ja: "牡牛座", story: "土に根を張る緑",
+    anchors: [
+      { h: 112, s: 32, l: 40, name: "牧草の緑" }, { h: 32, s: 34, l: 46, name: "肥えた土" },
+      { h: 336, s: 34, l: 76, name: "花のうす紅" }, { h: 44, s: 26, l: 86, name: "乳の白" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["gemini", "双子座", "ふたご座"], ja: "双子座", story: "移り気な二色",
+    anchors: [
+      { h: 50, s: 78, l: 64, name: "軽やかな黄" }, { h: 196, s: 56, l: 66, name: "風の水色" },
+      { h: 40, s: 18, l: 94, name: "白の間" }, { h: 280, s: 30, l: 62, name: "気まぐれの藤" },
+    ], toneBias: ["b", "lt"], technique: "セパレーション" },
+  { match: ["cancer", "蟹座", "かに座"], ja: "蟹座", story: "月に守られた銀",
+    anchors: [
+      { h: 210, s: 16, l: 86, name: "月の銀白" }, { h: 200, s: 32, l: 60, name: "潮の青" },
+      { h: 40, s: 26, l: 90, name: "貝の内側" }, { h: 222, s: 26, l: 38, name: "夜の深み" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "トーン・オン・トーン配色" },
+  { match: ["leo", "獅子座", "しし座"], ja: "獅子座", story: "陽そのものの金",
+    anchors: [
+      { h: 44, s: 82, l: 56, name: "太陽の金" }, { h: 28, s: 76, l: 50, name: "鬣の橙" },
+      { h: 352, s: 62, l: 42, name: "威の紅" }, { h: 44, s: 30, l: 92, name: "光の白" },
+    ], toneBias: ["v", "s"], sparkle: true, technique: "ドミナントカラー配色" },
+  { match: ["virgo", "乙女座", "おとめ座"], ja: "乙女座", story: "整えられた生成り",
+    anchors: [
+      { h: 40, s: 24, l: 88, name: "麦の生成り" }, { h: 96, s: 24, l: 52, name: "端正な緑" },
+      { h: 30, s: 20, l: 62, name: "落ち着いた砂" }, { h: 210, s: 10, l: 40, name: "整った灰" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "トーナル配色" },
+  { match: ["libra", "天秤座", "てんびん座"], ja: "天秤座", story: "釣り合いのとれた淡さ",
+    anchors: [
+      { h: 336, s: 40, l: 80, name: "均衡のうす紅" }, { h: 196, s: 34, l: 78, name: "均衡の水色" },
+      { h: 44, s: 20, l: 93, name: "白の支点" }, { h: 268, s: 24, l: 60, name: "中間の藤" },
+    ], toneBias: ["p", "lt"], technique: "対照色相配色" },
+  { match: ["scorpio", "蠍座", "さそり座"], ja: "蠍座", story: "沈めた深紅",
+    anchors: [
+      { h: 344, s: 54, l: 24, name: "秘めた深紅" }, { h: 268, s: 34, l: 30, name: "夜の紫" },
+      { h: 356, s: 62, l: 46, name: "毒の赤" }, { h: 30, s: 10, l: 12, name: "闇の黒" },
+    ], toneBias: ["dk", "dp"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["sagittarius", "射手座", "いて座"], ja: "射手座", story: "遠くへ向かう青紫",
+    anchors: [
+      { h: 262, s: 42, l: 46, name: "遠矢の青紫" }, { h: 208, s: 52, l: 58, name: "旅の空" },
+      { h: 40, s: 62, l: 62, name: "地平の金" }, { h: 44, s: 22, l: 90, name: "抜けの白" },
+    ], toneBias: ["b", "dp"], technique: "対照色相配色" },
+  { match: ["capricorn", "山羊座", "やぎ座"], ja: "山羊座", story: "積み上げた岩の色",
+    anchors: [
+      { h: 28, s: 20, l: 30, name: "岩の焦茶" }, { h: 210, s: 8, l: 52, name: "石の灰" },
+      { h: 140, s: 16, l: 34, name: "苔の緑" }, { h: 40, s: 22, l: 82, name: "頂の白" },
+    ], toneBias: ["dk", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["aquarius", "水瓶座", "みずがめ座"], ja: "水瓶座", story: "先を行く電気の青",
+    anchors: [
+      { h: 190, s: 62, l: 60, name: "電気の水色" }, { h: 226, s: 48, l: 44, name: "群青" },
+      { h: 168, s: 40, l: 76, name: "淡い翠" }, { h: 40, s: 16, l: 94, name: "空白の白" },
+    ], toneBias: ["b", "lt"], sparkle: true, technique: "類似色相配色" },
+  { match: ["pisces", "魚座", "うお座"], ja: "魚座", story: "境目のない青緑",
+    anchors: [
+      { h: 176, s: 38, l: 66, name: "溶ける青緑" }, { h: 284, s: 28, l: 74, name: "滲む藤" },
+      { h: 206, s: 36, l: 50, name: "深みの青" }, { h: 42, s: 20, l: 92, name: "泡の白" },
+    ], toneBias: ["p", "sf"], sparkle: true, technique: "トーン・オン・トーン配色" },
+  // ===== 花 =====
+  // ビーズ作品の定番。花そのものと、添える葉・茎まで含めて色にする。
+  { match: ["lily", "百合", "ゆり", "リリー"], ja: "百合", story: "香りの強い白",
+    anchors: [
+      { h: 44, s: 24, l: 95, name: "百合の白" }, { h: 46, s: 62, l: 66, name: "花粉の黄" },
+      { h: 108, s: 34, l: 38, name: "太い茎の緑" }, { h: 340, s: 26, l: 84, name: "喉のうす紅" },
+    ], toneBias: ["p", "v"], technique: "セパレーション" },
+  { match: ["orchid", "蘭", "ラン", "オーキッド"], ja: "蘭", story: "整いすぎた花のかたち",
+    anchors: [
+      { h: 302, s: 38, l: 66, name: "蘭の紅紫" }, { h: 44, s: 22, l: 94, name: "花弁の白" },
+      { h: 46, s: 58, l: 62, name: "唇弁の黄" }, { h: 130, s: 28, l: 30, name: "厚い葉" },
+    ], toneBias: ["sf", "p"], technique: "対照色相配色" },
+  { match: ["carnation", "カーネーション"], ja: "カーネーション", story: "縁のぎざぎざ",
+    anchors: [
+      { h: 348, s: 58, l: 62, name: "カーネーションの紅" }, { h: 344, s: 40, l: 82, name: "淡い覆輪" },
+      { h: 150, s: 20, l: 56, name: "白緑の葉" }, { h: 42, s: 24, l: 92, name: "白い品種" },
+    ], toneBias: ["b", "lt"], technique: "トーン・オン・トーン配色" },
+  { match: ["gerbera", "ガーベラ"], ja: "ガーベラ", story: "まっすぐ開いた円",
+    anchors: [
+      { h: 22, s: 82, l: 60, name: "ガーベラの橙" }, { h: 340, s: 68, l: 66, name: "濃桃の品種" },
+      { h: 48, s: 78, l: 62, name: "黄の品種" }, { h: 100, s: 34, l: 36, name: "細い茎" },
+    ], toneBias: ["v", "b"], technique: "リピテーション配色" },
+  { match: ["dahlia", "ダリア"], ja: "ダリア", story: "幾重にも重なる花弁",
+    anchors: [
+      { h: 336, s: 56, l: 46, name: "ダリアの紅紫" }, { h: 352, s: 46, l: 70, name: "外へゆく淡さ" },
+      { h: 300, s: 34, l: 28, name: "芯の深み" }, { h: 116, s: 30, l: 32, name: "濃い葉" },
+    ], toneBias: ["dp", "sf"], technique: "トーンのグラデーション" },
+  { match: ["peony", "芍薬", "しゃくやく"], ja: "芍薬", story: "ほどけるように咲く",
+    anchors: [
+      { h: 344, s: 48, l: 80, name: "芍薬のうす紅" }, { h: 350, s: 56, l: 58, name: "芯へ向かう紅" },
+      { h: 44, s: 26, l: 93, name: "白い品種" }, { h: 120, s: 26, l: 34, name: "青みの葉" },
+    ], toneBias: ["p", "sf"], technique: "トーン・オン・トーン配色" },
+  { match: ["marguerite", "マーガレット"], ja: "マーガレット", story: "白と黄の単純さ",
+    anchors: [
+      { h: 44, s: 20, l: 95, name: "花弁の白" }, { h: 48, s: 80, l: 60, name: "中心の黄" },
+      { h: 96, s: 32, l: 46, name: "細い葉" }, { h: 200, s: 24, l: 84, name: "空の抜け" },
+    ], toneBias: ["p", "v"], technique: "セパレーション" },
+  { match: ["baby's breath", "かすみ草", "カスミソウ"], ja: "かすみ草", story: "白い粒の霞",
+    anchors: [
+      { h: 42, s: 18, l: 96, name: "粒の白" }, { h: 90, s: 18, l: 66, name: "細い茎の緑" },
+      { h: 220, s: 10, l: 84, name: "重なりの影" }, { h: 40, s: 24, l: 88, name: "乾いた生成り" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "カマイユ配色" },
+  { match: ["mimosa flower", "ミモザ"], ja: "ミモザ", story: "春を告げる黄の粒",
+    anchors: [
+      { h: 48, s: 84, l: 64, name: "ミモザの黄" }, { h: 52, s: 60, l: 80, name: "ほどけた淡黄" },
+      { h: 96, s: 16, l: 56, name: "銀葉アカシア" }, { h: 200, s: 30, l: 82, name: "春の空" },
+    ], toneBias: ["b", "lt"], technique: "ドミナントカラー配色" },
+  { match: ["anemone", "アネモネ"], ja: "アネモネ", story: "黒い芯と濃い花弁",
+    anchors: [
+      { h: 276, s: 44, l: 46, name: "アネモネの紫" }, { h: 30, s: 10, l: 14, name: "黒い芯" },
+      { h: 352, s: 62, l: 52, name: "赤の品種" }, { h: 44, s: 22, l: 92, name: "白の品種" },
+    ], toneBias: ["v", "dk"], technique: "セパレーション" },
+  { match: ["ranunculus", "ラナンキュラス"], ja: "ラナンキュラス", story: "薄紙を重ねたよう",
+    anchors: [
+      { h: 32, s: 62, l: 74, name: "杏色の花弁" }, { h: 44, s: 56, l: 86, name: "外側の淡黄" },
+      { h: 348, s: 40, l: 68, name: "紅の品種" }, { h: 110, s: 28, l: 40, name: "茎の緑" },
+    ], toneBias: ["lt", "p"], technique: "トーンのグラデーション" },
+  { match: ["clematis", "クレマチス", "鉄線"], ja: "クレマチス", story: "つるに咲く星形",
+    anchors: [
+      { h: 268, s: 40, l: 52, name: "クレマチスの紫" }, { h: 280, s: 26, l: 80, name: "淡い覆輪" },
+      { h: 46, s: 58, l: 66, name: "しべの黄" }, { h: 120, s: 30, l: 30, name: "つるの緑" },
+    ], toneBias: ["dp", "p"], technique: "トーン・オン・トーン配色" },
+
+  // ===== 二十四節気 =====
+  // 暦がとらえた季節の刻み。日本の色彩文化そのもの。
+  { match: ["keichitsu", "啓蟄"], ja: "啓蟄", story: "土がゆるみ、虫が出てくる",
+    anchors: [
+      { h: 32, s: 30, l: 40, name: "ゆるむ土" }, { h: 86, s: 42, l: 54, name: "萌えはじめ" },
+      { h: 200, s: 26, l: 78, name: "ぬるむ空" }, { h: 44, s: 24, l: 86, name: "薄日" },
+    ], toneBias: ["sf", "lt"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["seimei", "清明"], ja: "清明", story: "すべてが清らかに明るい",
+    anchors: [
+      { h: 92, s: 50, l: 58, name: "洗われた若葉" }, { h: 198, s: 46, l: 76, name: "澄んだ空" },
+      { h: 344, s: 34, l: 86, name: "遅桜" }, { h: 44, s: 22, l: 94, name: "光の白" },
+    ], toneBias: ["lt", "b"], technique: "ナチュラルハーモニー" },
+  { match: ["shoman", "小満"], ja: "小満", story: "草木が満ちてくる",
+    anchors: [
+      { h: 104, s: 48, l: 44, name: "満ちる緑" }, { h: 80, s: 52, l: 62, name: "伸びる黄緑" },
+      { h: 46, s: 50, l: 74, name: "麦の色づき" }, { h: 200, s: 40, l: 70, name: "初夏の空" },
+    ], toneBias: ["b", "s"], technique: "類似色相配色" },
+  { match: ["boshu", "芒種"], ja: "芒種", story: "穂の出る穀物を蒔くころ",
+    anchors: [
+      { h: 74, s: 44, l: 48, name: "苗の緑" }, { h: 196, s: 20, l: 66, name: "田の水鏡" },
+      { h: 44, s: 40, l: 66, name: "芒の淡黄" }, { h: 214, s: 14, l: 46, name: "梅雨の入り" },
+    ], toneBias: ["sf", "d"], matte: true },
+  { match: ["shosho hot", "小暑"], ja: "小暑", story: "暑さが本気になる手前",
+    anchors: [
+      { h: 48, s: 72, l: 66, name: "強まる陽" }, { h: 130, s: 44, l: 40, name: "濃くなる葉" },
+      { h: 198, s: 52, l: 72, name: "入道雲の下" }, { h: 42, s: 20, l: 94, name: "白い光" },
+    ], toneBias: ["b", "v"], technique: "対照色相配色" },
+  { match: ["taisho heat", "大暑"], ja: "大暑", story: "一年でいちばん暑い",
+    anchors: [
+      { h: 46, s: 86, l: 58, name: "灼ける陽" }, { h: 14, s: 68, l: 52, name: "陽炎の赤" },
+      { h: 150, s: 40, l: 28, name: "濃い木陰" }, { h: 200, s: 40, l: 88, name: "白む空" },
+    ], toneBias: ["v", "s"], technique: "対照トーン配色" },
+  { match: ["shosho calm", "処暑"], ja: "処暑", story: "暑さがおさまる",
+    anchors: [
+      { h: 40, s: 52, l: 66, name: "やわらぐ陽" }, { h: 108, s: 30, l: 42, name: "疲れた緑" },
+      { h: 24, s: 46, l: 74, name: "夕の淡橙" }, { h: 210, s: 24, l: 62, name: "涼しさの兆し" },
+    ], toneBias: ["sf", "ltg"], matte: true, technique: "トーナル配色" },
+  { match: ["kanro", "寒露"], ja: "寒露", story: "露が冷たくなる",
+    anchors: [
+      { h: 200, s: 20, l: 76, name: "冷えた露" }, { h: 38, s: 52, l: 54, name: "色づく葉" },
+      { h: 268, s: 22, l: 50, name: "深まる影" }, { h: 44, s: 30, l: 86, name: "澄んだ朝" },
+    ], toneBias: ["ltg", "d"], matte: true, technique: "トーナル配色" },
+  { match: ["soko", "霜降"], ja: "霜降", story: "はじめて霜が降りる",
+    anchors: [
+      { h: 200, s: 12, l: 88, name: "霜の白" }, { h: 26, s: 46, l: 44, name: "枯れゆく褐" },
+      { h: 14, s: 56, l: 48, name: "最後の紅葉" }, { h: 214, s: 14, l: 40, name: "冷えた土" },
+    ], toneBias: ["ltg", "d"], matte: true, technique: "対照トーン配色" },
+  { match: ["shokan", "小寒"], ja: "小寒", story: "寒の入り",
+    anchors: [
+      { h: 210, s: 18, l: 84, name: "薄氷" }, { h: 220, s: 22, l: 44, name: "澄んだ寒気" },
+      { h: 30, s: 20, l: 30, name: "裸木" }, { h: 42, s: 16, l: 94, name: "冬の光" },
+    ], toneBias: ["p", "dkg"], matte: true, technique: "カマイユ配色" },
+  { match: ["daikan", "大寒"], ja: "大寒", story: "一年でいちばん寒い",
+    anchors: [
+      { h: 214, s: 26, l: 34, name: "凍てつく藍" }, { h: 200, s: 16, l: 92, name: "凍った白" },
+      { h: 220, s: 12, l: 62, name: "鈍い雲" }, { h: 350, s: 40, l: 44, name: "寒紅梅" },
+    ], toneBias: ["dkg", "p"], matte: true, technique: "対照トーン配色" },
+
+  // ===== 和の文様 =====
+  // 繰り返しの文様は、配色技法の「リピテーション」そのもの。
+  { match: ["asanoha", "麻の葉"], ja: "麻の葉", story: "六角に組んだ幾何",
+    anchors: [
+      { h: 216, s: 44, l: 32, name: "藍の線" }, { h: 44, s: 26, l: 90, name: "地の生成り" },
+      { h: 6, s: 56, l: 48, name: "差しの朱" }, { h: 150, s: 24, l: 44, name: "青竹の緑" },
+    ], toneBias: ["dp", "p"], matte: true, technique: "リピテーション配色" },
+  { match: ["kikko", "亀甲"], ja: "亀甲", story: "六角を継いだ長寿の文",
+    anchors: [
+      { h: 42, s: 30, l: 88, name: "地の白茶" }, { h: 30, s: 26, l: 34, name: "格子の焦茶" },
+      { h: 44, s: 56, l: 58, name: "金の縁" }, { h: 140, s: 22, l: 38, name: "松の緑" },
+    ], toneBias: ["ltg", "dk"], matte: true, technique: "リピテーション配色" },
+  { match: ["uroko", "鱗文", "鱗"], ja: "鱗", story: "三角の繰り返し",
+    anchors: [
+      { h: 30, s: 10, l: 18, name: "墨の三角" }, { h: 42, s: 24, l: 92, name: "地の白" },
+      { h: 4, s: 54, l: 46, name: "朱の三角" }, { h: 210, s: 8, l: 58, name: "銀鼠" },
+    ], toneBias: ["dkg", "p"], matte: true, technique: "セパレーション" },
+  { match: ["ajiro", "網代"], ja: "網代", story: "編み目の斜め",
+    anchors: [
+      { h: 36, s: 34, l: 66, name: "竹の膚" }, { h: 30, s: 30, l: 42, name: "編みの影" },
+      { h: 44, s: 26, l: 86, name: "白竹" }, { h: 24, s: 24, l: 26, name: "煤竹" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "同一色相配色" },
+  { match: ["sayagata", "紗綾形"], ja: "紗綾形", story: "卍を崩して繋げた地文",
+    anchors: [
+      { h: 42, s: 24, l: 92, name: "地の白綾" }, { h: 40, s: 26, l: 78, name: "織りの陰" },
+      { h: 300, s: 22, l: 42, name: "紫の織り" }, { h: 44, s: 50, l: 62, name: "金糸" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "カマイユ配色" },
+  { match: ["kanoko", "鹿の子絞り", "鹿の子文"], ja: "鹿の子", story: "絞りの粒が並ぶ",
+    anchors: [
+      { h: 350, s: 52, l: 46, name: "絞りの紅" }, { h: 44, s: 28, l: 92, name: "括りの白" },
+      { h: 340, s: 34, l: 68, name: "滲みのうす紅" }, { h: 30, s: 16, l: 24, name: "墨の縁" },
+    ], toneBias: ["dp", "p"], matte: true, technique: "リピテーション配色" },
+  { match: ["jade", "翡翠", "ひすい"], ja: "翡翠", story: "半透明にひそむ緑",
+    anchors: [
+      { h: 152, s: 34, l: 52, name: "翡翠の緑" },
+      { h: 146, s: 22, l: 76, name: "白翡翠の透け" },
+      { h: 160, s: 40, l: 30, name: "深みの碧" },
+      { h: 40, s: 20, l: 90, name: "磨きの照り" },
+    ], toneBias: ["sf", "dp"], sparkle: true, technique: "トーン・オン・トーン配色" },
 ];
 
 // テーマ文字列を辞書エントリの列に解決する

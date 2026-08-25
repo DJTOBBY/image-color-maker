@@ -227,7 +227,7 @@
         "g"
       ],
       "matte": true,
-      "technique": "トーンオントーン配色"
+      "technique": "トーン・オン・トーン配色"
     },
     {
       "key": "waterfall",
@@ -683,7 +683,7 @@
         "p",
         "lt"
       ],
-      "technique": "トーングラデーション"
+      "technique": "トーンのグラデーション"
     },
     {
       "key": "mountain",
@@ -876,7 +876,7 @@
         "dkg"
       ],
       "matte": true,
-      "technique": "セパレーション配色"
+      "technique": "セパレーション"
     },
     {
       "key": "shrine",
@@ -1015,7 +1015,7 @@
         "ltg"
       ],
       "matte": true,
-      "technique": "トーンオントーン配色"
+      "technique": "トーン・オン・トーン配色"
     },
     {
       "key": "cloud",
@@ -1057,7 +1057,7 @@
         "p",
         "lt"
       ],
-      "technique": "トーングラデーション"
+      "technique": "トーンのグラデーション"
     },
     {
       "key": "storm",
@@ -1193,7 +1193,7 @@
         "p"
       ],
       "matte": true,
-      "technique": "フォカマイユ配色"
+      "technique": "フォ・カマイユ配色"
     },
     {
       "key": "ceramic",
@@ -1378,7 +1378,7 @@
         "dk",
         "v"
       ],
-      "technique": "セパレーション配色"
+      "technique": "セパレーション"
     },
     {
       "key": "glass",

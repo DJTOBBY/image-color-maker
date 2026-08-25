@@ -46,6 +46,36 @@ def lab(hexstr):
     return (116 * y - 16, 500 * (x - y), 200 * (y - z))
 
 
+# 色名がその色を言い当てているか。名前は「〜の◯◯」の形が多いので、
+# 最後の「の」より後ろだけを見る(「茶葉の緑」の茶に反応しないように)。
+COLOR_RULES = [
+    ("黒|漆黒",            lambda h, s, l: l < 30,                        "暗くない"),
+    ("白(?!緑)|胡粉",       lambda h, s, l: l > 68,                        "明るくない"),
+    ("金(?!属)|黄金|琥珀",   lambda h, s, l: s < 12 or 15 <= h <= 62,       "黄〜橙の範囲外"),
+    ("(?<!黄)(?<!青)緑",    lambda h, s, l: s < 12 or 70 <= h <= 185,      "緑の範囲外"),
+    ("藍|紺|瑠璃|群青",      lambda h, s, l: s < 12 or 195 <= h <= 265,     "青の範囲外"),
+    ("朱|緋|紅|赤(?!茶|褐)", lambda h, s, l: s < 12 or h >= 330 or h <= 25, "赤の範囲外"),
+    ("紫(?!蘇)",           lambda h, s, l: s < 12 or 240 <= h <= 335,      "紫の範囲外"),
+]
+
+
+def name_mismatch(entries):
+    """色名と実際の色が食い違っているものを返す"""
+    import colorsys
+    out = []
+    for e in entries:
+        for hx, nm in zip(e["hexes"], e["names"]):
+            tail = nm.rsplit("の", 1)[-1] or nm
+            r, g, b = (int(hx[i:i + 2], 16) / 255 for i in (1, 3, 5))
+            hh, ll, ss = colorsys.rgb_to_hls(r, g, b)
+            h, sv, lv = round(hh * 360), round(ss * 100), round(ll * 100)
+            for pat, ok, why in COLOR_RULES:
+                if re.search(pat, tail) and not ok(h, sv, lv):
+                    out.append((e["term"], nm, hx, f"H{h} S{sv} L{lv}", why))
+                    break
+    return out
+
+
 def existing_words():
     words = set()
     for name in ("js/dictionary.js", "js/entries-imported.js"):
@@ -177,6 +207,13 @@ def main():
     print(f"\n5色中3色以上が同じ組: {len(close)}組")
     for n, a, b in sorted(close, reverse=True)[:6]:
         print(f"  {n}色共通: {a} / {b}")
+
+    mism = name_mismatch(E)
+    print(f"\n色名と実際の色が食い違うもの: {len(mism)}色 / {len(all_hex)}")
+    for t, nm, hx, v, why in mism[:10]:
+        print(f"  {t}: 「{nm}」 {hx} ({v}) ← {why}")
+    if len(mism) > 10:
+        print(f"  ほか {len(mism) - 10}色")
 
     descs = [e["desc"] for e in E if e["desc"]]
     if descs:

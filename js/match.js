@@ -69,6 +69,8 @@ const BeadMatcher = (() => {
 
   // パレットの各色に近いビーズを探す(品番は重複させない)
   // inventory: 手持ち品番のSet。inventoryOnly=true なら手持ちだけから選ぶ
+  // pinned: 色ごとに「必ず先頭に出すビーズの品番」。
+  // ユーザーが「このビーズを使う」と指定した品番は、色名の判定などで弾かれずに必ず出す
   function match(colors, { sparkle = false, matte = false, perColor = 3,
                            inventory = null, inventoryOnly = false } = {}) {
     const usedCodes = new Set();
@@ -106,6 +108,19 @@ const BeadMatcher = (() => {
           others[0].d + 3 < picks[perColor - 1].d && !isRound(others[0].bead)) {
         picks[perColor - 1] = others[0];
       }
+
+      // 「このビーズを使う」で指定された品番は、必ず先頭に置く。
+      // (色は一致していても、公式色名が目標色と食い違うと減点で埋もれてしまうため)
+      if (color.seedCode) {
+        const seed = beads.find(b => b.code === color.seedCode);
+        if (seed) {
+          const rest = picks.filter(p => p.bead.code !== seed.code);
+          picks.length = 0;
+          picks.push({ bead: seed, d: 0, owned: inventory ? inventory.has(seed.code) : false },
+                     ...rest.slice(0, perColor - 1));
+        }
+      }
+
       if (picks.length) usedCodes.add(picks[0].bead.code);
       return picks;
     });

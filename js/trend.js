@@ -1,5 +1,5 @@
 /* トレンドカラー年表
-   - PANTONE Color of the Year(2000〜2025)
+   - PANTONE Color of the Year(2000〜2026)
    - 年代パレット(60s〜2020s、Y2K、昭和・平成レトロ)
    「2016 SPRING」「Y2K TOKYO」「90年代の海」のような入力に反応する。
 */
@@ -31,6 +31,8 @@ const PANTONE_COY = {
   2023: [{ hex: "#BB2649", name: "ビバマゼンタ" }],
   2024: [{ hex: "#FFBE98", name: "ピーチファズ" }],
   2025: [{ hex: "#A47864", name: "モカムース" }],
+  // 史上初めて白が選ばれた年(2025年12月発表)
+  2026: [{ hex: "#F0EEE9", name: "クラウドダンサー" }],
 };
 
 const DECADES = {

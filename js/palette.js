@@ -162,10 +162,15 @@ function generatePalette(input, count = 6, variant = 0, locked = []) {
     if (near.length >= 2) anchors.splice(0, anchors.length, ...near);
     // 主役の色語を先頭に(mainとして技法や展開の基準になる)
     anchors.sort((a, b) => (b.lead ? 1 : 0) - (a.lead ? 1 : 0));
-    // 修飾語(dark/淡い など)はテーマ側の色にも効かせる
-    shift.dl += cw.shift.dl; shift.ds += cw.shift.ds;
-    shift.dl = Math.max(-28, Math.min(28, shift.dl));
-    shift.ds = Math.max(-28, Math.min(28, shift.ds));
+  }
+
+  // 修飾語(暗い・淡い・鮮やか など)を効かせる。
+  // 以前は色語があるときだけ効いていたので、「暗い京都」「淡い海」のように
+  // テーマだけを入れた場合に何も変わらなかった。
+  // 技法モードでは既にアンカーへ直接反映済みなので、ここでは重ねない。
+  if (!techniqueMode && (cw.shift.dl || cw.shift.ds)) {
+    shift.dl = Math.max(-28, Math.min(28, shift.dl + cw.shift.dl));
+    shift.ds = Math.max(-28, Math.min(28, shift.ds + cw.shift.ds));
   }
 
   if (anchors.length === 0) anchors.push({ h: 220, s: 30, l: 50, name: "無題の色", from: input });

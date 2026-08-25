@@ -17,6 +17,8 @@ const ASSETS = [
   "./js/trend.js",
   "./js/associations.js",
   "./js/dictionary.js",
+  "./js/category-data.js",
+  "./js/categories.js",
   "./js/match.js",
   "./js/export.js",
   "./js/app.js",

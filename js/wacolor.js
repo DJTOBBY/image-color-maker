@@ -180,8 +180,41 @@ const WaColor = (() => {
     return search(true) || search(false);
   }
 
-  // テーマ語として伝統色・襲の色目を解決し、辞書エントリ形式で返す
-  function lookup(input) {
+  // 同じ色を指す言い方の揺れを吸収するための別名表。
+  // 「苺」と「苺色」、「すみれ」と「菫色」を同じものとして拾えるようにする。
+  // sub=true の鍵は文中に含まれれば拾い、false の鍵は入力全体と一致したときだけ拾う
+  // (「空」で「空色」を拾うと「空港」まで反応してしまうため)。
+  const NAME_TAIL = /(色|染)$/;
+  const KANA_TAIL = /(いろ|しょく)$/;
+  let aliasCache = null;
+  function ensureAlias() {
+    if (aliasCache) return aliasCache;
+    // 1文字の色名(赤・茶など)と、色語(COLOR_WORDS)が担当する名前は別名にしない
+    const colorWordNames = typeof COLOR_WORDS !== "undefined"
+      ? new Set(COLOR_WORDS.flatMap(c => c.match)) : new Set();
+    aliasCache = WACOLORS.map(w => {
+      const keys = [];
+      const push = (key, minSub) => {
+        if (!key || colorWordNames.has(key)) return;
+        if (keys.some(k => k.key === key)) return;
+        keys.push({ key, sub: key.length >= minSub });
+      };
+      push(w.name, 2);                           // 「苺色」
+      push(w.name.replace(NAME_TAIL, ""), 2);    // 「苺」
+      if (w.kana) {
+        push(w.kana, 4);                         // 「いちごいろ」
+        push(w.kana.replace(KANA_TAIL, ""), 3);  // 「すみれ」
+      }
+      return { w, keys };
+    });
+    return aliasCache;
+  }
+
+  // テーマ語として伝統色・襲の色目を解決し、辞書エントリ形式で返す。
+  // loose=true のときだけ言い方の揺れ(苺→苺色、すみれ→菫色)まで拾う。
+  // 常に拾うと「浅葱と朱」に「朱色」が混ざり、和田三造の配色が
+  // 本来より鮮やかに転んでしまうため、他が当たらなかったときの助けにとどめる。
+  function lookup(input, loose = false) {
     const entries = [];
     for (const k of KASANE) {
       if (k.match.some(m => input.includes(m))) {
@@ -197,12 +230,13 @@ const WaColor = (() => {
         break; // 襲はひとつで十分
       }
     }
-    // 1000色近くを走査するため、誤マッチを避ける:
-    // 1文字の色名(赤・茶など)と、色語(COLOR_WORDS)が担当する名前は拾わない
-    const colorWordNames = typeof COLOR_WORDS !== "undefined"
-      ? new Set(COLOR_WORDS.flatMap(c => c.match)) : new Set();
-    let hits = WACOLORS.filter(w =>
-      w.name.length >= 2 && !colorWordNames.has(w.name) && input.includes(w.name));
+    const norm = input.trim();
+    let hits = ensureAlias()
+      .filter(a => a.keys.some(k => {
+        if (!loose && k.key !== a.w.name) return false; // 厳密のときは正式な色名だけ
+        return k.sub ? norm.includes(k.key) : norm === k.key;
+      }))
+      .map(a => a.w);
     // 「桜」と「桜色」のように包含関係があるときは長い名前だけを残す
     hits = hits.filter(w => !hits.some(o => o !== w &&
       o.name.length > w.name.length && o.name.includes(w.name)));

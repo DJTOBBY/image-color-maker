@@ -120,8 +120,20 @@ function generatePalette(input, count = 6, variant = 0, locked = []) {
       seen.add(e.ja);
       return true;
     });
+    // どれも当たらなければ、言い方の揺れまで許して伝統色をもう一度探す
+    // (「苺」で「苺色」、「すみれ」で「菫色」に行き当たるように)
+    if (entries.length === 0 && typeof WaColor !== "undefined") {
+      entries = WaColor.lookup(input, true);
+    }
+
     usedFallback = entries.length === 0;
-    if (usedFallback) entries = [hashFallback(input)];
+    if (usedFallback) {
+      // 辞書に無い言葉でも、それが何であるか(島・湖・温泉…)が分かれば
+      // その分類の色を継がせる。それも分からないときだけ文字列から色を作る。
+      const cat = typeof lookupCategory === "function" ? lookupCategory(input) : null;
+      if (cat) { entries = [cat]; usedFallback = false; }
+      else entries = [hashFallback(input)];
+    }
   }
 
   // アンカーとバイアスを集める

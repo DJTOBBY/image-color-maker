@@ -23,8 +23,12 @@ OUT = os.path.join(ROOT, "js/category-data.js")
 UA = {"User-Agent": "ColorStoryPalette/1.0 (https://palette.tohobeads.jp; tohohy@gmail.com)"}
 API = "https://ja.wikipedia.org/w/api.php"
 # 曖昧さ回避ページに落ちたときに補う語(函館→函館市、知床→知床半島)
-SUFFIXES = ["市", "県", "半島", "山", "山脈", "湖", "島", "諸島", "町", "温泉", "城",
-            "砂漠", "高原", "地方", "渓谷", "国立公園", "平原", "湿原", "州", "焼"]
+# 曖昧さ回避ページに落ちたときに補う語。先にあるものから試す。
+# まぎれの少ない語を前に、1文字の「山」「島」「湖」を最後に置く。
+# (「乳頭」は乳頭山ではなく乳頭温泉、「織部」は織部山ではなく織部焼)
+SUFFIXES = ["温泉", "焼", "諸島", "半島", "山脈", "国立公園", "渓谷", "高原",
+            "湿原", "砂漠", "平原", "市", "町", "県", "地方", "州", "城",
+            "島", "湖", "山"]
 # 分類として使ってはいけない説明(一覧記事・曖昧さ回避)
 JUNK = re.compile(r"曖昧さ回避|一覧記事|ウィキメディアの")
 
@@ -33,16 +37,23 @@ def _query(titles, extracts):
     """まとめて引く。extracts=True なら本文の冒頭も一緒に引く(1回20件まで)"""
     params = {"action": "query", "format": "json", "formatversion": "2",
               "titles": "|".join(titles),
+              # 転送を追わないと「八重山諸島」「乳頭温泉」のような転送名で
+              # 中身が空のまま返り、地形を取り違える
+              "redirects": "1",
               "prop": "description|extracts" if extracts else "description"}
     if extracts:
-        params.update({"exintro": "1", "explaintext": "1", "exsentences": "2"})
+        # exlimit を付けないと本文は先頭1件しか返ってこない
+        params.update({"exintro": "1", "explaintext": "1",
+                       "exsentences": "2", "exlimit": "20"})
     q = urllib.parse.urlencode(params)
     try:
         with urllib.request.urlopen(urllib.request.Request(API + "?" + q, headers=UA), timeout=30) as r:
-            return json.load(r).get("query", {}).get("pages", [])
+            data = json.load(r).get("query", {})
+        redirects = {x["from"]: x["to"] for x in data.get("redirects", [])}
+        return data.get("pages", []), redirects
     except Exception as e:
         print(f"\n  ! 取得に失敗 ({e}) — この塊は飛ばします", file=sys.stderr)
-        return []
+        return [], {}
 
 
 def descriptions(titles):
@@ -54,22 +65,33 @@ def descriptions(titles):
     out = {}
     step = 20  # 本文も引くため1回20件まで
     for i in range(0, len(titles), step):
-        for p in _query(titles[i:i + step], extracts=True):
+        chunk = titles[i:i + step]
+        pages, redirects = _query(chunk, extracts=True)
+        # 転送先の見出しで返ってくるので、こちらが尋ねた名前に戻す
+        back = {to: frm for frm, to in redirects.items()}
+        for p in pages:
+            title = back.get(p["title"], p["title"])
             d = (p.get("description") or "").strip()
             if JUNK.search(d):
                 continue  # 曖昧さ回避・一覧記事は接尾辞を補って引き直す
             if not d:
                 d = (p.get("extract") or "").strip().replace("\n", " ")
             if d:
-                out[p["title"]] = d
+                out[title] = d
         sys.stderr.write(f"\r  {min(i + step, len(titles))}/{len(titles)}")
         time.sleep(0.08)
     sys.stderr.write("\n")
     return out
 
 
+# 「和歌山県」の「山」、「鹿児島県」の「島」に反応してしまうため、
+# 都道府県・市区町村の名前は判定の前に落とす。どこにあるかは分類ではない。
+PLACE_SUFFIX = re.compile(r"[一-龥ぁ-んァ-ヶ]{2,4}[都道府県]|[一-龥ぁ-んァ-ヶ]{2,5}[市区町村](?=[のには、。]|$)")
+
+
 def classify(text):
     """説明文から分類を決める。上に置いた分類ほど優先(火山を山より先に)"""
+    text = PLACE_SUFFIX.sub("", text)
     for c in CATS:
         for kw in c.get("desc", []):
             if kw in text:
@@ -97,11 +119,15 @@ def build_map():
             for s in SUFFIXES:
                 cand.append(w + s)
                 origin[w + s] = w
-        for title, d in descriptions(cand).items():
-            w = origin[title]
-            # 先に当たった接尾辞を優先し、上書きはしない
-            if w not in got:
-                got[w] = d
+        found = descriptions(cand)
+        # SUFFIXES の並び順どおりに拾う。まとめて引くと返ってくる順が不定で、
+        # 「富山」が富山市ではなく富山山に、「乳頭」が乳頭温泉ではなく
+        # 乳頭山に化けることがあった。
+        for w in missing:
+            for suf in SUFFIXES:
+                if w + suf in found:
+                    got[w] = found[w + suf]
+                    break
 
     out, unresolved = {}, []
     for w in words:

@@ -79,7 +79,7 @@ const DICTIONARY = [
     story: "橙と紺 — 大胆で朗らかな対比。和田三造『色彩の辞典』(1933)より",
     anchors: [{ h: 28, s: 78, l: 55, name: "橙" }, { h: 222, s: 50, l: 22, name: "紺" }, { h: 42, s: 48, l: 92, name: "胡粉" }],
     toneBias: ["v", "b"] },
-  { match: ["seiji kinari", "青磁と生成", "青磁"], ja: "青磁と生成",
+  { match: ["seiji kinari", "青磁と生成"], ja: "青磁と生成",
     story: "青磁の静けさと生成りの布。和田三造『色彩の辞典』(1933)より",
     anchors: [{ h: 170, s: 30, l: 55, name: "青磁" }, { h: 44, s: 30, l: 88, name: "生成" }, { h: 25, s: 30, l: 40, name: "焦茶" }],
     toneBias: ["lt", "d"] },
@@ -319,7 +319,7 @@ const DICTIONARY = [
       { h: 30, s: 40, l: 35, name: "幹の焦茶" },
     ],
     toneBias: ["dp", "d"], matte: true, technique: "ナチュラルハーモニー" },
-  { match: ["mountain", "山", "alps", "アルプス"], ja: "山", story: "稜線の遠近",
+  { match: ["mountain", "alps", "アルプス"], ja: "山", story: "稜線の遠近",
     anchors: [
       { h: 220, s: 30, l: 45, name: "遠山の青" },
       { h: 140, s: 30, l: 38, name: "山肌の緑" },
@@ -2829,6 +2829,298 @@ const DICTIONARY = [
       { h: 42, s: 24, l: 90, name: "白い民家" }, { h: 214, s: 48, l: 40, name: "刺繍の藍" },
       { h: 356, s: 58, l: 46, name: "刺繍の赤" }, { h: 122, s: 30, l: 32, name: "山地の緑" },
     ], toneBias: ["v", "p"], matte: true, technique: "リピテーション配色" },
+  // ===== 日本の焼きもの =====
+  // 「分類:焼きもの」では窯ごとの違いが出ない。
+  // 有田の白磁と備前の土肌はまったく別の色なので、窯ごとに持つ。
+  { match: ["arita", "有田焼", "伊万里焼"], ja: "有田焼", story: "白磁に染付の藍",
+    anchors: [
+      { h: 200, s: 8, l: 94, name: "白磁の地" }, { h: 218, s: 58, l: 38, name: "染付の呉須" },
+      { h: 4, s: 66, l: 48, name: "赤絵の朱" }, { h: 44, s: 58, l: 58, name: "金彩" },
+    ], toneBias: ["p", "dp"], technique: "セパレーション" },
+  { match: ["kutani", "九谷焼"], ja: "九谷焼", story: "五彩を塗り埋める",
+    anchors: [
+      { h: 140, s: 52, l: 34, name: "九谷の緑" }, { h: 46, s: 78, l: 54, name: "九谷の黄" },
+      { h: 288, s: 34, l: 36, name: "九谷の紫" }, { h: 220, s: 52, l: 30, name: "九谷の紺青" },
+    ], toneBias: ["dp", "v"], sparkle: true, technique: "リピテーション配色" },
+  { match: ["bizen", "備前焼"], ja: "備前焼", story: "釉をかけない土そのもの",
+    anchors: [
+      { h: 18, s: 40, l: 40, name: "緋襷の赤褐" }, { h: 26, s: 18, l: 28, name: "焼き締めの土" },
+      { h: 40, s: 14, l: 62, name: "灰かぶりの白茶" }, { h: 20, s: 26, l: 16, name: "窯変の黒" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "同一色相配色" },
+  { match: ["shigaraki", "信楽焼"], ja: "信楽焼", story: "土に長石が跳ねる",
+    anchors: [
+      { h: 22, s: 42, l: 52, name: "信楽の緋色" }, { h: 40, s: 20, l: 80, name: "長石の白粒" },
+      { h: 96, s: 16, l: 44, name: "自然釉のビードロ" }, { h: 28, s: 24, l: 30, name: "焦げの褐" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["oribe", "織部焼", "織部"], ja: "織部", story: "流れる緑釉と鉄絵",
+    anchors: [
+      { h: 132, s: 44, l: 32, name: "織部の緑釉" }, { h: 40, s: 26, l: 86, name: "白い抜き" },
+      { h: 26, s: 34, l: 30, name: "鉄絵の褐" }, { h: 150, s: 30, l: 52, name: "薄がかりの緑" },
+    ], toneBias: ["dp", "p"], matte: true, technique: "対照トーン配色" },
+  { match: ["shino", "志野焼", "志野"], ja: "志野", story: "厚い長石釉の柚肌",
+    anchors: [
+      { h: 24, s: 22, l: 90, name: "志野の乳白" }, { h: 12, s: 36, l: 68, name: "火色の薄紅" },
+      { h: 26, s: 30, l: 36, name: "鉄絵の鼠志野" }, { h: 40, s: 16, l: 76, name: "柚肌の陰" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "カマイユ配色" },
+  { match: ["hagi", "萩焼"], ja: "萩焼", story: "貫入から茶が染みてゆく",
+    anchors: [
+      { h: 30, s: 20, l: 84, name: "萩の枇杷色" }, { h: 340, s: 14, l: 74, name: "うすい紅の景色" },
+      { h: 36, s: 22, l: 58, name: "貫入の染み" }, { h: 40, s: 12, l: 92, name: "白釉の抜け" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "フォ・カマイユ配色" },
+  { match: ["karatsu", "唐津焼"], ja: "唐津焼", story: "砂まじりの土と斑",
+    anchors: [
+      { h: 34, s: 20, l: 56, name: "砂目の土" }, { h: 40, s: 16, l: 82, name: "斑唐津の白" },
+      { h: 26, s: 26, l: 32, name: "鉄絵の黒褐" }, { h: 96, s: 12, l: 46, name: "灰釉の緑みの灰" },
+    ], toneBias: ["d", "ltg"], matte: true, technique: "トーナル配色" },
+  { match: ["mashiko", "益子焼"], ja: "益子焼", story: "厚い釉と柿と黒",
+    anchors: [
+      { h: 24, s: 56, l: 44, name: "柿釉の赤褐" }, { h: 30, s: 12, l: 18, name: "黒釉" },
+      { h: 40, s: 24, l: 86, name: "糠白釉" }, { h: 96, s: 16, l: 42, name: "青磁釉の灰緑" },
+    ], toneBias: ["dk", "d"], matte: true, technique: "対照トーン配色" },
+  { match: ["seiji", "青磁"], ja: "青磁", story: "翡翠を目指した釉",
+    anchors: [
+      { h: 158, s: 24, l: 68, name: "青磁の翠" }, { h: 168, s: 20, l: 50, name: "溜まりの濃み" },
+      { h: 40, s: 14, l: 90, name: "素地の白" }, { h: 30, s: 16, l: 60, name: "貫入の線" },
+    ], toneBias: ["ltg", "sf"], technique: "同一色相配色" },
+  { match: ["sometsuke", "染付"], ja: "染付", story: "白磁に呉須ひといろ",
+    anchors: [
+      { h: 42, s: 12, l: 94, name: "白磁" }, { h: 220, s: 60, l: 36, name: "濃い呉須" },
+      { h: 214, s: 44, l: 62, name: "薄く溶いた呉須" }, { h: 224, s: 52, l: 22, name: "描き起こしの線" },
+    ], toneBias: ["p", "dp"], technique: "同一色相配色" },
+  { match: ["tenmoku", "天目"], ja: "天目", story: "黒釉に浮かぶ星",
+    anchors: [
+      { h: 24, s: 30, l: 12, name: "天目の黒" }, { h: 36, s: 52, l: 40, name: "禾目の飴色" },
+      { h: 200, s: 34, l: 52, name: "曜変の青" }, { h: 44, s: 44, l: 66, name: "縁の金" },
+    ], toneBias: ["dk", "dkg"], sparkle: true, technique: "対照トーン配色" },
+
+  // ===== 染めと織り =====
+  { match: ["kyo yuzen", "京友禅", "友禅"], ja: "京友禅", story: "糸目で囲って挿す色",
+    anchors: [
+      { h: 344, s: 46, l: 74, name: "挿し色の紅" }, { h: 44, s: 58, l: 60, name: "金彩" },
+      { h: 140, s: 30, l: 40, name: "葉の緑" }, { h: 42, s: 24, l: 92, name: "糸目の白" },
+    ], toneBias: ["p", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["kaga yuzen", "加賀友禅"], ja: "加賀友禅", story: "五彩と虫喰いの写実",
+    anchors: [
+      { h: 344, s: 42, l: 40, name: "臙脂" }, { h: 210, s: 40, l: 34, name: "藍" },
+      { h: 48, s: 52, l: 52, name: "黄土" }, { h: 122, s: 26, l: 32, name: "草の緑" },
+    ], toneBias: ["dp", "d"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["nishijin", "西陣織", "西陣"], ja: "西陣織", story: "先に染めた糸で紋を織る",
+    anchors: [
+      { h: 44, s: 60, l: 56, name: "金糸" }, { h: 348, s: 52, l: 34, name: "臙脂の地" },
+      { h: 220, s: 46, l: 28, name: "紺の地" }, { h: 40, s: 22, l: 88, name: "銀糸の白" },
+    ], toneBias: ["dk", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["bingata", "紅型", "びんがた"], ja: "紅型", story: "南の光で染める型",
+    anchors: [
+      { h: 48, s: 84, l: 60, name: "紅型の黄" }, { h: 356, s: 68, l: 52, name: "紅型の朱" },
+      { h: 176, s: 52, l: 46, name: "紅型の青緑" }, { h: 42, s: 26, l: 90, name: "抜きの白" },
+    ], toneBias: ["v", "b"], technique: "リピテーション配色" },
+  { match: ["oshima tsumugi", "大島紬"], ja: "大島紬", story: "泥に沈めて黒くする",
+    anchors: [
+      { h: 26, s: 16, l: 18, name: "泥染めの黒褐" }, { h: 20, s: 26, l: 34, name: "車輪梅の赤褐" },
+      { h: 40, s: 22, l: 84, name: "絣の白" }, { h: 30, s: 12, l: 52, name: "織りの霜降り" },
+    ], toneBias: ["dkg", "dk"], matte: true, technique: "同一色相配色" },
+  { match: ["yuki tsumugi", "結城紬"], ja: "結城紬", story: "真綿から手で紡ぐ",
+    anchors: [
+      { h: 36, s: 18, l: 74, name: "真綿の生成り" }, { h: 216, s: 30, l: 34, name: "藍の縞" },
+      { h: 28, s: 20, l: 44, name: "茶の格子" }, { h: 40, s: 14, l: 88, name: "地の白" },
+    ], toneBias: ["ltg", "d"], matte: true, technique: "トーナル配色" },
+  { match: ["kurume kasuri", "久留米絣"], ja: "久留米絣", story: "藍地に白い十字",
+    anchors: [
+      { h: 218, s: 40, l: 26, name: "久留米の藍" }, { h: 42, s: 22, l: 90, name: "括りの白" },
+      { h: 214, s: 30, l: 50, name: "褪せた藍" }, { h: 220, s: 24, l: 16, name: "濃紺の地" },
+    ], toneBias: ["dp", "p"], matte: true, technique: "同一色相配色" },
+  { match: ["hakata ori", "博多織"], ja: "博多織", story: "厚く締まる帯の紋",
+    anchors: [
+      { h: 348, s: 46, l: 32, name: "献上の臙脂" }, { h: 40, s: 24, l: 86, name: "白の献上柄" },
+      { h: 220, s: 40, l: 26, name: "紺の地" }, { h: 44, s: 54, l: 58, name: "金の縁" },
+    ], toneBias: ["dk", "p"], matte: true, technique: "リピテーション配色" },
+  { match: ["bashofu", "芭蕉布"], ja: "芭蕉布", story: "糸芭蕉の張りのある布",
+    anchors: [
+      { h: 46, s: 26, l: 76, name: "芭蕉の生成り" }, { h: 24, s: 32, l: 42, name: "車輪梅の茶" },
+      { h: 216, s: 34, l: 36, name: "藍の絣" }, { h: 60, s: 16, l: 60, name: "枯草の黄み" },
+    ], toneBias: ["ltg", "d"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["jofu", "上布", "越後上布"], ja: "上布", story: "雪にさらした苧麻",
+    anchors: [
+      { h: 44, s: 16, l: 92, name: "雪ざらしの白" }, { h: 214, s: 32, l: 40, name: "細い藍の縞" },
+      { h: 40, s: 20, l: 76, name: "苧麻の生成り" }, { h: 30, s: 14, l: 56, name: "織り目の影" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "カマイユ配色" },
+  { match: ["chirimen", "縮緬", "ちりめん"], ja: "縮緬", story: "しぼの立つ絹",
+    anchors: [
+      { h: 348, s: 40, l: 68, name: "縮緬の紅" }, { h: 40, s: 28, l: 88, name: "白縮緬" },
+      { h: 286, s: 26, l: 52, name: "紫のしぼ" }, { h: 176, s: 26, l: 56, name: "浅葱のしぼ" },
+    ], toneBias: ["sf", "lt"], matte: true, technique: "トーン・オン・トーン配色" },
+  { match: ["kumihimo", "組紐", "くみひも"], ja: "組紐", story: "何本もの糸を組み上げる",
+    anchors: [
+      { h: 348, s: 56, l: 46, name: "組みの紅" }, { h: 44, s: 60, l: 58, name: "組みの金" },
+      { h: 218, s: 46, l: 32, name: "組みの紺" }, { h: 42, s: 26, l: 90, name: "組みの白" },
+    ], toneBias: ["v", "dp"], sparkle: true, technique: "リピテーション配色" },
+  { match: ["sashiko", "刺子", "刺し子"], ja: "刺し子", story: "藍地に白い運針",
+    anchors: [
+      { h: 218, s: 42, l: 28, name: "刺し子の藍" }, { h: 42, s: 22, l: 92, name: "白い糸目" },
+      { h: 214, s: 28, l: 48, name: "褪せた藍" }, { h: 40, s: 18, l: 70, name: "布の摩耗" },
+    ], toneBias: ["dp", "p"], matte: true, technique: "セパレーション" },
+  { match: ["kogin", "こぎん刺し", "こぎん"], ja: "こぎん刺し", story: "麻に木綿で埋める菱",
+    anchors: [
+      { h: 220, s: 38, l: 26, name: "こぎんの紺" }, { h: 42, s: 24, l: 90, name: "木綿の白" },
+      { h: 218, s: 22, l: 54, name: "麻地の青み" }, { h: 30, s: 16, l: 66, name: "生成りの地" },
+    ], toneBias: ["dp", "p"], matte: true, technique: "リピテーション配色" },
+  { match: ["nishiki", "錦", "金襴"], ja: "錦", story: "金糸を織り込む",
+    anchors: [
+      { h: 44, s: 62, l: 54, name: "金襴の金" }, { h: 348, s: 54, l: 34, name: "錦の臙脂" },
+      { h: 218, s: 48, l: 28, name: "錦の紺" }, { h: 140, s: 34, l: 30, name: "錦の緑" },
+    ], toneBias: ["dk", "v"], sparkle: true, technique: "リピテーション配色" },
+  { match: ["edo komon", "江戸小紋"], ja: "江戸小紋", story: "遠目には無地に見える",
+    anchors: [
+      { h: 30, s: 8, l: 40, name: "鮫小紋の鼠" }, { h: 42, s: 22, l: 88, name: "抜きの白点" },
+      { h: 220, s: 24, l: 30, name: "紺鼠" }, { h: 24, s: 16, l: 56, name: "灰みの茶" },
+    ], toneBias: ["g", "dkg"], matte: true, technique: "カマイユ配色" },
+  // ===== 漆 =====
+  { match: ["wajima", "輪島塗"], ja: "輪島塗", story: "何度も研いで重ねた黒",
+    anchors: [
+      { h: 20, s: 24, l: 9, name: "輪島の黒" }, { h: 6, s: 70, l: 40, name: "本朱" },
+      { h: 44, s: 62, l: 54, name: "沈金の金" }, { h: 30, s: 20, l: 62, name: "研ぎ出しの照り" },
+    ], toneBias: ["dk", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["raden", "螺鈿", "らでん"], ja: "螺鈿", story: "貝が角度で色を変える",
+    anchors: [
+      { h: 20, s: 20, l: 10, name: "漆の黒地" }, { h: 186, s: 34, l: 78, name: "貝の青みの照り" },
+      { h: 320, s: 26, l: 78, name: "貝の紅みの照り" }, { h: 46, s: 40, l: 84, name: "貝の金みの照り" },
+    ], toneBias: ["dk", "p"], sparkle: true, technique: "対照トーン配色" },
+  { match: ["chinkin", "沈金"], ja: "沈金", story: "彫った溝に金を沈める",
+    anchors: [
+      { h: 20, s: 22, l: 10, name: "黒漆" }, { h: 46, s: 66, l: 56, name: "沈めた金" },
+      { h: 40, s: 34, l: 72, name: "線の光" }, { h: 24, s: 16, l: 24, name: "彫りの陰" },
+    ], toneBias: ["dk", "dkg"], sparkle: true, technique: "対照トーン配色" },
+  { match: ["negoro", "根来", "根来塗"], ja: "根来", story: "朱が擦れて黒が覗く",
+    anchors: [
+      { h: 8, s: 62, l: 44, name: "根来の朱" }, { h: 20, s: 26, l: 16, name: "下地の黒" },
+      { h: 14, s: 40, l: 62, name: "擦れた朱の淡み" }, { h: 30, s: 20, l: 34, name: "境の褐" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "同一色相配色" },
+  { match: ["tsugaru nuri", "津軽塗"], ja: "津軽塗", story: "研ぎ出すと斑が現れる",
+    anchors: [
+      { h: 20, s: 22, l: 14, name: "地の黒" }, { h: 6, s: 58, l: 42, name: "斑の朱" },
+      { h: 46, s: 52, l: 58, name: "斑の黄" }, { h: 140, s: 26, l: 34, name: "斑の緑" },
+    ], toneBias: ["dk", "d"], sparkle: true, technique: "リピテーション配色" },
+  { match: ["aizu nuri", "会津塗"], ja: "会津塗", story: "朱に金の絵柄",
+    anchors: [
+      { h: 6, s: 66, l: 44, name: "会津の朱" }, { h: 44, s: 58, l: 56, name: "金の絵" },
+      { h: 20, s: 22, l: 12, name: "黒の縁" }, { h: 30, s: 28, l: 70, name: "木地の照り" },
+    ], toneBias: ["v", "dk"], sparkle: true, technique: "セパレーション" },
+
+  // ===== 金工・硝子 =====
+  { match: ["nambu tekki", "南部鉄器", "南部鉄"], ja: "南部鉄器", story: "鋳肌の黒とあられ",
+    anchors: [
+      { h: 210, s: 6, l: 18, name: "鋳肌の黒" }, { h: 24, s: 20, l: 34, name: "錆止めの褐" },
+      { h: 210, s: 4, l: 52, name: "あられの陰影" }, { h: 30, s: 10, l: 66, name: "湯気の白" },
+    ], toneBias: ["dkg", "dk"], matte: true, technique: "トーンのグラデーション" },
+  { match: ["tsuiki", "鎚起銅器", "鎚起"], ja: "鎚起銅器", story: "叩いて締めた銅の肌",
+    anchors: [
+      { h: 18, s: 48, l: 42, name: "銅の赤" }, { h: 30, s: 34, l: 24, name: "煮色の暗褐" },
+      { h: 160, s: 26, l: 44, name: "緑青のきざし" }, { h: 36, s: 40, l: 68, name: "鎚目の照り" },
+    ], toneBias: ["d", "dk"], sparkle: true, technique: "同一色相配色" },
+  { match: ["zogan", "象嵌", "ぞうがん"], ja: "象嵌", story: "地金に別の金属を嵌める",
+    anchors: [
+      { h: 30, s: 8, l: 16, name: "黒く焼いた地金" }, { h: 46, s: 62, l: 56, name: "嵌めた金" },
+      { h: 210, s: 6, l: 76, name: "嵌めた銀" }, { h: 20, s: 34, l: 40, name: "赤銅の陰" },
+    ], toneBias: ["dk", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["shippo", "七宝", "七宝焼"], ja: "七宝", story: "金属に硝子を焼きつける",
+    anchors: [
+      { h: 196, s: 62, l: 44, name: "七宝の青" }, { h: 348, s: 56, l: 50, name: "七宝の紅" },
+      { h: 44, s: 62, l: 58, name: "銀線の金" }, { h: 40, s: 20, l: 92, name: "白の釉" },
+    ], toneBias: ["v", "dp"], sparkle: true, technique: "セパレーション" },
+  { match: ["edo kiriko", "江戸切子"], ja: "江戸切子", story: "被せ硝子を削って白を出す",
+    anchors: [
+      { h: 220, s: 62, l: 34, name: "被せの瑠璃" }, { h: 200, s: 14, l: 94, name: "削り出した透明" },
+      { h: 348, s: 56, l: 42, name: "被せの銅赤" }, { h: 210, s: 30, l: 70, name: "カットの反射" },
+    ], toneBias: ["dp", "p"], sparkle: true, technique: "対照トーン配色" },
+  { match: ["satsuma kiriko", "薩摩切子"], ja: "薩摩切子", story: "厚い被せがぼかしになる",
+    anchors: [
+      { h: 218, s: 56, l: 36, name: "薩摩の藍" }, { h: 212, s: 40, l: 66, name: "ぼかしの中間" },
+      { h: 200, s: 12, l: 93, name: "透明の地" }, { h: 288, s: 34, l: 40, name: "被せの紫" },
+    ], toneBias: ["dp", "lt"], sparkle: true, technique: "トーンのグラデーション" },
+  { match: ["ryukyu glass", "琉球ガラス", "琉球硝子"], ja: "琉球ガラス", story: "気泡を抱いた厚い硝子",
+    anchors: [
+      { h: 186, s: 54, l: 60, name: "海の青緑" }, { h: 46, s: 76, l: 62, name: "陽の黄" },
+      { h: 6, s: 66, l: 56, name: "泡盛びんの赤" }, { h: 200, s: 20, l: 88, name: "気泡の白" },
+    ], toneBias: ["b", "v"], sparkle: true, technique: "リピテーション配色" },
+  { match: ["tonbodama", "とんぼ玉", "蜻蛉玉"], ja: "とんぼ玉", story: "熔けた硝子に模様を巻く",
+    anchors: [
+      { h: 218, s: 56, l: 34, name: "地の瑠璃" }, { h: 46, s: 72, l: 60, name: "巻いた黄" },
+      { h: 42, s: 22, l: 92, name: "白の縞" }, { h: 4, s: 62, l: 48, name: "点した赤" },
+    ], toneBias: ["v", "dp"], sparkle: true, technique: "セパレーション" },
+
+  // ===== 木・紙・郷土 =====
+  { match: ["yosegi", "寄木細工"], ja: "寄木細工", story: "木の色だけで模様を組む",
+    anchors: [
+      { h: 40, s: 24, l: 84, name: "水木の白" }, { h: 26, s: 34, l: 34, name: "神代杉の黒褐" },
+      { h: 36, s: 46, l: 60, name: "櫨の黄" }, { h: 14, s: 30, l: 46, name: "桜の赤み" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "リピテーション配色" },
+  { match: ["magewappa", "曲げわっぱ"], ja: "曲げわっぱ", story: "杉を曲げて桜皮で綴じる",
+    anchors: [
+      { h: 38, s: 32, l: 80, name: "秋田杉の白木" }, { h: 30, s: 26, l: 56, name: "年輪の筋" },
+      { h: 12, s: 34, l: 38, name: "桜皮の赤褐" }, { h: 42, s: 20, l: 92, name: "削りたての白" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "同一色相配色" },
+  { match: ["kiri tansu", "桐箪笥", "桐たんす"], ja: "桐箪笥", story: "白い桐に金具ひとつ",
+    anchors: [
+      { h: 44, s: 18, l: 82, name: "桐の白" }, { h: 40, s: 14, l: 62, name: "柾目の陰" },
+      { h: 30, s: 8, l: 22, name: "鉄の金具" }, { h: 36, s: 30, l: 70, name: "経年の飴色" },
+    ], toneBias: ["ltg", "p"], matte: true, technique: "カマイユ配色" },
+  { match: ["takezaiku", "竹細工", "竹編み"], ja: "竹細工", story: "青竹が飴色に変わるまで",
+    anchors: [
+      { h: 76, s: 34, l: 58, name: "青竹" }, { h: 38, s: 44, l: 62, name: "晒し竹の黄" },
+      { h: 28, s: 34, l: 36, name: "煤竹の褐" }, { h: 40, s: 22, l: 86, name: "白竹" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "トーンのグラデーション" },
+  { match: ["kokeshi", "こけし"], ja: "こけし", story: "白木に赤と黒だけ",
+    anchors: [
+      { h: 40, s: 24, l: 88, name: "白木の胴" }, { h: 356, s: 66, l: 50, name: "描彩の赤" },
+      { h: 30, s: 12, l: 16, name: "髪の黒" }, { h: 46, s: 60, l: 60, name: "菊の黄" },
+    ], toneBias: ["p", "v"], matte: true, technique: "セパレーション" },
+  { match: ["hariko", "張子", "張り子"], ja: "張子", story: "紙を貼って胡粉を塗る",
+    anchors: [
+      { h: 42, s: 20, l: 92, name: "胡粉の白" }, { h: 356, s: 68, l: 48, name: "張子の赤" },
+      { h: 30, s: 12, l: 16, name: "描き線の墨" }, { h: 140, s: 40, l: 36, name: "彩色の緑" },
+    ], toneBias: ["v", "p"], matte: true, technique: "セパレーション" },
+  { match: ["daruma", "だるま", "達磨"], ja: "だるま", story: "赤い姿と金の眉",
+    anchors: [
+      { h: 358, s: 74, l: 46, name: "だるまの朱赤" }, { h: 44, s: 60, l: 58, name: "金の縁取り" },
+      { h: 30, s: 10, l: 14, name: "描き入れの墨" }, { h: 40, s: 22, l: 90, name: "顔の胡粉" },
+    ], toneBias: ["v", "dk"], matte: true, technique: "セパレーション" },
+  { match: ["mizuhiki", "水引"], ja: "水引", story: "こよりに色を掛けて結ぶ",
+    anchors: [
+      { h: 356, s: 68, l: 48, name: "祝いの紅" }, { h: 42, s: 22, l: 94, name: "祝いの白" },
+      { h: 46, s: 62, l: 58, name: "金の水引" }, { h: 210, s: 6, l: 74, name: "銀の水引" },
+    ], toneBias: ["v", "p"], sparkle: true, technique: "セパレーション" },
+  { match: ["origami", "折り紙", "おりがみ"], ja: "折り紙", story: "一枚の紙の裏と表",
+    anchors: [
+      { h: 356, s: 70, l: 56, name: "折り紙の赤" }, { h: 210, s: 62, l: 52, name: "折り紙の青" },
+      { h: 48, s: 80, l: 62, name: "折り紙の黄" }, { h: 42, s: 22, l: 94, name: "裏の白" },
+    ], toneBias: ["v", "b"], matte: true, technique: "リピテーション配色" },
+  { match: ["karakami", "唐紙"], ja: "唐紙", story: "雲母が角度で光る",
+    anchors: [
+      { h: 44, s: 22, l: 88, name: "紙の生成り" }, { h: 40, s: 18, l: 74, name: "雲母の刷り" },
+      { h: 30, s: 16, l: 52, name: "版木の陰" }, { h: 216, s: 18, l: 66, name: "藍の刷り" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "フォ・カマイユ配色" },
+
+  // ===== 日本の名所(分類では取り違えやすいので直接持つ) =====
+  { match: ["sakurajima", "桜島"], ja: "桜島", story: "噴煙を上げつづける島",
+    anchors: [
+      { h: 24, s: 10, l: 20, name: "溶岩の黒" }, { h: 210, s: 8, l: 64, name: "噴煙の灰" },
+      { h: 200, s: 44, l: 46, name: "錦江湾の青" }, { h: 46, s: 56, l: 62, name: "夕陽の照り" },
+    ], toneBias: ["dkg", "dp"], matte: true, technique: "対照トーン配色" },
+  { match: ["aso", "阿蘇"], ja: "阿蘇", story: "草千里とカルデラ",
+    anchors: [
+      { h: 92, s: 40, l: 48, name: "草千里の緑" }, { h: 24, s: 14, l: 24, name: "火口の黒" },
+      { h: 46, s: 52, l: 66, name: "枯草の金" }, { h: 190, s: 30, l: 60, name: "湯だまりの碧" },
+    ], toneBias: ["sf", "dk"], matte: true, technique: "対照色相配色" },
+  { match: ["kumano", "熊野"], ja: "熊野", story: "杉木立の参詣道",
+    anchors: [
+      { h: 130, s: 30, l: 24, name: "杉木立の深緑" }, { h: 8, s: 66, l: 44, name: "社殿の朱" },
+      { h: 30, s: 16, l: 46, name: "石段の苔むし" }, { h: 200, s: 14, l: 78, name: "山の靄" },
+    ], toneBias: ["dp", "dk"], matte: true },
+  { match: ["nachi", "那智"], ja: "那智", story: "朱の塔と一筋の滝",
+    anchors: [
+      { h: 6, s: 70, l: 46, name: "三重塔の朱" }, { h: 190, s: 16, l: 90, name: "滝の白" },
+      { h: 140, s: 34, l: 26, name: "原生林の緑" }, { h: 30, s: 12, l: 40, name: "濡れた岩" },
+    ], toneBias: ["v", "dp"], matte: true, technique: "対照色相配色" },
 ];
 
 // テーマ文字列を辞書エントリの列に解決する

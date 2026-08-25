@@ -16,6 +16,7 @@ const ASSETS = [
   "./js/wacolor.js",
   "./js/trend.js",
   "./js/associations.js",
+  "./js/entries-imported.js",
   "./js/dictionary.js",
   "./js/category-data.js",
   "./js/categories.js",

@@ -14,7 +14,7 @@ DIST = ROOT / "dist"
 DIST.mkdir(exist_ok=True)
 
 JS_FILES = ["pccs.js", "techniques.js", "palette.js", "wacolor-data.js", "wacolor.js",
-            "trend.js", "associations.js", "dictionary.js", "category-data.js", "categories.js",
+            "trend.js", "associations.js", "entries-imported.js", "dictionary.js", "category-data.js", "categories.js",
             "match.js", "export.js", "app.js"]
 
 

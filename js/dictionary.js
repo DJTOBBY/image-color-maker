@@ -3123,12 +3123,18 @@ const DICTIONARY = [
     ], toneBias: ["v", "dp"], matte: true, technique: "対照色相配色" },
 ];
 
+// 表から取り込んだ項目(tools/import-entries.py)も、手で書いた辞書と同じに扱う
+function allEntries() {
+  return typeof IMPORTED_ENTRIES !== "undefined"
+    ? DICTIONARY.concat(IMPORTED_ENTRIES) : DICTIONARY;
+}
+
 // テーマ文字列を辞書エントリの列に解決する
 function lookupTheme(input) {
   const raw = input.trim();
   const lower = raw.toLowerCase().replace(/[_\-]+/g, " ");
   const hits = [];
-  for (const entry of DICTIONARY) {
+  for (const entry of allEntries()) {
     for (const m of entry.match) {
       const isAscii = /^[a-z ]+$/.test(m);
       const found = isAscii
@@ -3158,7 +3164,7 @@ function lookupColorWords(input) {
   // 「紫禁城」の「紫」、「青丹」の「青」のように、
   // 物語辞書や伝統色名の長い語の内部に埋もれた色字は色語として拾わない
   const themeHits = [
-    ...DICTIONARY.flatMap(e => e.match.filter(m => raw.includes(m))),
+    ...allEntries().flatMap(e => e.match.filter(m => raw.includes(m))),
     ...(typeof WACOLORS !== "undefined"
       ? WACOLORS.map(w => w.name).filter(n => n.length >= 2 && raw.includes(n)) : []),
   ];

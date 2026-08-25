@@ -219,5 +219,19 @@ const WaColor = (() => {
     return entries;
   }
 
-  return { nearest, lookup, WACOLORS, KASANE };
+  // 手で色を選び直すための候補。
+  // その色に近い伝統色を、明るい順に並べて返す(暗い→明るいの幅も見せたいので広めに拾う)
+  function neighbors(hex, limit = 12) {
+    const lab = hexToLab(hex);
+    return ensureLab()
+      .map(w => ({ ...w, d: labDist(lab, w.lab) * (w.jp === false ? 1.4 : 1) }))
+      .sort((a, b) => a.d - b.d)
+      .slice(0, limit)
+      .sort((a, b) => {
+        const la = hexToLab(a.hex)[0], lb = hexToLab(b.hex)[0];
+        return lb - la;
+      });
+  }
+
+  return { nearest, neighbors, lookup, WACOLORS, KASANE };
 })();

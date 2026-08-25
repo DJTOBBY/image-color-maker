@@ -306,7 +306,7 @@ function generatePalette(input, count = 6, variant = 0, locked = []) {
   // 明→暗に並べ、PCCS分類を付ける
   picked.sort((a, b) => b.l - a.l);
   // 色を機械的に展開したときの仮の名前。物語を語らないので、伝統色名に置き換える対象
-  const MACHINE_NAME = /(のティント|のシェード)$|^(となりの色相|もうひとつの隣|対岸の色|灯りの色|無題の色)$/;
+  const MACHINE_NAME = /(のティント|のシェード|のペール|のライト|のソフト|のダル|のディープ|のダーク|のブライト|のストロング|のビビッド)$|^(となりの色相|もうひとつの隣|対岸の色|灯りの色|無題の色|面影の色|残響の色)$/;
   // 伝統色に該当が無いほど鮮烈な色のための、最後の名付け。
   // PCCSの色相とトーンの言葉で呼ぶ(「冴えた青」など)
   const fallbackName = (c) => {
@@ -337,6 +337,7 @@ function generatePalette(input, count = 6, variant = 0, locked = []) {
       hex: c.hex, h: c.h, s: c.s, l: c.l,
       name, from: c.from,
       locked: !!c.locked,
+      seedCode: c.seedCode || null,   // 「このビーズを使う」で指定された品番
       pccs: PCCS.classify(c.h, c.s, c.l),
       wa: wa && wa.name === name ? null : wa,
     };

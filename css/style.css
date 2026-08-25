@@ -60,16 +60,131 @@ button.primary:hover { background: #000; }
   margin-top: 12px; font-size: 0.75rem; color: var(--ink-soft); line-height: 1.8;
 }
 
-/* 手持ちビーズ */
-.mybeads { margin-top: 14px; font-size: 0.8rem; color: var(--ink-soft); }
-.mybeads summary { cursor: pointer; letter-spacing: 0.05em; }
-.mybeads textarea {
-  width: 100%; margin-top: 8px; padding: 10px 12px; font-family: var(--sans);
-  font-size: 0.85rem; border: 1px solid var(--line); border-radius: 8px; background: #fff;
-  resize: vertical;
+/* このビーズを使う(品番3つ・ふだんは畳んでおく) */
+.seed-beads { margin-top: 14px; }
+.seed-beads > summary {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  font-size: 0.8rem; color: var(--ink-soft);
 }
-.mybeads .inv-only { display: block; margin-top: 6px; cursor: pointer; }
-#inventory-count { color: var(--accent); }
+.seed-beads > summary::-webkit-details-marker { display: none; }
+.seed-beads > summary::before {
+  content: "▶"; font-size: 0.6rem; color: var(--ink-soft);
+  transition: transform 0.15s; display: inline-block;
+}
+.seed-beads[open] > summary::before { transform: rotate(90deg); }
+.seed-title { font-size: 0.8rem; color: var(--ink); letter-spacing: 0.08em; }
+.seed-note { font-size: 0.72rem; color: var(--ink-soft); }
+.seed-badge { font-size: 0.72rem; color: var(--accent); }
+.seed-row { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; flex-wrap: wrap; }
+.seed-field { flex: 1; min-width: 130px; display: block; }
+.seed-input {
+  width: 100%; padding: 8px 10px; font-family: var(--sans); font-size: 0.9rem;
+  border: 1px solid var(--line); border-radius: 6px; background: #fff;
+  letter-spacing: 0.05em;
+}
+.seed-input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.seed-chip {
+  display: block; margin-top: 4px; font-size: 0.68rem; color: var(--ink-soft);
+  min-height: 1.2em;
+}
+.seed-chip i {
+  display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+  margin-right: 5px; vertical-align: -1px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+}
+.seed-chip.is-missing { color: #b3541e; }
+#seed-clear { align-self: center; }
+/* 資料の中で、指定したビーズの色だと分かるようにする */
+.seed-mark {
+  display: inline-block; margin-left: 4px; font-size: 0.6rem;
+  color: var(--accent); border: 1px solid var(--accent); border-radius: 3px;
+  padding: 0 4px; letter-spacing: 0.03em;
+}
+
+/* 保存・作品へのリンク */
+.quick-links { margin-top: 12px; display: flex; gap: 18px; }
+
+/* モーダル(保存したパレット / 作品) */
+.modal {
+  position: fixed; inset: 0; z-index: 60; background: rgba(30, 28, 25, 0.72);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.modal[hidden] { display: none; }
+.modal-box {
+  background: #fff; border-radius: 8px; width: min(760px, 94vw);
+  max-height: 88vh; display: flex; flex-direction: column;
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+}
+.modal-head h2 { font-family: var(--serif); font-size: 1.05rem; letter-spacing: 0.1em; }
+.modal-close {
+  background: none; border: none; font-size: 1.3rem; line-height: 1;
+  color: var(--ink-soft); cursor: pointer; padding: 0 4px;
+}
+.modal-body { padding: 20px; overflow: auto; }
+.modal-note { font-size: 0.76rem; color: var(--ink-soft); line-height: 1.7; }
+
+/* 保存したパレットの一覧 */
+.saved-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.saved-card { position: relative; }
+.saved-open {
+  width: 100%; text-align: left; cursor: pointer;
+  background: none; border: 1px solid var(--line); border-radius: 6px;
+  padding: 8px; font-family: var(--sans);
+}
+.saved-open:hover { border-color: var(--accent); }
+.saved-open b { display: block; font-size: 0.82rem; margin-top: 6px; }
+.saved-band { display: flex; height: 34px; border-radius: 3px; overflow: hidden; }
+.saved-band i { flex: 1; }
+.saved-meta { font-size: 0.68rem; color: var(--ink-soft); }
+.saved-del {
+  position: absolute; top: 4px; right: 4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(255,255,255,0.9); border: 1px solid var(--line);
+  color: var(--ink-soft); cursor: pointer; font-size: 0.8rem; line-height: 1;
+}
+.saved-del:hover { color: #c0392b; border-color: #c0392b; }
+
+/* 作品一覧(モーダル内) */
+.modal-works .work-card figcaption { position: relative; }
+.work-theme {
+  display: inline-block; margin-top: 3px; font-size: 0.68rem; color: var(--accent);
+  border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; cursor: pointer;
+}
+.work-theme:hover { border-color: var(--accent); }
+.work-band { display: flex; height: 8px; margin-top: 5px; border-radius: 2px; overflow: hidden; }
+.work-band i { flex: 1; }
+
+/* 作品登録フォーム */
+.field { display: block; margin-bottom: 12px; }
+.field > span { display: block; font-size: 0.76rem; color: var(--ink-soft); margin-bottom: 4px; }
+.field input[type="text"], .field textarea {
+  width: 100%; padding: 8px 10px; font-family: var(--sans); font-size: 0.9rem;
+  border: 1px solid var(--line); border-radius: 6px; background: #fff; resize: vertical;
+}
+.field-actions { display: flex; align-items: center; gap: 12px; margin: 14px 0 10px; }
+
+/* 色を選び直すパネル */
+.swap-panel {
+  grid-column: 1 / -1; margin-top: 10px; padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+.swap-title { font-size: 0.7rem; color: var(--ink-soft); margin-bottom: 8px; letter-spacing: 0.06em; }
+.swap-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.swap-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--line); border-radius: 999px;
+  padding: 3px 10px 3px 4px; cursor: pointer;
+  font-family: var(--sans); font-size: 0.7rem; color: var(--ink);
+}
+.swap-chip:hover { border-color: var(--accent); }
+.swap-dot { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); }
+/* 色の丸は押せることが分かるように */
+.bead-row .dot { border: none; padding: 0; cursor: pointer; }
+.bead-row .dot:hover { box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08), 0 0 0 3px var(--line); }
 
 /* 別の配色を試す(資料の上に置く) */
 .vary-bar {

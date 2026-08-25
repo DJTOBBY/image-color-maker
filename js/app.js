@@ -65,19 +65,6 @@ function toneMapSVG(usedToneKeys, mainHueDeg) {
   return out;
 }
 
-// ---------- 在庫リスト ----------
-const INV_KEY = "icm-inventory";
-function parseInventory(text) {
-  return new Set(text.toUpperCase().split(/[\s,、。/]+/).filter(s => /^[0-9A-Z\-]+$/.test(s)));
-}
-function currentInventory() {
-  return parseInventory($("#inventory-input").value || "");
-}
-function updateInventoryCount() {
-  const n = currentInventory().size;
-  $("#inventory-count").textContent = n ? ` ${n}品番` : "";
-}
-
 // ---------- シート描画 ----------
 function renderSheet(palette, matches) {
   const { colors } = palette;
@@ -117,9 +104,12 @@ function renderSheet(palette, matches) {
     return `
       <div class="bead-row${c.locked ? " is-locked" : ""}">
         <div class="color-cell">
-          <div class="dot" style="background:${c.hex}"></div>
+          <button type="button" class="dot" style="background:${c.hex}"
+            data-swap="${i}" data-hex="${esc(c.hex)}"
+            title="この色を選び直す"></button>
           <div class="color-meta">
             <b>${esc(c.name)}</b>
+            ${c.seedCode ? `<span class="seed-mark">使用: No.${esc(c.seedCode)}</span>` : ""}
             ${c.hex.toUpperCase()}
             ${c.wa ? `<span class="wa-name">≒ ${esc(c.wa.name)}(${esc(c.wa.kana)})</span>` : ""}
             <span class="pccs-tag">${pccsLine}</span>
@@ -129,8 +119,11 @@ function renderSheet(palette, matches) {
       </div>`;
   }).join("");
 
-  // 作品事例
-  const workItems = BeadMatcher.worksFor(palette.input);
+  // 作品事例(共有データ + このブラウザに登録した自分の作品)
+  const workItems = [
+    ...BeadMatcher.worksFor(palette.input),
+    ...(typeof MyWorks !== "undefined" ? MyWorks.forTheme(palette.input) : []),
+  ];
   const worksHtml = workItems.length ? `
     <div class="works">
       <h3>この物語で作った作品</h3>
@@ -219,6 +212,155 @@ function updateVaryHint() {
   $("#unlock-btn").hidden = n === 0;
 }
 
+// ---------- 使いたいビーズ(品番3つまで) ----------
+const SEED_IDS = ["#seed-1", "#seed-2", "#seed-3"];
+
+// 入力された品番を、実在するビーズに解決する
+function resolveSeedBeads() {
+  const found = [];
+  SEED_IDS.forEach((sel, i) => {
+    const raw = $(sel).value.trim();
+    const chip = $(`#seed-chip-${i + 1}`);
+    if (!raw) { chip.textContent = ""; chip.className = "seed-chip"; return; }
+    const bead = BeadMatcher.findByCode(raw);
+    if (bead) {
+      chip.className = "seed-chip is-found";
+      chip.innerHTML = `<i style="background:${bead.hex}"></i>${esc(bead.shape)}`;
+      found.push(bead);
+    } else {
+      chip.className = "seed-chip is-missing";
+      chip.textContent = "見つかりません";
+    }
+  });
+  $("#seed-clear").hidden = !SEED_IDS.some(s => $(s).value.trim());
+  // 折りたたんでいても、いま何色指定しているか分かるようにする
+  $("#seed-badge").textContent = found.length ? `${found.length}色を指定中` : "";
+  return found;
+}
+
+// 使いたいビーズを「残す色」として登録する。
+// こうすると、そのビーズの色が必ずパレットに入り、周りだけが組み替わる
+function seedsToLocked(beads) {
+  return beads.map(b => {
+    const wa = WaColor.nearest(b.hex, 40);
+    return { hex: b.hex, name: wa ? wa.name : `No.${b.code}`, seedCode: b.code };
+  });
+}
+
+// ---------- 保存したパレット / 作品の一覧 ----------
+function refreshCounts() {
+  const s = SavedPalettes.all().length;
+  const w = MyWorks.all().length;
+  $("#saved-count").textContent = s ? ` ${s}` : "";
+  $("#works-count").textContent = w ? ` ${w}` : "";
+}
+
+function closeModal() { $("#modal").hidden = true; }
+
+function openModal(kind) {
+  const body = $("#modal-body");
+  if (kind === "saved") {
+    $("#modal-title").textContent = "保存したパレット";
+    const list = SavedPalettes.all();
+    body.innerHTML = list.length ? `
+      <div class="saved-grid">
+        ${list.map(s => `
+          <div class="saved-card">
+            <button type="button" class="saved-open" data-id="${esc(s.id)}">
+              <span class="saved-band">${s.swatches.map(h => `<i style="background:${h}"></i>`).join("")}</span>
+              <b>${esc(s.input)}</b>
+              <span class="saved-meta">${s.swatches.length}色 / ${esc(s.technique || "")}</span>
+            </button>
+            <button type="button" class="saved-del" data-del="${esc(s.id)}" title="削除">×</button>
+          </div>`).join("")}
+      </div>` : `<p class="modal-note">まだ保存したパレットはありません。資料の下の「このパレットを保存」から残せます。</p>`;
+  } else {
+    $("#modal-title").textContent = "登録した作品";
+    const list = MyWorks.all();
+    body.innerHTML = list.length ? `
+      <div class="works-grid modal-works">
+        ${list.map(w => `
+          <figure class="work-card">
+            <img src="${w.image}" alt="${esc(w.title)}">
+            <figcaption>
+              <b>${esc(w.title)}</b>
+              ${w.theme ? `<span class="work-theme" data-theme="${esc(w.theme)}">${esc(w.theme)}</span>` : ""}
+              ${w.note ? `<span>${esc(w.note)}</span>` : ""}
+              ${w.colors?.length ? `<span class="work-band">${w.colors.map(c => `<i style="background:${c.hex}"></i>`).join("")}</span>` : ""}
+              <button type="button" class="saved-del" data-delwork="${esc(w.id)}" title="削除">×</button>
+            </figcaption>
+          </figure>`).join("")}
+      </div>` : `<p class="modal-note">まだ作品はありません。パレットを作ったあと「作品を登録」から写真を追加できます。</p>`;
+  }
+
+  body.onclick = e => {
+    const open = e.target.closest(".saved-open");
+    if (open) {
+      const s = SavedPalettes.all().find(x => x.id === open.dataset.id);
+      if (s) {
+        $("#theme-input").value = s.input;
+        $("#color-count").value = String(s.count);
+        lockedColors.clear();
+        (s.locked || []).forEach(l => lockedColors.set(l.hex.toLowerCase(), l));
+        updateVaryHint();
+        closeModal();
+        run(s.variant || 0);
+      }
+      return;
+    }
+    const del = e.target.closest("[data-del]");
+    if (del) { SavedPalettes.remove(del.dataset.del); refreshCounts(); openModal("saved"); return; }
+    const delw = e.target.closest("[data-delwork]");
+    if (delw) { MyWorks.remove(delw.dataset.delwork); refreshCounts(); openModal("works"); return; }
+    // 作品のテーマを押すと、その配色をもう一度作る
+    const th = e.target.closest(".work-theme");
+    if (th) {
+      $("#theme-input").value = th.dataset.theme;
+      lockedColors.clear(); updateVaryHint(); closeModal(); run(0);
+    }
+  };
+  $("#modal").hidden = false;
+}
+
+// ---------- 色を手で選び直す ----------
+// いま出ている色をすべて固定したうえで、選ばれた1色だけを別の色に差し替える。
+// こうすると「この色だけ変えたい」が、他の色を巻き込まずに叶う
+function replaceColor(index, newColor) {
+  const cur = window.__lastResult?.palette?.colors;
+  if (!cur) return;
+  lockedColors.clear();
+  cur.forEach((c, i) => {
+    const use = (i === index) ? newColor : c;
+    lockedColors.set(use.hex.toLowerCase(), { hex: use.hex, name: use.name });
+  });
+  updateVaryHint();
+  run(window.__lastResult.palette.variant || 0);
+}
+
+// 色の丸を押したときに開く、差し替え候補
+function openSwapPanel(row, index, hex) {
+  row.querySelectorAll(".swap-panel").forEach(el => el.remove());
+  const cands = WaColor.neighbors(hex, 12);
+  const panel = document.createElement("div");
+  panel.className = "swap-panel no-print";
+  panel.innerHTML = `
+    <div class="swap-title">近い伝統色から選び直す</div>
+    <div class="swap-list">
+      ${cands.map(c => `
+        <button type="button" class="swap-chip" data-hex="${esc(c.hex)}" data-name="${esc(c.name)}"
+          title="${esc(c.name)}${c.kana ? `(${esc(c.kana)})` : ""}">
+          <span class="swap-dot" style="background:${c.hex}"></span>
+          <span class="swap-name">${esc(c.name)}</span>
+        </button>`).join("")}
+    </div>`;
+  panel.addEventListener("click", e => {
+    const chip = e.target.closest(".swap-chip");
+    if (!chip) return;
+    replaceColor(index, { hex: chip.dataset.hex, name: chip.dataset.name });
+  });
+  row.appendChild(panel);
+}
+
 // ---------- イベント ----------
 async function run(variant = 0) {
   const input = $("#theme-input").value.trim();
@@ -228,12 +370,40 @@ async function run(variant = 0) {
   btn.disabled = true; btn.textContent = "配色中…";
   try {
     await BeadMatcher.load();
+
+    // 「このビーズを使う」に入れた品番は、その色を必ずパレットに含める
+    const seedBeads = resolveSeedBeads();
+    let locked = lockedList();
+    if (seedBeads.length) {
+      // 画面で色を残しているときは、それも一緒に活かす(重複はビーズ側を優先)
+      const seeds = seedsToLocked(seedBeads);
+      const hexes = new Set(seeds.map(s => s.hex.toLowerCase()));
+      locked = [...seeds, ...locked.filter(l => !hexes.has(l.hex.toLowerCase()))];
+    }
+
+    // 入力欄に品番だけを打った場合も、そのビーズを主役にする
+    let beadSeed = null;
+    const looksLikeCode = /^[#\s]*(toho\s*)?(no\.?\s*)?[0-9A-Za-z][0-9A-Za-z\-]*$/i.test(input)
+      && /[0-9]/.test(input) && lookupTheme(input).length === 0;
+    if (!locked.length && looksLikeCode) {
+      beadSeed = BeadMatcher.findByCode(input);
+      if (beadSeed) locked = seedsToLocked([beadSeed]);
+    }
+
     const palette = generatePalette(
-      input, Number($("#color-count").value), variant, lockedList());
+      input, Number($("#color-count").value), variant, locked);
+
+    // 使ったビーズを資料に書き添える
+    const usedSeeds = seedBeads.length ? seedBeads : (beadSeed ? [beadSeed] : []);
+    if (usedSeeds.length) {
+      palette.seedBeads = usedSeeds;
+      const list = usedSeeds.map(b => `No.${b.code}`).join("・");
+      palette.story = seedBeads.length
+        ? `${list} を使った配色`
+        : `TOHO ${list}(${usedSeeds[0].shape} / ${usedSeeds[0].finish})を主役に組んだ配色`;
+    }
     const matches = BeadMatcher.match(palette.colors, {
       sparkle: palette.sparkle, matte: palette.matte, perColor: 3,
-      inventory: currentInventory(),
-      inventoryOnly: $("#inventory-only").checked,
     });
     renderSheet(palette, matches);
     window.__lastResult = { palette, matches };
@@ -250,6 +420,7 @@ async function run(variant = 0) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  refreshCounts();
   const ex = $("#examples");
   for (const name of EXAMPLES) {
     const chip = document.createElement("button");
@@ -269,6 +440,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const current = window.__lastResult?.palette?.variant || 0;
     run(current + 1);
   });
+  // 色の丸: 押すと、近い伝統色から選び直せる
+  $("#result").addEventListener("click", e => {
+    const dot = e.target.closest(".dot[data-swap]");
+    if (!dot) return;
+    const row = dot.closest(".bead-row");
+    const open = row.querySelector(".swap-panel");
+    document.querySelectorAll(".swap-panel").forEach(el => el.remove());
+    if (!open) openSwapPanel(row, Number(dot.dataset.swap), dot.dataset.hex);
+  });
+
   // 鍵ボタン: 押した色を残す/残すのをやめる(パレットは描き直されるので委譲で拾う)
   $("#result").addEventListener("click", e => {
     const btn = e.target.closest(".lock-btn");
@@ -292,6 +473,75 @@ document.addEventListener("DOMContentLoaded", () => {
     run(window.__lastResult?.palette?.variant || 0);
   });
 
+  // ---- 使いたいビーズ(品番3つ) ----
+  SEED_IDS.forEach(sel => {
+    const el = $(sel);
+    // 打ち終わったら品番を照合して、色と種類をその場に出す
+    el.addEventListener("input", () => { if (BeadMatcher.ready?.()) resolveSeedBeads(); });
+    el.addEventListener("change", () => resolveSeedBeads());
+    el.addEventListener("keydown", e => { if (e.key === "Enter") run(0); });
+  });
+  $("#seed-clear").addEventListener("click", () => {
+    SEED_IDS.forEach(s => { $(s).value = ""; });
+    resolveSeedBeads();
+    if (window.__lastResult) run(window.__lastResult.palette.variant || 0);
+  });
+
+  // ---- パレットの保存 ----
+  $("#save-btn").addEventListener("click", () => {
+    const r = window.__lastResult;
+    if (!r) return;
+    const saved = SavedPalettes.add(r.palette, lockedList());
+    const btn = $("#save-btn");
+    btn.textContent = saved ? "保存しました" : "保存済みです";
+    setTimeout(() => { btn.textContent = "このパレットを保存"; }, 1800);
+    refreshCounts();
+  });
+
+  // ---- 一覧(保存したパレット / 作品)----
+  $("#open-saved").addEventListener("click", () => openModal("saved"));
+  $("#open-works").addEventListener("click", () => openModal("works"));
+  $("#modal-close").addEventListener("click", closeModal);
+  $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
+
+  // ---- 作品の登録 ----
+  $("#addwork-btn").addEventListener("click", () => {
+    const r = window.__lastResult;
+    if (!r) return;
+    $("#work-theme-note").textContent = `「${r.palette.input}」の配色として登録します`;
+    $("#work-title").value = "";
+    $("#work-note").value = "";
+    $("#work-file").value = "";
+    $("#work-status").textContent = "";
+    $("#work-modal").hidden = false;
+  });
+  $("#work-close").addEventListener("click", () => { $("#work-modal").hidden = true; });
+  $("#work-modal").addEventListener("click", e => {
+    if (e.target.id === "work-modal") $("#work-modal").hidden = true;
+  });
+  $("#work-save").addEventListener("click", async () => {
+    const file = $("#work-file").files[0];
+    const status = $("#work-status");
+    if (!file) { status.textContent = "写真を選んでください"; return; }
+    const r = window.__lastResult;
+    status.textContent = "登録中…";
+    try {
+      await MyWorks.add({
+        file,
+        title: $("#work-title").value.trim(),
+        note: $("#work-note").value.trim(),
+        theme: r.palette.input,
+        colors: r.palette.colors.map(c => ({ hex: c.hex, name: c.name })),
+        beads: r.matches.map(m => m[0]?.bead.code).filter(Boolean),
+      });
+      status.textContent = "登録しました";
+      refreshCounts();
+      setTimeout(() => { $("#work-modal").hidden = true; run(r.palette.variant || 0); }, 800);
+    } catch (err) {
+      status.textContent = "登録できませんでした(" + err.message + ")";
+    }
+  });
+
   $("#print-btn").addEventListener("click", () => window.print());
   $("#jpeg-btn").addEventListener("click", () => {
     if (window.__lastResult) JpegExport.exportJpeg(window.__lastResult.palette, window.__lastResult.matches);
@@ -307,15 +557,6 @@ document.addEventListener("DOMContentLoaded", () => {
       prompt("このリンクをコピーしてください", location.href);
     }
     setTimeout(() => { btn.textContent = "シェアリンクをコピー"; }, 2000);
-  });
-
-  // 在庫リスト: localStorage に自動保存
-  const inv = $("#inventory-input");
-  inv.value = localStorage.getItem(INV_KEY) || "";
-  updateInventoryCount();
-  inv.addEventListener("input", () => {
-    localStorage.setItem(INV_KEY, inv.value);
-    updateInventoryCount();
   });
 
   // PWA: アプリとしてインストールできるようにする

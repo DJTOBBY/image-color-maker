@@ -111,5 +111,18 @@ const BeadMatcher = (() => {
     });
   }
 
-  return { load, match, worksFor };
+  // 品番からビーズを1つ引く(「939F」「TOHO 939F」「no.939f」などの揺れを吸収する)
+  function findByCode(input) {
+    if (!beads) return null;
+    const key = String(input).toUpperCase()
+      .replace(/TOHO/g, "").replace(/NO\.?/g, "").replace(/[#\s]/g, "").trim();
+    if (!key) return null;
+    return beads.find(b => b.code.toUpperCase() === key)
+        || beads.find(b => b.code.toUpperCase().replace(/[-\s]/g, "") === key.replace(/[-\s]/g, ""))
+        || null;
+  }
+
+  function ready() { return !!beads; }
+
+  return { load, match, worksFor, findByCode, ready };
 })();

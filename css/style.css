@@ -299,7 +299,24 @@ button.primary.secondary:hover { background: var(--ink); color: #fff; }
   font-family: var(--sans); font-size: 0.75rem; text-decoration: underline;
 }
 
-.site-footer { text-align: center; color: var(--ink-soft); font-size: 0.72rem; padding: 24px 16px 48px; }
+.site-footer {
+  text-align: center; color: var(--ink-soft); font-size: 0.72rem;
+  padding: 30px 16px 48px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.site-footer p { max-width: 620px; }
+
+/* TOHO BEADS ロゴ。ロゴ本来の紺ではなく、資料と同じ墨色で静かに置く */
+.toho-logo-link {
+  display: inline-flex; color: var(--ink-soft);
+  transition: color 0.2s, opacity 0.2s;
+  opacity: 0.75;
+}
+.toho-logo-link:hover { color: var(--ink); opacity: 1; }
+.toho-logo { height: 30px; width: auto; display: block; }
+.toho-logo-link:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px;
+}
 
 /* ---------- 資料シート ---------- */
 .sheet {

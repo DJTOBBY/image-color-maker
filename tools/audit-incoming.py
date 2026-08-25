@@ -30,8 +30,19 @@ ROLE_NAME = re.compile(r"[・:：](主調|副調|アクセント|陰影|光|ベ�
 # 知覚的に同じとみなす差(CIE Lab)。3を下回ると並べても区別がつかない
 SAME_COLOR = 3.0
 # 判定の線引き。これまで測った4つのデータの実績から置いている
-#   自前の辞書 1.70 / v2 1.43 / 追加版 0.19 / v1 0.06
+#   無彩色(白黒灰)を除いた、1項目あたりの「その項目だけの色」の数。
+#   自前の辞書と過去の納品を同じ数え方で測って置いている。
 MIN_UNIQUE = 1.0
+
+
+# これ未満の彩度は無彩色として扱い、専用色の数えから外す
+NEUTRAL_S = 18
+
+
+def saturation(hexstr):
+    import colorsys
+    r, g, b = (int(hexstr[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    return colorsys.rgb_to_hls(r, g, b)[2] * 100
 
 
 def lab(hexstr):
@@ -159,7 +170,11 @@ def main():
     have = existing_words()
     all_hex = [h for e in E for h in e["hexes"]]
     gid, ngroups = group_colors(all_hex)
-    count = collections.Counter(gid[h] for h in all_hex)
+    # 白・黒・灰は重なって当然(「枝雪の白」も「冠羽の白」も白)。
+    # 専用色を数えるときは無彩色を外さないと、正直に白を白と置いた
+    # データほど低く出てしまう。
+    chroma = [h for h in all_hex if saturation(h) >= NEUTRAL_S]
+    count = collections.Counter(gid[h] for h in chroma)
 
     print(f"項目 {len(E)} / のべ色 {len(all_hex)}")
     print(f"  完全に一致しない色: {len(set(all_hex))}")
@@ -168,8 +183,9 @@ def main():
     # 見せかけていると、ここに大きな塊が出る。
     clusters = collections.Counter(gid[h] for h in set(all_hex))
     biggest = clusters.most_common(1)[0][1]
-    if biggest >= 8:
-        sample = sorted(h for h in set(all_hex) if gid[h] == clusters.most_common(1)[0][0])
+    big_hex = [h for h in set(all_hex) if gid[h] == clusters.most_common(1)[0][0]]
+    if biggest >= 8 and saturation(big_hex[0]) >= NEUTRAL_S:
+        sample = sorted(big_hex)
         print(f"  ※ 見分けのつかない色が最大 {biggest} 色ぶん重なっている: "
               + " ".join(sample[:5]) + " …")
     broken = [e["term"] for e in E if e["broken"]]
@@ -183,7 +199,8 @@ def main():
         by[e["cat"]].append(e)
     verdicts = {}
     for cat, es in sorted(by.items(), key=lambda x: -len(x[1])):
-        uq = [sum(1 for h in e["hexes"] if count[gid[h]] == 1) for e in es]
+        uq = [sum(1 for h in e["hexes"]
+                  if saturation(h) >= NEUTRAL_S and count[gid[h]] == 1) for e in es]
         avg = sum(uq) / len(es)
         role = sum(1 for e in es
                    if sum(1 for n in e["names"] if ROLE_NAME.search(n)) >= 3) / len(es)
@@ -197,7 +214,7 @@ def main():
         else:
             v = "採用できる"
         verdicts[cat] = v
-        print(f"  {cat:24} {len(es):3}件  専用色 {avg:.2f}/5  役割名 {round(role*100):3}%  "
+        print(f"  {cat:24} {len(es):3}件  専用色 {avg:.2f}  役割名 {round(role*100):3}%  "
               f"新規 {len(new):3}  → {v}")
 
     # 無関係な項目どうしが似すぎていないか

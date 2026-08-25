@@ -102,6 +102,18 @@
   <button id="addwork-btn" class="primary secondary">作品を登録</button>
   <span class="hint">PDF: ブラウザの印刷画面で「PDFとして保存」。色が出ない場合は「背景のグラフィック」をON。
     JPEG: 1080×1350(フィード4:5)の画像カードを書き出します</span>
+  <!-- iPhoneは印刷画面の出し方が違うので、押されたときだけ手順を出す -->
+  <div class="ios-hint" id="print-hint" hidden>
+    <b>iPhoneでPDFにするには</b>
+    <ol>
+      <li>画面の下(または上)の <b>共有ボタン</b>(□に↑)を押す</li>
+      <li>メニューを下にたどって <b>「プリント」</b> を選ぶ</li>
+      <li>プレビューを<b>ピンチで開く</b>と、PDFとして扱えます</li>
+      <li>もう一度共有ボタンから「”ファイル”に保存」を選ぶ</li>
+    </ol>
+    <p>うまくいかないときは、<b>Instagram用JPEG</b>の方が確実です。</p>
+    <button type="button" class="link-btn" onclick="this.closest('.ios-hint').hidden = true">閉じる</button>
+  </div>
 </div>
 
 <!-- 保存したパレット / 作品の一覧 -->

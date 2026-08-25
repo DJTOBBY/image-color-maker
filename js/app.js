@@ -65,6 +65,15 @@ function toneMapSVG(usedToneKeys, mainHueDeg) {
   return out;
 }
 
+// フッターに置いたTOHO BEADSロゴを、資料(PDF)にも同じ形で入れる
+function tohoLogoSVG() {
+  const src = document.querySelector(".site-footer .toho-logo");
+  if (!src) return "";
+  const svg = src.cloneNode(true);
+  svg.classList.add("sheet-logo");
+  return svg.outerHTML;
+}
+
 // ---------- シート描画 ----------
 function renderSheet(palette, matches) {
   const { colors } = palette;
@@ -167,7 +176,10 @@ function renderSheet(palette, matches) {
     </div>
 
     <div class="sheet-footer">
-      <span>COLOR STORY PALETTE by TOHOBEADS</span>
+      <span class="sheet-brand">
+        ${tohoLogoSVG()}
+        <span>COLOR STORY PALETTE</span>
+      </span>
       <span>${today}</span>
     </div>`;
 
@@ -571,7 +583,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  $("#print-btn").addEventListener("click", () => window.print());
+  // PDF/印刷。iPhoneは印刷画面の出し方が違うので、先に手順を伝える
+  $("#print-btn").addEventListener("click", () => {
+    const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (isIOS) {
+      const hint = $("#print-hint");
+      if (hint) {
+        hint.hidden = false;
+        hint.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+    window.print();
+  });
   $("#jpeg-btn").addEventListener("click", () => {
     if (window.__lastResult) JpegExport.exportJpeg(window.__lastResult.palette, window.__lastResult.matches);
   });

@@ -59,6 +59,28 @@ const JpegExport = (() => {
     });
   }
 
+  // 画面に埋め込んであるTOHO BEADSロゴを、書き出し用の色でCanvasに描けるようにする
+  function loadLogo(color) {
+    const src = document.querySelector(".toho-logo");
+    if (!src) return Promise.resolve(null);
+    const svg = src.cloneNode(true);
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    // currentColor のままでは画像化したときに色が決まらないので、実際の色を焼き込む
+    svg.querySelectorAll('[fill="currentColor"]').forEach(el => el.setAttribute("fill", color));
+    svg.querySelectorAll("g").forEach(g => {
+      if (g.getAttribute("fill") === "currentColor") g.setAttribute("fill", color);
+    });
+    const url = "data:image/svg+xml;charset=utf-8," +
+      encodeURIComponent(new XMLSerializer().serializeToString(svg));
+    return new Promise(res => {
+      const img = new Image();
+      const timer = setTimeout(() => res(null), 3000);
+      img.onload = () => { clearTimeout(timer); res(img); };
+      img.onerror = () => { clearTimeout(timer); res(null); };
+      img.src = url;
+    });
+  }
+
   // カタログ(CORS開放)の実物写真を読み込む。失敗・タイムアウトはnull
   function loadPhoto(url, timeoutMs = 4000) {
     return new Promise(res => {
@@ -217,40 +239,89 @@ const JpegExport = (() => {
     ctx.fillStyle = SOFT;
     ctx.font = `500 20px ${SANS}`;
     ctx.letterSpacing = "2px";
-    ctx.fillText("COLOR STORY PALETTE by TOHOBEADS", M, H - 46);
+    ctx.fillText("COLOR STORY PALETTE", M, H - 46);
+    ctx.letterSpacing = "0px";
+
+    // TOHO BEADSロゴ(投稿された画像から出どころが分かるように)
+    const logo = await loadLogo(SOFT);
+    if (logo) {
+      const lh = 26, lw = logo.width * (lh / logo.height);
+      ctx.drawImage(logo, W / 2 - lw / 2, H - 62, lw, lh);
+    }
+
     ctx.textAlign = "right";
+    ctx.fillStyle = SOFT;
+    ctx.font = `500 20px ${SANS}`;
     ctx.fillText(new Date().toLocaleDateString("ja-JP"), W - M, H - 46);
     ctx.textAlign = "left";
-    ctx.letterSpacing = "0px";
 
     return canvas;
   }
 
   // 保存: Artifact上ではdownloads capability、ローカルでは<a download>相当
+  // iPhone・iPad(iPadOSはMacを名乗るのでタッチの有無でも見る)
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  function canvasToBlob(canvas) {
+    return new Promise(r => canvas.toBlob(r, "image/jpeg", 0.92));
+  }
+
   async function saveJpeg(canvas, filename, statusEl) {
     const runtime = window.claude && window.claude.use ? window.claude : null;
     if (runtime) {
       const dl = await runtime.use("downloads");
       if (dl) {
         try {
-          const blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", 0.92));
-          await dl.save({ filename, data: blob });
+          await dl.save({ filename, data: await canvasToBlob(canvas) });
           statusEl.textContent = "保存しました";
           return;
         } catch (e) {
           if (e && e.code === "declined") { statusEl.textContent = ""; return; }
           if (e && e.code === "rate_limited") { statusEl.textContent = "確認画面が開いています。少し待ってからもう一度どうぞ"; return; }
-          statusEl.textContent = "保存できませんでした。画像を長押し(またはright-click)して保存してください";
+          statusEl.textContent = "保存できませんでした。画像を長押しして保存してください";
           return;
         }
       }
-      statusEl.textContent = "この環境では、画像を長押し(またはright-click)して保存してください";
+      statusEl.textContent = "この環境では、画像を長押しして保存してください";
       return;
     }
+
+    const blob = await canvasToBlob(canvas);
+    if (!blob) { statusEl.textContent = "画像を作れませんでした"; return; }
+
+    // iPhoneは共有シートから「画像を保存」できる。写真アプリに直接入るのでこれが最良
+    if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: "image/jpeg" })] })) {
+      try {
+        await navigator.share({ files: [new File([blob], filename, { type: "image/jpeg" })] });
+        statusEl.textContent = "";
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") { statusEl.textContent = ""; return; }
+        // 共有できなければ下の方法へ
+      }
+    }
+
+    // iOSのSafariは <a download> を無視して画像を表示してしまうため、
+    // 新しいタブで開いて「長押しで保存」してもらう
+    const url = URL.createObjectURL(blob);
+    if (isIOS) {
+      const win = window.open(url, "_blank");
+      statusEl.textContent = win
+        ? "開いた画像を長押しして「”写真”に追加」を選んでください"
+        : "画像を長押しして「”写真”に追加」を選んでください";
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      return;
+    }
+
     const a = document.createElement("a");
-    a.href = canvas.toDataURL("image/jpeg", 0.92);
+    a.href = url;
     a.download = filename;
+    document.body.appendChild(a);
     a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    statusEl.textContent = "保存しました";
   }
 
   // 書き出してオーバーレイに表示(長押し/右クリック保存にも対応)
@@ -271,8 +342,11 @@ const JpegExport = (() => {
       <div class="jpeg-box">
         <img src="${dataUrl}" alt="書き出し画像">
         <div class="jpeg-actions">
-          <button class="primary-link" id="jpeg-save-btn">JPEGを保存</button>
-          <span id="jpeg-status">Instagramには保存した画像を投稿してください。画像の長押し(またはright-click)でも保存できます</span>
+          <button class="primary-link" id="jpeg-save-btn">${
+            isIOS && navigator.share ? "写真に保存 / 共有" : "JPEGを保存"}</button>
+          <span id="jpeg-status">${isIOS
+            ? "上の画像を長押しして「”写真”に追加」でも保存できます"
+            : "Instagramには保存した画像を投稿してください。画像を長押し(または右クリック)でも保存できます"}</span>
           <button class="close-btn" onclick="this.closest('.jpeg-overlay').remove()">閉じる</button>
         </div>
       </div>`;

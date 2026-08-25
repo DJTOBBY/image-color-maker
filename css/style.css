@@ -275,6 +275,19 @@ button.primary:hover { background: #000; }
 .print-bar .hint {
   display: block; margin: 8px auto 0; color: var(--ink-soft); font-size: 0.75rem; max-width: 560px;
 }
+/* iPhoneでPDFにする手順 */
+.ios-hint {
+  max-width: 460px; margin: 14px auto 0; padding: 16px 20px;
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  text-align: left; font-size: 0.8rem; line-height: 1.9;
+}
+.ios-hint[hidden] { display: none; }
+.ios-hint b { font-weight: 700; }
+.ios-hint ol { margin: 8px 0 0 1.2em; }
+.ios-hint li { margin-bottom: 2px; }
+.ios-hint p { margin-top: 10px; color: var(--ink-soft); font-size: 0.76rem; }
+.ios-hint .link-btn { margin-top: 10px; }
+
 button.primary.secondary { background: transparent; color: var(--ink); border: 1px solid var(--ink); margin-left: 8px; }
 button.primary.secondary:hover { background: var(--ink); color: #fff; }
 
@@ -436,8 +449,12 @@ a.bead-card:hover { outline: 1px solid var(--accent); }
 
 .sheet-footer {
   margin-top: 36px; padding-top: 12px; border-top: 1px solid var(--line);
-  display: flex; justify-content: space-between; font-size: 0.62rem; color: var(--ink-soft);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.62rem; color: var(--ink-soft);
 }
+/* 資料のフッター。ロゴとアプリ名を並べて、印刷しても出どころが分かるように */
+.sheet-brand { display: inline-flex; align-items: center; gap: 10px; }
+.sheet-logo { height: 16px; width: auto; display: block; color: var(--ink-soft); }
 
 /* 色見本・ビーズ画像は印刷時も背景を必ず出す */
 .palette-band .swatch,

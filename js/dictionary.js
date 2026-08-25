@@ -2628,6 +2628,207 @@ const DICTIONARY = [
       { h: 262, s: 26, l: 56, name: "早い夕闇" },
       { h: 44, s: 34, l: 84, name: "薄れる白" },
     ], toneBias: ["sf", "ltg"], matte: true, technique: "トーナル配色" },
+  // ===== 世界の国(補い) =====
+  { match: ["italy", "イタリア"], ja: "イタリア", story: "テラコッタと糸杉と地中海",
+    anchors: [
+      { h: 18, s: 50, l: 48, name: "テラコッタの屋根" }, { h: 126, s: 30, l: 26, name: "糸杉の深緑" },
+      { h: 200, s: 54, l: 50, name: "地中海の青" }, { h: 40, s: 26, l: 86, name: "漆喰の生成り" },
+    ], toneBias: ["d", "dp"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["america", "usa", "アメリカ", "米国"], ja: "アメリカ", story: "広い空とデニムと星条",
+    anchors: [
+      { h: 218, s: 52, l: 34, name: "旗の紺" }, { h: 356, s: 68, l: 46, name: "旗の赤" },
+      { h: 42, s: 20, l: 94, name: "旗の白" }, { h: 30, s: 40, l: 46, name: "荒野の土" },
+    ], toneBias: ["v", "dk"], technique: "セパレーション" },
+  { match: ["united kingdom", "britain", "イギリス", "英国"], ja: "イギリス", story: "煉瓦と苔と霧",
+    anchors: [
+      { h: 12, s: 40, l: 38, name: "煉瓦の赤褐" }, { h: 140, s: 30, l: 30, name: "レーシンググリーン" },
+      { h: 210, s: 10, l: 66, name: "霧の灰" }, { h: 220, s: 42, l: 26, name: "オックスフォードの紺" },
+    ], toneBias: ["dk", "d"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["philippines", "フィリピン"], ja: "フィリピン", story: "七千の島と椰子",
+    anchors: [
+      { h: 186, s: 58, l: 62, name: "遠浅の碧" }, { h: 44, s: 22, l: 92, name: "白砂" },
+      { h: 130, s: 42, l: 38, name: "椰子の緑" }, { h: 22, s: 74, l: 58, name: "夕陽の橙" },
+    ], toneBias: ["b", "lt"], technique: "対照色相配色" },
+  { match: ["malaysia", "マレーシア"], ja: "マレーシア", story: "熱帯の緑とバティックの藍",
+    anchors: [
+      { h: 148, s: 48, l: 34, name: "熱帯の濃緑" }, { h: 218, s: 46, l: 32, name: "バティックの藍" },
+      { h: 44, s: 66, l: 58, name: "金の装飾" }, { h: 12, s: 56, l: 50, name: "香辛料の赤茶" },
+    ], toneBias: ["dp", "s"], matte: true },
+  { match: ["myanmar", "burma", "ミャンマー", "ビルマ"], ja: "ミャンマー", story: "金の仏塔と僧衣の臙脂",
+    anchors: [
+      { h: 44, s: 76, l: 56, name: "パゴダの金" }, { h: 346, s: 46, l: 38, name: "僧衣の臙脂" },
+      { h: 30, s: 40, l: 44, name: "乾いた大地" }, { h: 40, s: 26, l: 86, name: "タナカの白" },
+    ], toneBias: ["s", "dp"], matte: true, technique: "対照色相配色" },
+  { match: ["cambodia", "カンボジア", "アンコール"], ja: "カンボジア", story: "砂岩の遺跡と樹の根",
+    anchors: [
+      { h: 30, s: 22, l: 44, name: "砂岩の灰褐" }, { h: 100, s: 30, l: 30, name: "覆う樹の緑" },
+      { h: 44, s: 58, l: 60, name: "祠の金" }, { h: 20, s: 40, l: 62, name: "陽の当たる石" },
+    ], toneBias: ["d", "dp"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["laos", "ラオス", "ルアンパバーン"], ja: "ラオス", story: "托鉢の橙と川の霞",
+    anchors: [
+      { h: 28, s: 78, l: 54, name: "托鉢衣の橙" }, { h: 40, s: 20, l: 82, name: "朝靄の白" },
+      { h: 100, s: 26, l: 38, name: "山の緑" }, { h: 34, s: 30, l: 52, name: "メコンの土色" },
+    ], toneBias: ["s", "ltg"], matte: true },
+  { match: ["israel", "イスラエル", "エルサレム"], ja: "イスラエル", story: "石灰岩の街と乾いた青",
+    anchors: [
+      { h: 40, s: 34, l: 76, name: "エルサレムの石" }, { h: 210, s: 52, l: 52, name: "乾いた空の青" },
+      { h: 42, s: 22, l: 92, name: "白い壁" }, { h: 96, s: 22, l: 42, name: "オリーブの緑" },
+    ], toneBias: ["ltg", "b"], matte: true },
+  { match: ["jordan", "ヨルダン", "ペトラ"], ja: "ヨルダン", story: "薔薇色の岩を彫った街",
+    anchors: [
+      { h: 12, s: 46, l: 56, name: "ペトラの薔薇岩" }, { h: 28, s: 38, l: 38, name: "峡谷の影" },
+      { h: 40, s: 48, l: 74, name: "砂漠の砂" }, { h: 200, s: 30, l: 80, name: "細い空" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "同一色相配色" },
+  { match: ["saudi arabia", "サウジアラビア"], ja: "サウジアラビア", story: "砂丘と黒衣と金",
+    anchors: [
+      { h: 36, s: 52, l: 68, name: "砂丘の金" }, { h: 30, s: 8, l: 14, name: "アバヤの黒" },
+      { h: 46, s: 64, l: 56, name: "装飾の金" }, { h: 150, s: 42, l: 30, name: "旗の緑" },
+    ], toneBias: ["dk", "s"], matte: true, technique: "対照トーン配色" },
+  { match: ["uae", "アラブ首長国連邦", "エミレーツ"], ja: "アラブ首長国連邦", story: "砂漠に立つ硝子",
+    anchors: [
+      { h: 38, s: 48, l: 72, name: "砂の色" }, { h: 196, s: 46, l: 62, name: "硝子の反射" },
+      { h: 46, s: 68, l: 56, name: "金の装飾" }, { h: 220, s: 34, l: 24, name: "夜の紺" },
+    ], toneBias: ["b", "dk"], sparkle: true, technique: "セパレーション" },
+  { match: ["georgia country", "ジョージア", "グルジア"], ja: "ジョージア", story: "葡萄酒と石造りの塔",
+    anchors: [
+      { h: 344, s: 42, l: 30, name: "葡萄酒の深紅" }, { h: 30, s: 16, l: 52, name: "石塔の灰褐" },
+      { h: 96, s: 30, l: 42, name: "葡萄畑の緑" }, { h: 40, s: 24, l: 84, name: "壁の生成り" },
+    ], toneBias: ["dp", "d"], matte: true },
+  { match: ["armenia", "アルメニア"], ja: "アルメニア", story: "凝灰岩の桃色と杏",
+    anchors: [
+      { h: 14, s: 34, l: 56, name: "凝灰岩の桃" }, { h: 28, s: 68, l: 62, name: "杏の橙" },
+      { h: 30, s: 20, l: 32, name: "石彫りの影" }, { h: 210, s: 30, l: 74, name: "高地の空" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["azerbaijan", "アゼルバイジャン"], ja: "アゼルバイジャン", story: "火の国の絨毯",
+    anchors: [
+      { h: 186, s: 52, l: 42, name: "絨毯のターコイズ" }, { h: 6, s: 58, l: 42, name: "絨毯の茜" },
+      { h: 44, s: 60, l: 56, name: "細工の金" }, { h: 30, s: 22, l: 26, name: "石油の黒" },
+    ], toneBias: ["dp", "v"], matte: true, technique: "対照色相配色" },
+  { match: ["kyrgyz", "キルギス"], ja: "キルギス", story: "天山の草原とフェルト",
+    anchors: [
+      { h: 92, s: 34, l: 48, name: "草原の緑" }, { h: 200, s: 20, l: 88, name: "天山の雪" },
+      { h: 12, s: 52, l: 44, name: "フェルトの茜" }, { h: 40, s: 30, l: 80, name: "羊毛の生成り" },
+    ], toneBias: ["sf", "p"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["ethiopia", "エチオピア"], ja: "エチオピア", story: "高原の珈琲と岩の教会",
+    anchors: [
+      { h: 26, s: 40, l: 30, name: "焙煎の褐" }, { h: 12, s: 46, l: 42, name: "岩窟の赤土" },
+      { h: 46, s: 66, l: 58, name: "旗の黄" }, { h: 40, s: 26, l: 88, name: "白い綿布" },
+    ], toneBias: ["dk", "s"], matte: true },
+  { match: ["ghana", "ガーナ"], ja: "ガーナ", story: "ケンテ織りの帯",
+    anchors: [
+      { h: 46, s: 78, l: 56, name: "ケンテの金" }, { h: 356, s: 66, l: 44, name: "ケンテの赤" },
+      { h: 148, s: 48, l: 32, name: "ケンテの緑" }, { h: 30, s: 12, l: 16, name: "織りの黒" },
+    ], toneBias: ["v", "dk"], technique: "リピテーション配色" },
+  { match: ["senegal", "セネガル"], ja: "セネガル", story: "藍染めの布と赤い大地",
+    anchors: [
+      { h: 220, s: 44, l: 32, name: "藍の布" }, { h: 16, s: 48, l: 44, name: "ラテライトの赤土" },
+      { h: 46, s: 66, l: 62, name: "陽の黄" }, { h: 40, s: 26, l: 88, name: "白い衣" },
+    ], toneBias: ["dp", "s"], matte: true, technique: "対照色相配色" },
+  { match: ["namibia", "ナミビア"], ja: "ナミビア", story: "赤い砂丘と枯木",
+    anchors: [
+      { h: 16, s: 62, l: 52, name: "ナミブの赤砂" }, { h: 200, s: 46, l: 70, name: "抜ける空" },
+      { h: 30, s: 14, l: 20, name: "枯木の黒" }, { h: 40, s: 24, l: 90, name: "塩の白" },
+    ], toneBias: ["v", "dk"], matte: true, technique: "対照色相配色" },
+  { match: ["zimbabwe", "ジンバブエ"], ja: "ジンバブエ", story: "石積みの遺跡と滑石",
+    anchors: [
+      { h: 30, s: 14, l: 46, name: "石積みの灰" }, { h: 96, s: 30, l: 36, name: "灌木の緑" },
+      { h: 24, s: 42, l: 40, name: "赤土" }, { h: 40, s: 20, l: 78, name: "乾いた草" },
+    ], toneBias: ["d", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["uganda", "ウガンダ"], ja: "ウガンダ", story: "赤道の緑と樹皮布",
+    anchors: [
+      { h: 120, s: 44, l: 34, name: "赤道の濃緑" }, { h: 26, s: 44, l: 48, name: "樹皮布の褐" },
+      { h: 46, s: 62, l: 60, name: "陽の黄" }, { h: 200, s: 34, l: 66, name: "湖の青" },
+    ], toneBias: ["dp", "s"], matte: true },
+  { match: ["algeria", "アルジェリア"], ja: "アルジェリア", story: "白い街とサハラの縁",
+    anchors: [
+      { h: 42, s: 18, l: 92, name: "白い街" }, { h: 200, s: 50, l: 48, name: "地中海の青" },
+      { h: 38, s: 48, l: 64, name: "サハラの砂" }, { h: 150, s: 36, l: 34, name: "旗の緑" },
+    ], toneBias: ["p", "b"], matte: true, technique: "セパレーション" },
+  { match: ["iraq", "イラク", "メソポタミア"], ja: "イラク", story: "青釉の煉瓦と大河",
+    anchors: [
+      { h: 200, s: 58, l: 44, name: "青釉の煉瓦" }, { h: 34, s: 44, l: 56, name: "日干し煉瓦" },
+      { h: 44, s: 60, l: 58, name: "装飾の金" }, { h: 96, s: 24, l: 40, name: "河畔の棗椰子" },
+    ], toneBias: ["dp", "sf"], matte: true, technique: "対照色相配色" },
+  { match: ["bangladesh", "バングラデシュ"], ja: "バングラデシュ", story: "モスリンとデルタの緑",
+    anchors: [
+      { h: 140, s: 46, l: 32, name: "デルタの濃緑" }, { h: 356, s: 62, l: 48, name: "旗の赤" },
+      { h: 42, s: 26, l: 90, name: "モスリンの白" }, { h: 34, s: 34, l: 52, name: "川の土色" },
+    ], toneBias: ["dp", "v"], matte: true },
+  { match: ["colombia", "コロンビア"], ja: "コロンビア", story: "珈琲畑とエメラルド",
+    anchors: [
+      { h: 132, s: 40, l: 36, name: "珈琲畑の緑" }, { h: 158, s: 56, l: 34, name: "エメラルド" },
+      { h: 48, s: 78, l: 58, name: "旗の黄" }, { h: 26, s: 40, l: 34, name: "焙煎の褐" },
+    ], toneBias: ["dp", "v"], matte: true },
+  { match: ["chile", "チリ"], ja: "チリ", story: "細長い国の砂漠と氷河",
+    anchors: [
+      { h: 30, s: 44, l: 58, name: "アタカマの砂" }, { h: 198, s: 40, l: 78, name: "氷河の淡青" },
+      { h: 218, s: 50, l: 40, name: "旗の青" }, { h: 356, s: 62, l: 46, name: "旗の赤" },
+    ], toneBias: ["b", "sf"], technique: "対照トーン配色" },
+  { match: ["ecuador", "エクアドル"], ja: "エクアドル", story: "赤道の高地と織物",
+    anchors: [
+      { h: 46, s: 72, l: 58, name: "織物の黄" }, { h: 214, s: 54, l: 42, name: "織物の藍" },
+      { h: 356, s: 62, l: 46, name: "織物の赤" }, { h: 100, s: 30, l: 38, name: "高地の緑" },
+    ], toneBias: ["v", "dp"], matte: true, technique: "リピテーション配色" },
+  { match: ["costa rica", "コスタリカ"], ja: "コスタリカ", story: "雲霧林と極彩色の鳥",
+    anchors: [
+      { h: 146, s: 46, l: 36, name: "雲霧林の緑" }, { h: 190, s: 20, l: 82, name: "霧の白" },
+      { h: 14, s: 78, l: 56, name: "鳥の赤" }, { h: 202, s: 62, l: 50, name: "鳥の青" },
+    ], toneBias: ["dp", "v"], technique: "対照色相配色" },
+  { match: ["guatemala", "グアテマラ"], ja: "グアテマラ", story: "ウイピルの縞と火山",
+    anchors: [
+      { h: 336, s: 62, l: 50, name: "ウイピルの紅紫" }, { h: 176, s: 52, l: 42, name: "ウイピルの青緑" },
+      { h: 48, s: 76, l: 58, name: "ウイピルの黄" }, { h: 24, s: 16, l: 22, name: "火山の黒砂" },
+    ], toneBias: ["v", "dk"], matte: true, technique: "リピテーション配色" },
+  { match: ["panama", "パナマ"], ja: "パナマ", story: "運河の水とモラの重ね布",
+    anchors: [
+      { h: 190, s: 44, l: 52, name: "運河の水" }, { h: 356, s: 68, l: 46, name: "モラの赤" },
+      { h: 30, s: 10, l: 16, name: "モラの黒" }, { h: 44, s: 70, l: 60, name: "モラの黄" },
+    ], toneBias: ["v", "dk"], matte: true, technique: "セパレーション" },
+  { match: ["venezuela", "ベネズエラ"], ja: "ベネズエラ", story: "卓状台地と落ちる水",
+    anchors: [
+      { h: 28, s: 30, l: 36, name: "テプイの岩" }, { h: 140, s: 44, l: 34, name: "密林の緑" },
+      { h: 200, s: 16, l: 86, name: "落水の白" }, { h: 46, s: 70, l: 58, name: "旗の黄" },
+    ], toneBias: ["dp", "d"], matte: true },
+  { match: ["uruguay", "ウルグアイ"], ja: "ウルグアイ", story: "牧場と空色の旗",
+    anchors: [
+      { h: 204, s: 50, l: 66, name: "旗の空色" }, { h: 42, s: 22, l: 94, name: "旗の白" },
+      { h: 96, s: 32, l: 44, name: "牧場の緑" }, { h: 34, s: 30, l: 46, name: "革の褐" },
+    ], toneBias: ["lt", "sf"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["ukraine", "ウクライナ"], ja: "ウクライナ", story: "麦畑と空の二層",
+    anchors: [
+      { h: 210, s: 58, l: 48, name: "空の青" }, { h: 46, s: 78, l: 58, name: "麦の黄" },
+      { h: 42, s: 26, l: 90, name: "刺繍布の白" }, { h: 356, s: 56, l: 42, name: "刺繍の赤" },
+    ], toneBias: ["v", "b"], technique: "セパレーション" },
+  { match: ["estonia", "エストニア"], ja: "エストニア", story: "森と旧市街の石畳",
+    anchors: [
+      { h: 130, s: 26, l: 30, name: "針葉樹の森" }, { h: 210, s: 12, l: 62, name: "石畳の灰" },
+      { h: 42, s: 24, l: 88, name: "北の白" }, { h: 214, s: 40, l: 36, name: "バルト海の藍" },
+    ], toneBias: ["dp", "ltg"], matte: true, technique: "トーナル配色" },
+  { match: ["latvia", "ラトビア"], ja: "ラトビア", story: "琥珀と民族の縞",
+    anchors: [
+      { h: 36, s: 72, l: 54, name: "バルトの琥珀" }, { h: 8, s: 40, l: 34, name: "民族衣装の暗紅" },
+      { h: 42, s: 24, l: 90, name: "麻布の白" }, { h: 100, s: 22, l: 36, name: "森の緑" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["lithuania", "リトアニア"], ja: "リトアニア", story: "十字架の丘と亜麻",
+    anchors: [
+      { h: 40, s: 28, l: 80, name: "亜麻の生成り" }, { h: 30, s: 30, l: 40, name: "木の十字架" },
+      { h: 46, s: 66, l: 58, name: "旗の黄" }, { h: 140, s: 36, l: 32, name: "旗の緑" },
+    ], toneBias: ["ltg", "d"], matte: true },
+  { match: ["slovenia", "スロベニア"], ja: "スロベニア", story: "湖と石灰岩の山",
+    anchors: [
+      { h: 172, s: 40, l: 52, name: "湖の翠" }, { h: 40, s: 14, l: 86, name: "石灰岩の白" },
+      { h: 128, s: 32, l: 30, name: "山の森" }, { h: 14, s: 44, l: 46, name: "屋根の赤" },
+    ], toneBias: ["sf", "dp"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["serbia", "セルビア"], ja: "セルビア", story: "修道院の壁画",
+    anchors: [
+      { h: 218, s: 46, l: 34, name: "壁画の藍" }, { h: 8, s: 52, l: 40, name: "壁画の朱" },
+      { h: 44, s: 56, l: 58, name: "光輪の金" }, { h: 38, s: 22, l: 80, name: "漆喰の地" },
+    ], toneBias: ["dp", "d"], matte: true },
+  { match: ["slovakia", "スロバキア"], ja: "スロバキア", story: "山地の民家と刺繍",
+    anchors: [
+      { h: 42, s: 24, l: 90, name: "白い民家" }, { h: 214, s: 48, l: 40, name: "刺繍の藍" },
+      { h: 356, s: 58, l: 46, name: "刺繍の赤" }, { h: 122, s: 30, l: 32, name: "山地の緑" },
+    ], toneBias: ["v", "p"], matte: true, technique: "リピテーション配色" },
 ];
 
 // テーマ文字列を辞書エントリの列に解決する

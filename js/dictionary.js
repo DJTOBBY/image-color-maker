@@ -1341,7 +1341,7 @@ const DICTIONARY = [
       { h: 118, s: 24, l: 34, name: "針葉樹の緑" },
       { h: 268, s: 20, l: 76, name: "白夜の淡い紫" },
     ], toneBias: ["p", "sf"], matte: true, technique: "トーン・オン・トーン配色" },
-  { match: ["netherlands", "holland", "オランダ", "デルフト"], ja: "オランダ", story: "デルフトの青と王室の橙",
+  { match: ["netherlands", "holland", "オランダ"], ja: "オランダ", story: "デルフトの青と王室の橙",
     anchors: [
       { h: 218, s: 62, l: 40, name: "デルフトの青" },
       { h: 42, s: 20, l: 94, name: "白磁の地" },
@@ -1411,7 +1411,7 @@ const DICTIONARY = [
       { h: 350, s: 56, l: 48, name: "アグアヨの紅" },
       { h: 44, s: 62, l: 56, name: "織りの黄" },
     ], toneBias: ["p", "v"], technique: "セパレーション" },
-  { match: ["mexico", "メキシコ", "タラベラ"], ja: "メキシコ", story: "マリーゴールドとタイル",
+  { match: ["mexico", "メキシコ"], ja: "メキシコ", story: "マリーゴールドとタイル",
     anchors: [
       { h: 30, s: 88, l: 54, name: "マリーゴールドの橙" },
       { h: 330, s: 72, l: 54, name: "メキシカンピンク" },
@@ -1446,7 +1446,7 @@ const DICTIONARY = [
       { h: 288, s: 28, l: 52, name: "ヒースの紫" },
       { h: 40, s: 24, l: 86, name: "羊毛の生成り" },
     ], toneBias: ["dp", "ltg"], matte: true, technique: "ナチュラルハーモニー" },
-  { match: ["scotland", "スコットランド", "タータン"], ja: "スコットランド", story: "タータンと霧の丘",
+  { match: ["scotland", "スコットランド", "ハイランド"], ja: "スコットランド", story: "タータンと霧の丘",
     anchors: [
       { h: 148, s: 34, l: 24, name: "タータンの深緑" },
       { h: 352, s: 56, l: 34, name: "タータンの臙脂" },
@@ -2350,6 +2350,284 @@ const DICTIONARY = [
       { h: 350, s: 40, l: 86, name: "トウシューズの桃" }, { h: 40, s: 26, l: 92, name: "チュールの白" },
       { h: 28, s: 28, l: 74, name: "タイツの肌色" }, { h: 340, s: 30, l: 58, name: "リボンの紅" },
     ], toneBias: ["p", "ltg"], matte: true, technique: "ドミナントトーン配色" },
+  // ===== 美術・美術運動 =====
+  // 作家名は「その人の公式色」ではなく、作品に繰り返し現れる色の傾向として扱う。
+  { match: ["impressionism", "印象派", "印象主義"], ja: "印象派", story: "輪郭を溶かす戸外の光",
+    anchors: [
+      { h: 198, s: 42, l: 72, name: "戸外の空色" }, { h: 46, s: 62, l: 74, name: "陽のクロムイエロー" },
+      { h: 284, s: 26, l: 66, name: "影のすみれ" }, { h: 118, s: 26, l: 52, name: "草叢の緑" },
+    ], toneBias: ["lt", "sf"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["pop art", "ポップアート"], ja: "ポップアート", story: "印刷インキの四原色",
+    anchors: [
+      { h: 340, s: 82, l: 58, name: "マゼンタの網点" }, { h: 52, s: 88, l: 60, name: "イエローの網点" },
+      { h: 200, s: 78, l: 50, name: "シアンの網点" }, { h: 30, s: 8, l: 14, name: "刷りの黒" },
+    ], toneBias: ["v", "b"], technique: "セパレーション" },
+  { match: ["cubism", "キュビスム", "立体派"], ja: "キュビスム", story: "面に割られた土の色",
+    anchors: [
+      { h: 34, s: 42, l: 46, name: "黄土" }, { h: 26, s: 26, l: 28, name: "焦茶の面" },
+      { h: 40, s: 14, l: 72, name: "灰みの生成り" }, { h: 96, s: 16, l: 42, name: "沈んだ緑灰" },
+    ], toneBias: ["d", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["surrealism", "シュルレアリスム", "超現実主義"], ja: "シュルレアリスム", story: "写実の中に置かれた異物",
+    anchors: [
+      { h: 206, s: 48, l: 64, name: "澄みすぎた空" }, { h: 32, s: 44, l: 52, name: "荒野の土" },
+      { h: 8, s: 62, l: 46, name: "違和の赤" }, { h: 44, s: 18, l: 88, name: "白昼の光" },
+    ], toneBias: ["b", "d"], matte: true, technique: "対照色相配色" },
+  { match: ["fauvism", "フォーヴィスム", "野獣派"], ja: "フォーヴィスム", story: "見たままを裏切る原色",
+    anchors: [
+      { h: 356, s: 82, l: 52, name: "そのままの赤" }, { h: 156, s: 62, l: 44, name: "そのままの緑" },
+      { h: 210, s: 74, l: 48, name: "そのままの青" }, { h: 46, s: 86, l: 60, name: "そのままの黄" },
+    ], toneBias: ["v", "s"], technique: "対照色相配色" },
+  { match: ["abstract expressionism", "抽象表現主義"], ja: "抽象表現主義", story: "画布に叩きつけた身振り",
+    anchors: [
+      { h: 30, s: 10, l: 14, name: "滴らせた黒" }, { h: 40, s: 26, l: 84, name: "生成りの画布" },
+      { h: 4, s: 62, l: 44, name: "打ちつけた赤" }, { h: 44, s: 62, l: 58, name: "はじけた黄土" },
+    ], toneBias: ["dk", "v"], matte: true, technique: "セパレーション" },
+  { match: ["monet", "モネ", "クロード・モネ"], ja: "モネ", story: "睡蓮の池に映るもの",
+    anchors: [
+      { h: 176, s: 32, l: 58, name: "水面の青緑" }, { h: 286, s: 30, l: 72, name: "藤棚のうす紫" },
+      { h: 340, s: 42, l: 78, name: "睡蓮のうす紅" }, { h: 132, s: 28, l: 40, name: "浮き葉の緑" },
+    ], toneBias: ["sf", "lt"], matte: true, technique: "トーン・オン・トーン配色" },
+  { match: ["van gogh", "ゴッホ", "ファン・ゴッホ"], ja: "ゴッホ", story: "渦を巻く黄と青",
+    anchors: [
+      { h: 48, s: 88, l: 58, name: "ひまわりの黄" }, { h: 226, s: 56, l: 34, name: "夜空のウルトラマリン" },
+      { h: 36, s: 62, l: 44, name: "麦畑の黄土" }, { h: 168, s: 34, l: 34, name: "糸杉の暗緑" },
+    ], toneBias: ["v", "dp"], technique: "補色配色" },
+
+  // ===== 文様 =====
+  // 繰り返しの柄は、そのまま配色技法の考え方につながる。
+  { match: ["stripe", "ストライプ", "縞模様"], ja: "ストライプ", story: "並んだ線のリズム",
+    anchors: [
+      { h: 222, s: 44, l: 30, name: "縞の紺" }, { h: 42, s: 20, l: 94, name: "地の白" },
+      { h: 356, s: 66, l: 48, name: "差しの赤" }, { h: 200, s: 40, l: 66, name: "細い水色" },
+    ], toneBias: ["dp", "p"], technique: "リピテーション配色" },
+  { match: ["check", "チェック", "格子柄"], ja: "チェック", story: "交差してできる第三の色",
+    anchors: [
+      { h: 148, s: 34, l: 28, name: "格子の深緑" }, { h: 348, s: 44, l: 34, name: "格子の臙脂" },
+      { h: 40, s: 34, l: 82, name: "地の生成り" }, { h: 30, s: 24, l: 20, name: "重なりの黒" },
+    ], toneBias: ["dk", "ltg"], matte: true, technique: "リピテーション配色" },
+  { match: ["tartan", "タータン", "タータンチェック"], ja: "タータン", story: "氏族ごとに決まった縞",
+    anchors: [
+      { h: 150, s: 40, l: 24, name: "タータンの深緑" }, { h: 352, s: 60, l: 36, name: "タータンの赤" },
+      { h: 222, s: 40, l: 24, name: "タータンの紺" }, { h: 46, s: 60, l: 60, name: "細い黄の線" },
+    ], toneBias: ["dk", "v"], matte: true, technique: "リピテーション配色" },
+  { match: ["paisley", "ペイズリー"], ja: "ペイズリー", story: "勾玉のかたちが渦を巻く",
+    anchors: [
+      { h: 344, s: 48, l: 34, name: "ペイズリーの臙脂" }, { h: 184, s: 44, l: 34, name: "深い青緑" },
+      { h: 38, s: 56, l: 50, name: "金茶の縁取り" }, { h: 40, s: 28, l: 84, name: "地の生成り" },
+    ], toneBias: ["dp", "d"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["floral pattern", "花柄", "フローラル"], ja: "花柄", story: "花と葉のくり返し",
+    anchors: [
+      { h: 344, s: 50, l: 70, name: "花の紅" }, { h: 120, s: 30, l: 42, name: "葉の緑" },
+      { h: 46, s: 62, l: 72, name: "しべの黄" }, { h: 42, s: 26, l: 90, name: "地の白" },
+    ], toneBias: ["lt", "sf"], technique: "ナチュラルハーモニー" },
+  { match: ["geometric", "幾何学", "幾何学模様"], ja: "幾何学", story: "図形だけで組み立てる",
+    anchors: [
+      { h: 30, s: 10, l: 14, name: "輪郭の黒" }, { h: 42, s: 18, l: 94, name: "抜きの白" },
+      { h: 214, s: 68, l: 48, name: "面の青" }, { h: 14, s: 74, l: 52, name: "面の赤橙" },
+    ], toneBias: ["v", "dk"], technique: "セパレーション" },
+  { match: ["tribal", "トライバル", "民族柄"], ja: "トライバル", story: "土と炭で描く記号",
+    anchors: [
+      { h: 20, s: 44, l: 38, name: "赤土の顔料" }, { h: 30, s: 10, l: 16, name: "炭の黒" },
+      { h: 40, s: 28, l: 82, name: "白土" }, { h: 36, s: 46, l: 58, name: "黄土" },
+    ], toneBias: ["d", "dk"], matte: true, technique: "セパレーション" },
+  { match: ["arabesque", "アラベスク"], ja: "アラベスク", story: "終わりのない蔓の連続",
+    anchors: [
+      { h: 182, s: 52, l: 42, name: "蔓のターコイズ" }, { h: 220, s: 58, l: 38, name: "地のコバルト" },
+      { h: 44, s: 62, l: 58, name: "縁の金" }, { h: 40, s: 22, l: 90, name: "抜きの白" },
+    ], toneBias: ["dp", "v"], sparkle: true, technique: "類似色相配色" },
+  { match: ["fan pattern", "扇文", "扇面"], ja: "扇文", story: "末広がりの吉祥",
+    anchors: [
+      { h: 44, s: 58, l: 60, name: "扇の金" }, { h: 6, s: 60, l: 46, name: "扇面の朱" },
+      { h: 42, s: 26, l: 90, name: "地の白" }, { h: 218, s: 42, l: 32, name: "要の紺" },
+    ], toneBias: ["v", "p"], sparkle: true, technique: "リピテーション配色" },
+
+  // ===== 音楽 =====
+  { match: ["disco", "ディスコ"], ja: "ディスコ", story: "ミラーボールの反射",
+    anchors: [
+      { h: 210, s: 8, l: 78, name: "ミラーボールの銀" }, { h: 326, s: 72, l: 60, name: "照明のマゼンタ" },
+      { h: 46, s: 74, l: 58, name: "ラメの金" }, { h: 262, s: 46, l: 32, name: "フロアの紫闇" },
+    ], toneBias: ["v", "dk"], sparkle: true, technique: "セパレーション" },
+  { match: ["house music", "ハウス", "ハウスミュージック"], ja: "ハウス", story: "暗がりに落ちる原色",
+    anchors: [
+      { h: 218, s: 72, l: 52, name: "レーザーの青" }, { h: 316, s: 64, l: 52, name: "レーザーの紅紫" },
+      { h: 30, s: 8, l: 12, name: "地下の黒" }, { h: 160, s: 52, l: 52, name: "抜ける青緑" },
+    ], toneBias: ["v", "dkg"], sparkle: true, technique: "対照色相配色" },
+  { match: ["techno", "テクノ"], ja: "テクノ", story: "無機質な反復",
+    anchors: [
+      { h: 210, s: 6, l: 34, name: "鉄板の灰" }, { h: 30, s: 6, l: 12, name: "黒" },
+      { h: 190, s: 78, l: 54, name: "信号の青緑" }, { h: 210, s: 8, l: 74, name: "クローム" },
+    ], toneBias: ["dkg", "v"], matte: true, technique: "対照トーン配色" },
+  { match: ["hip hop", "ヒップホップ", "ヒップ・ホップ"], ja: "ヒップホップ", story: "金と黒と壁の落書き",
+    anchors: [
+      { h: 30, s: 8, l: 12, name: "黒" }, { h: 46, s: 68, l: 54, name: "太い金" },
+      { h: 214, s: 40, l: 40, name: "デニムの藍" }, { h: 356, s: 68, l: 48, name: "ロゴの赤" },
+    ], toneBias: ["dk", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["reggae", "レゲエ"], ja: "レゲエ", story: "常夏と土のリズム",
+    anchors: [
+      { h: 140, s: 54, l: 34, name: "深い緑" }, { h: 48, s: 80, l: 56, name: "陽の黄" },
+      { h: 4, s: 68, l: 46, name: "熱の赤" }, { h: 30, s: 34, l: 30, name: "大地の褐" },
+    ], toneBias: ["v", "dp"], matte: true, technique: "リピテーション配色" },
+  { match: ["rock music", "ロック", "ロックンロール"], ja: "ロック", story: "革と歪んだ音",
+    anchors: [
+      { h: 30, s: 8, l: 12, name: "革の黒" }, { h: 354, s: 74, l: 46, name: "叫ぶ赤" },
+      { h: 210, s: 6, l: 72, name: "金具の銀" }, { h: 344, s: 42, l: 26, name: "沈む臙脂" },
+    ], toneBias: ["dk", "v"], matte: true, technique: "対照トーン配色" },
+  { match: ["ambient", "アンビエント"], ja: "アンビエント", story: "輪郭を持たない音",
+    anchors: [
+      { h: 200, s: 20, l: 84, name: "薄い水色" }, { h: 40, s: 12, l: 88, name: "白の霞" },
+      { h: 260, s: 18, l: 66, name: "淡い藤鼠" }, { h: 190, s: 16, l: 52, name: "沈む青灰" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "カマイユ配色" },
+
+  // ===== 文化・工芸 =====
+  // ビーズと相性のいい、糸と土と染めの色。
+  { match: ["kimono", "着物", "和装"], ja: "着物", story: "重ねて見せる染めと織り",
+    anchors: [
+      { h: 220, s: 44, l: 30, name: "地の藍" }, { h: 6, s: 62, l: 46, name: "八掛の朱" },
+      { h: 288, s: 26, l: 40, name: "京紫" }, { h: 44, s: 58, l: 58, name: "帯の金" },
+    ], toneBias: ["dp", "dk"], sparkle: true, technique: "対照色相配色" },
+  { match: ["zellige", "ゼリージュ"], ja: "ゼリージュ", story: "手割りタイルの揺らぎ",
+    anchors: [
+      { h: 178, s: 48, l: 44, name: "ゼリージュの青緑" }, { h: 40, s: 26, l: 88, name: "目地の白" },
+      { h: 24, s: 48, l: 48, name: "土のテラコッタ" }, { h: 210, s: 56, l: 36, name: "深いコバルト" },
+    ], toneBias: ["dp", "b"], matte: true, technique: "類似色相配色" },
+  { match: ["batik", "バティック"], ja: "バティック", story: "蝋が防いだところだけ白く残る",
+    anchors: [
+      { h: 218, s: 48, l: 28, name: "蝋防染の藍" }, { h: 34, s: 50, l: 44, name: "ソガの茶" },
+      { h: 42, s: 34, l: 84, name: "蝋の抜き白" }, { h: 16, s: 46, l: 40, name: "赤茶の縁" },
+    ], toneBias: ["dp", "d"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["ikat", "イカット", "絣"], ja: "イカット", story: "括って染めた糸のにじみ",
+    anchors: [
+      { h: 216, s: 42, l: 32, name: "絣の藍" }, { h: 40, s: 30, l: 86, name: "括りの白" },
+      { h: 10, s: 48, l: 44, name: "茜のにじみ" }, { h: 178, s: 34, l: 40, name: "褪せた青緑" },
+    ], toneBias: ["dp", "sf"], matte: true, technique: "トーン・オン・トーン配色" },
+  { match: ["kilim", "キリム"], ja: "キリム", story: "平織りの幾何と草木染め",
+    anchors: [
+      { h: 12, s: 50, l: 44, name: "茜の赤" }, { h: 38, s: 52, l: 52, name: "刈安の黄土" },
+      { h: 200, s: 34, l: 34, name: "沈んだ藍" }, { h: 40, s: 26, l: 82, name: "羊毛の生成り" },
+    ], toneBias: ["d", "dp"], matte: true, technique: "リピテーション配色" },
+  { match: ["navajo", "ナバホ"], ja: "ナバホ", story: "砂岩とターコイズ。特定の部族の公式色ではなく、南西部の風土の色として",
+    anchors: [
+      { h: 180, s: 44, l: 50, name: "ターコイズ" }, { h: 16, s: 52, l: 46, name: "砂岩の赤" },
+      { h: 40, s: 34, l: 78, name: "砂の生成り" }, { h: 30, s: 10, l: 16, name: "織りの黒" },
+    ], toneBias: ["dp", "sf"], matte: true, technique: "対照色相配色" },
+  { match: ["delftware", "デルフト焼", "デルフト"], ja: "デルフト焼", story: "白磁に藍ひといろ",
+    anchors: [
+      { h: 42, s: 18, l: 94, name: "白磁の地" }, { h: 220, s: 62, l: 40, name: "デルフトの藍" },
+      { h: 216, s: 44, l: 66, name: "薄く溶いた藍" }, { h: 224, s: 50, l: 24, name: "濃い筆致" },
+    ], toneBias: ["p", "dp"], technique: "同一色相配色" },
+  { match: ["talavera", "タラベラ", "タラベラ焼"], ja: "タラベラ焼", story: "白地に黄と青の花",
+    anchors: [
+      { h: 44, s: 22, l: 92, name: "白地" }, { h: 214, s: 58, l: 44, name: "コバルトの花" },
+      { h: 46, s: 76, l: 58, name: "黄の花" }, { h: 12, s: 62, l: 50, name: "縁の橙赤" },
+    ], toneBias: ["v", "p"], technique: "セパレーション" },
+  // ===== 服の場面 =====
+  // 「この服に合わせる色」という引き方のための入口。
+  { match: ["casual", "カジュアル", "普段着"], ja: "カジュアル", story: "気を張らない日の色",
+    anchors: [
+      { h: 214, s: 38, l: 46, name: "デニムの青" }, { h: 40, s: 30, l: 86, name: "白Tの生成り" },
+      { h: 32, s: 32, l: 58, name: "履きこんだ革" }, { h: 100, s: 22, l: 48, name: "カーキ" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["formal", "フォーマル", "礼装"], ja: "フォーマル", story: "式のための深い色",
+    anchors: [
+      { h: 30, s: 10, l: 12, name: "礼服の黒" }, { h: 42, s: 26, l: 92, name: "絹の白" },
+      { h: 222, s: 40, l: 24, name: "濃紺" }, { h: 44, s: 50, l: 68, name: "シャンパン" },
+    ], toneBias: ["dk", "p"], sparkle: true, technique: "対照トーン配色" },
+  { match: ["office", "オフィス", "通勤"], ja: "オフィス", story: "毎日着ても疲れない",
+    anchors: [
+      { h: 220, s: 34, l: 34, name: "紺のジャケット" }, { h: 36, s: 12, l: 74, name: "石灰の灰" },
+      { h: 42, s: 20, l: 92, name: "シャツの白" }, { h: 350, s: 26, l: 46, name: "小物の臙脂" },
+    ], toneBias: ["dp", "ltg"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["kids fashion", "キッズ", "子ども服"], ja: "キッズ", story: "汚しても許される明るさ",
+    anchors: [
+      { h: 196, s: 60, l: 70, name: "はっきりした水色" }, { h: 12, s: 74, l: 68, name: "珊瑚の橙" },
+      { h: 50, s: 80, l: 70, name: "黄" }, { h: 150, s: 44, l: 62, name: "若い緑" },
+    ], toneBias: ["b", "lt"], technique: "リピテーション配色" },
+  { match: ["menswear", "メンズ", "紳士服"], ja: "メンズ", story: "落ち着いた地の色で組む",
+    anchors: [
+      { h: 222, s: 34, l: 26, name: "紺" }, { h: 210, s: 6, l: 38, name: "チャコール" },
+      { h: 32, s: 34, l: 52, name: "キャメル" }, { h: 150, s: 26, l: 26, name: "深緑" },
+    ], toneBias: ["dk", "dkg"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["genderless", "ジェンダーレス", "ユニセックス"], ja: "ジェンダーレス", story: "どちらにも寄せない",
+    anchors: [
+      { h: 40, s: 12, l: 80, name: "生成り" }, { h: 210, s: 8, l: 52, name: "中間の灰" },
+      { h: 168, s: 20, l: 48, name: "青みの緑灰" }, { h: 24, s: 16, l: 34, name: "落ち着いた褐" },
+    ], toneBias: ["ltg", "g"], matte: true, technique: "トーナル配色" },
+
+  // ===== ブライダル =====
+  // 「結婚式」だけでは粗いので、場面ごとに分ける。
+  { match: ["garden wedding", "ガーデンウェディング", "ガーデン挙式"], ja: "ガーデンウェディング", story: "木漏れ日の下の誓い",
+    anchors: [
+      { h: 96, s: 22, l: 58, name: "ユーカリの葉" }, { h: 40, s: 30, l: 93, name: "アイボリー" },
+      { h: 348, s: 40, l: 84, name: "ブラッシュ" }, { h: 44, s: 44, l: 74, name: "シャンパン" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["beach wedding", "ビーチウェディング", "リゾート婚"], ja: "ビーチウェディング", story: "波音のする式",
+    anchors: [
+      { h: 182, s: 52, l: 70, name: "遠浅のアクア" }, { h: 42, s: 24, l: 95, name: "白いドレス" },
+      { h: 38, s: 44, l: 80, name: "砂の色" }, { h: 206, s: 48, l: 52, name: "沖の青" },
+    ], toneBias: ["lt", "p"], technique: "トーン・オン・トーン配色" },
+  { match: ["japanese wedding", "和婚", "神前式", "白無垢"], ja: "和婚", story: "白無垢と朱と金",
+    anchors: [
+      { h: 42, s: 14, l: 96, name: "白無垢の白" }, { h: 6, s: 70, l: 46, name: "掛下の朱" },
+      { h: 46, s: 58, l: 58, name: "金襴の金" }, { h: 140, s: 30, l: 26, name: "常磐の緑" },
+    ], toneBias: ["p", "v"], sparkle: true, technique: "セパレーション" },
+  { match: ["winter wedding", "冬の結婚式", "冬婚"], ja: "冬の結婚式", story: "澄んだ空気の中で",
+    anchors: [
+      { h: 42, s: 18, l: 95, name: "雪の白" }, { h: 210, s: 26, l: 76, name: "冬空の淡青" },
+      { h: 344, s: 30, l: 40, name: "深いボルドー" }, { h: 210, s: 10, l: 72, name: "銀" },
+    ], toneBias: ["p", "dk"], sparkle: true, technique: "対照トーン配色" },
+  { match: ["vintage wedding", "ヴィンテージウェディング", "アンティーク婚"], ja: "ヴィンテージウェディング", story: "少し褪せた白",
+    anchors: [
+      { h: 42, s: 28, l: 88, name: "褪せた生成り" }, { h: 40, s: 36, l: 66, name: "古いレースの飴色" },
+      { h: 344, s: 24, l: 62, name: "褪せた薔薇" }, { h: 44, s: 40, l: 52, name: "古金" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "ドミナントトーン配色" },
+
+  // ===== 記憶・物語 =====
+  { match: ["childhood", "子ども時代", "幼少期"], ja: "子ども時代", story: "背の低いところから見た色",
+    anchors: [
+      { h: 200, s: 52, l: 72, name: "見上げた空" }, { h: 50, s: 74, l: 70, name: "画用紙の黄" },
+      { h: 8, s: 62, l: 66, name: "赤いランドセル" }, { h: 110, s: 38, l: 52, name: "校庭の草" },
+    ], toneBias: ["b", "lt"], matte: true, technique: "リピテーション配色" },
+  { match: ["family", "家族", "かぞく"], ja: "家族", story: "そこにある温度",
+    anchors: [
+      { h: 30, s: 34, l: 76, name: "食卓の生成り" }, { h: 24, s: 34, l: 44, name: "使い込んだ木" },
+      { h: 350, s: 26, l: 62, name: "褪せた薔薇" }, { h: 210, s: 24, l: 38, name: "父の紺" },
+    ], toneBias: ["sf", "d"], matte: true, technique: "トーナル配色" },
+  { match: ["home", "わが家", "帰る家", "おうち", "マイホーム"], ja: "家", story: "灯りのついている窓",
+    anchors: [
+      { h: 36, s: 56, l: 66, name: "窓の灯" }, { h: 26, s: 30, l: 38, name: "柱の木" },
+      { h: 40, s: 22, l: 88, name: "壁の白" }, { h: 110, s: 24, l: 42, name: "鉢植えの緑" },
+    ], toneBias: ["sf", "ltg"], matte: true, technique: "ドミナントカラー配色" },
+  { match: ["travel memory", "旅の記憶", "旅の思い出"], ja: "旅の記憶", story: "戻ってから濃くなる色",
+    anchors: [
+      { h: 196, s: 34, l: 62, name: "遠い海" }, { h: 36, s: 40, l: 70, name: "切符の紙" },
+      { h: 20, s: 40, l: 46, name: "屋根の赤茶" }, { h: 210, s: 14, l: 40, name: "曇りの記憶" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "トーナル配色" },
+
+  // ===== 時代 =====
+  { match: ["georgian", "ジョージアン"], ja: "ジョージアン", story: "18世紀英国の抑えた室内",
+    anchors: [
+      { h: 98, s: 18, l: 56, name: "サージの緑" }, { h: 40, s: 26, l: 86, name: "石膏の生成り" },
+      { h: 222, s: 32, l: 34, name: "抑えた紺" }, { h: 42, s: 42, l: 54, name: "古金の縁" },
+    ], toneBias: ["ltg", "d"], matte: true, technique: "トーナル配色" },
+  { match: ["belle epoque", "ベルエポック", "ベル・エポック"], ja: "ベルエポック", story: "世紀末パリの華やぎ",
+    anchors: [
+      { h: 44, s: 46, l: 70, name: "シャンパン" }, { h: 344, s: 30, l: 62, name: "褪せた薔薇" },
+      { h: 184, s: 40, l: 34, name: "深いティール" }, { h: 42, s: 46, l: 50, name: "古金" },
+    ], toneBias: ["sf", "dp"], sparkle: true, technique: "ドミナントトーン配色" },
+  { match: ["summer vacation", "夏休み", "なつやすみ"], ja: "夏休み", story: "終わらないと思っていた日",
+    anchors: [
+      { h: 198, s: 66, l: 62, name: "プールの水" },
+      { h: 48, s: 84, l: 66, name: "照りつける陽" },
+      { h: 128, s: 44, l: 40, name: "濃い夏草" },
+      { h: 42, s: 26, l: 94, name: "入道雲の白" },
+    ], toneBias: ["v", "b"], technique: "対照色相配色" },
+  { match: ["end of summer", "夏の終わり", "晩夏"], ja: "夏の終わり", story: "陽が少し傾いた",
+    anchors: [
+      { h: 32, s: 56, l: 66, name: "傾いた陽の橙" },
+      { h: 96, s: 26, l: 44, name: "疲れた夏草" },
+      { h: 262, s: 26, l: 56, name: "早い夕闇" },
+      { h: 44, s: 34, l: 84, name: "薄れる白" },
+    ], toneBias: ["sf", "ltg"], matte: true, technique: "トーナル配色" },
 ];
 
 // テーマ文字列を辞書エントリの列に解決する

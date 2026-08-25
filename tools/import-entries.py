@@ -82,15 +82,20 @@ def resolve_color(raw, beads):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("csv")
+    ap.add_argument("csv", nargs="+", help="複数指定するとまとめて1つに書き出す")
     ap.add_argument("--write", action="store_true", help="点検を通ったら書き出す")
     args = ap.parse_args()
 
     beads = load_beads()
     techniques = load_techniques()
     existing = load_existing_words()
-    with open(args.csv, encoding="utf-8-sig", newline="") as f:
-        rows = list(csv.DictReader(f))
+    rows, origin = [], {}
+    for path in args.csv:
+        with open(path, encoding="utf-8-sig", newline="") as f:
+            got = list(csv.DictReader(f))
+        for i, r in enumerate(got, start=2):
+            origin[len(rows) + i - 2] = (os.path.basename(path), i)
+        rows += got
     if not rows:
         print("行がありません", file=sys.stderr)
         return 1
@@ -107,8 +112,9 @@ def main():
     for i, row in enumerate(rows, start=2):  # 2行目からデータ
         if not (row.get("表示名") or "").strip():
             continue  # 空行は飛ばす
-        def bad(msg):
-            problems.append(f"{i}行目 「{row.get('表示名', '').strip()}」: {msg}")
+        src, line = origin.get(i - 2, ("", i))
+        def bad(msg, _s=src, _l=line):
+            problems.append(f"{_s} {_l}行目 「{row.get('表示名', '').strip()}」: {msg}")
 
         ja = row["表示名"].strip()
         words = [w.strip() for w in (row.get("反応することば") or "").split("|") if w.strip()]
@@ -168,8 +174,9 @@ def main():
         print("書き出すには --write を付けてください。")
         return 0
 
+    srcs = ", ".join(os.path.relpath(os.path.abspath(c), ROOT) for c in args.csv)
     body = ["/* 表から取り込んだ辞書項目(自動生成 — tools/import-entries.py)",
-            f"   元データ: {os.path.relpath(os.path.abspath(args.csv), ROOT)} */",
+            f"   元データ: {srcs} */",
             "const IMPORTED_ENTRIES = ["]
     for e in entries:
         parts = [f'  {{ match: {json.dumps(e["match"], ensure_ascii=False)}, '

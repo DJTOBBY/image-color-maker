@@ -58,7 +58,32 @@ def existing_words():
     return words
 
 
+def load_csv(path):
+    """こちらの納品形式(data/entries-template.csv)で来た場合"""
+    import csv
+    out = []
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        if not (r.get("表示名") or "").strip():
+            continue
+        pal = [(r.get(f"色{i}", "").strip().upper(), r.get(f"色{i}の名前", "").strip())
+               for i in range(1, 5)]
+        pal = [(h, n) for h, n in pal if h]
+        hexes = [h for h, _ in pal if re.fullmatch(r"#[0-9A-Fa-f]{6}", h)]
+        out.append({
+            "term": r["表示名"].strip(),
+            "cat": (r.get("※分野") or "(分野なし)").strip() or "(分野なし)",
+            "words": [w.strip() for w in (r.get("反応することば") or "").split("|") if w.strip()],
+            "hexes": hexes,
+            "names": [n for _, n in pal],
+            "desc": (r.get("ひとこと") or "").strip(),
+            "broken": len(hexes) != len(pal),
+        })
+    return out, []
+
+
 def load(path):
+    if path.lower().endswith(".csv"):
+        return load_csv(path)
     data = json.load(open(path, encoding="utf-8"))
     entries = data["entries"] if isinstance(data, dict) else data
     out = []
@@ -155,11 +180,14 @@ def main():
 
     descs = [e["desc"] for e in E if e["desc"]]
     if descs:
-        shapes = collections.Counter(re.sub(r"[^、。]+", "…", d) for d in descs)
-        top, n = shapes.most_common(1)[0]
         print(f"\n説明文: {len(set(descs))}種 / {len(descs)}件")
-        if n / len(descs) > 0.5:
-            print(f"  ※ {round(n/len(descs)*100)}% が同じ形。穴埋めなので、ひとことは書き直しが要る")
+        # 穴埋め文は「…は、A、B、Cを核に…編集パレット。」のように
+        # 決まった言い回しを共有する。末尾の一致で見分ける。
+        tails = collections.Counter(d[-6:] for d in descs if len(d) >= 6)
+        tail, n = tails.most_common(1)[0] if tails else ("", 0)
+        if n / len(descs) > 0.3:
+            print(f"  ※ {round(n/len(descs)*100)}% が「{tail}」で終わる。"
+                  f"穴埋めなので、ひとことは書き直しが要る")
 
     if mods:
         def sig(m):

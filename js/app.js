@@ -65,6 +65,29 @@ function toneMapSVG(usedToneKeys, mainHueDeg) {
   return out;
 }
 
+// ---------- 印刷(PDF) ----------
+// 1枚目=配色とビーズ / 2枚目=カラーワークシート の2ページ構成。
+// 収め方は印刷用CSSのレイアウト(ビーズ候補を3列に並べる)で解決しているので、
+// ここでやるのは保存されるファイル名をテーマ名にすることだけ。
+function preparePrint() {
+  const input = window.__lastResult?.palette?.input;
+  if (!input) return;
+  // 保存されるPDFの名前は <title> から決まる
+  if (!document.body.dataset.titleBackup) {
+    document.body.dataset.titleBackup = document.title;
+  }
+  document.title = `${input} - COLOR STORY PALETTE`;
+}
+
+// 印刷が終わったらタイトルを元に戻す(タブの表示を変えたままにしない)
+function restoreAfterPrint() {
+  const backup = document.body.dataset.titleBackup;
+  if (backup) {
+    document.title = backup;
+    delete document.body.dataset.titleBackup;
+  }
+}
+
 // フッターに置いたTOHO BEADSロゴを、資料(PDF)にも同じ形で入れる
 function tohoLogoSVG() {
   const src = document.querySelector(".site-footer .toho-logo");
@@ -595,6 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return;
     }
+    preparePrint();
     window.print();
   });
   $("#jpeg-btn").addEventListener("click", () => {
@@ -612,6 +636,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     setTimeout(() => { btn.textContent = "シェアリンクをコピー"; }, 2000);
   });
+
+  // ブラウザのメニューやCtrl+Pから印刷されたときも、同じ準備をする
+  window.addEventListener("beforeprint", preparePrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
 
   // PWA: アプリとしてインストールできるようにする
   if ("serviceWorker" in navigator) {

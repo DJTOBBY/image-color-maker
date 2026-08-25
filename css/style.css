@@ -467,6 +467,9 @@ a.bead-card:hover { outline: 1px solid var(--accent); }
 }
 
 /* ---------- 印刷 ---------- */
+/* 印刷用の詰めたレイアウト。
+   印刷時と、印刷前に高さを測るとき(.measuring-print)の両方で使う。
+   測るときも同じ条件にしないと、縮小率がずれてしまう。 */
 @media print {
   .no-print { display: none !important; }
   body {
@@ -474,15 +477,55 @@ a.bead-card:hover { outline: 1px solid var(--accent); }
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+  /* transform:scale は見た目しか縮まず、改ページの計算には効かない。
+     そのため拡大縮小に頼らず、レイアウトそのものを詰めて2ページに収める */
   .sheet {
     box-shadow: none; border: none; margin: 0 auto; max-width: none;
-    padding: 24px 28px;
+    padding: 0; width: auto;
   }
-  .palette-band { height: 80px; }
-  .bead-row { break-inside: avoid; padding: 8px 12px; }
-  .bead-rows { gap: 8px; }
-  .worksheet { break-inside: avoid; }
+  /* 要素が改ページで割れないようにする */
+  .sheet-head, .palette-band, .palette-caption,
+  .technique-box, .bead-row, .worksheet, .works, .sheet-footer {
+    break-inside: avoid;
+  }
+
+  /* カラーワークシートは必ず2枚目に送る。
+     1枚目(配色とビーズ)の文字を大きく保つため、意図的に分ける */
+  .worksheet { break-before: page; padding-top: 6mm; }
+
   @page { size: A4; margin: 10mm; }
+}
+
+/* 印刷用のレイアウト。文字の大きさは保ったまま、並べ方を変えて高さを減らす。
+   要はビーズ候補を3列に並べること。画面では2列で折り返して2段になっているぶん、
+   1色あたりの高さがほぼ半分になり、8色でも1ページ目に収まる。 */
+@media print {
+  .bead-cards { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .bead-card { padding: 5px 7px; }
+  .bead-card .b-img { width: 26px; height: 26px; }
+  .bead-card .b-meta { font-size: 0.56rem; }
+  .bead-card .b-meta b { font-size: 0.66rem; }
+  .bead-card .buy-mark { font-size: 0.54rem; }
+
+  .bead-row { grid-template-columns: 150px 1fr; gap: 12px; padding: 5px 10px; }
+  .bead-rows { gap: 4px; }
+  .bead-row .dot { width: 34px; height: 34px; }
+  .bead-row .color-meta { font-size: 0.6rem; }
+  .bead-row .color-meta b { font-size: 0.72rem; }
+
+  .palette-band { height: 54px; margin: 10px 0 3px; }
+  .palette-caption { margin-bottom: 10px; }
+  .palette-caption .cap { font-size: 0.56rem; }
+  .palette-caption .cap b { font-size: 0.66rem; }
+  .technique-box { padding: 7px 4px; margin-bottom: 10px; }
+  .sheet-title { font-size: 1.75rem; margin: 2px 0 2px; }
+  .sheet-head { margin-bottom: 0; }
+  .sheet-series { font-size: 0.62rem; }
+  .sheet-story { font-size: 0.82rem; }
+  .mood-words, .assoc-words { margin-top: 2px; font-size: 0.7rem; }
+  .worksheet { margin-top: 0; }
+  .ws-figures svg { height: 210px; width: auto; }
+  .sheet-footer { margin-top: 18px; }
 }
 
 @media (max-width: 640px) {

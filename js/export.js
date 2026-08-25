@@ -165,9 +165,15 @@ const JpegExport = (() => {
       ctx.letterSpacing = "0px";
     }
 
-    // パレット帯
-    const bandY = 370, bandH = 260;
-    const colW = (W - M * 2) / colors.length;
+    // 色数が増えるほど1行が薄くなり、文字が窮屈になる。
+    // そこで(1)パレット帯を縮めて行に場所を譲り、(2)文字も少しだけ小さくする。
+    // 片方だけだと副作用が目立つので、両方を穏やかに効かせる。
+    const n = colors.length;
+    const bandY = 370;
+    const bandH = n <= 5 ? 260 : Math.max(196, 260 - (n - 5) * 22);
+    const gapAfterBand = n <= 5 ? 100 : 84;   // 帯と行のあいだ
+
+    const colW = (W - M * 2) / n;
     colors.forEach((c, i) => {
       ctx.fillStyle = c.hex;
       ctx.fillRect(M + i * colW, bandY, colW, bandH);
@@ -179,48 +185,54 @@ const JpegExport = (() => {
     ctx.fillStyle = SOFT;
     ctx.font = `500 24px ${SANS}`;
     ctx.letterSpacing = "2px";
-    ctx.fillText(`配色技法 ─ ${palette.technique}`, W / 2, bandY + bandH + 56);
+    ctx.fillText(`配色技法 ─ ${palette.technique}`, W / 2, bandY + bandH + Math.round(gapAfterBand * 0.56));
     ctx.letterSpacing = "0px";
 
     // 色ごとの行
-    const rowsTop = bandY + bandH + 100;
+    const rowsTop = bandY + bandH + gapAfterBand;
     const rowsBottom = H - 120;
-    const rowH = Math.min(96, (rowsBottom - rowsTop) / colors.length);
+    const rowH = Math.min(96, (rowsBottom - rowsTop) / n);
+    // 行の高さに合わせて文字を縮める(96pxのときが基準。小さくしすぎない)
+    const fz = Math.max(0.78, Math.min(1, rowH / 96));
+    const px = (base) => Math.round(base * fz);
     ctx.textAlign = "left";
     colors.forEach((c, i) => {
       const y = rowsTop + i * rowH + rowH / 2;
+      // 2行の文字は行の中心をはさんで上下に置く。間隔も行の高さに合わせる
+      const lead = Math.round(16 * fz);        // 中心から1行目までの距離
+      const drop = Math.round(26 * fz);        // 中心から2行目までの距離
       // 丸スウォッチ
       ctx.beginPath();
-      ctx.arc(M + 34, y, 30, 0, Math.PI * 2);
+      ctx.arc(M + 34, y, Math.round(30 * fz), 0, Math.PI * 2);
       ctx.fillStyle = c.hex;
       ctx.fill();
       ctx.strokeStyle = "rgba(0,0,0,0.1)";
       ctx.stroke();
       // 名前と情報
       ctx.fillStyle = INK;
-      ctx.font = `700 31px ${SANS}`;
-      ctx.fillText(c.name, M + 92, y - 6);
+      ctx.font = `700 ${px(31)}px ${SANS}`;
+      ctx.fillText(c.name, M + 92, y - lead + Math.round(10 * fz));
       ctx.fillStyle = SOFT;
-      ctx.font = `400 22px ${SANS}`;
+      ctx.font = `400 ${px(22)}px ${SANS}`;
       const pccsLabel = c.pccs.neutral ? c.pccs.toneJa : `${c.pccs.hueNo}:${c.pccs.hueSym} ${c.pccs.toneJa}`;
       const waLabel = c.wa ? ` ≒${c.wa.name}` : "";
-      ctx.fillText(`${c.hex.toUpperCase()}  ${pccsLabel}${waLabel}`, M + 92, y + 26);
+      ctx.fillText(`${c.hex.toUpperCase()}  ${pccsLabel}${waLabel}`, M + 92, y + drop);
       // ビーズ品番(右寄せ)と実物写真(写真が無い品番は計測色でビーズを描く)
       const first = matches[i] && matches[i][0];
       if (first) {
         if (photos[i]) {
-          drawPhotoStrip(ctx, photos[i], 640, y, 220, Math.min(52, rowH * 0.58));
+          drawPhotoStrip(ctx, photos[i], 640, y, Math.round(220 * fz), Math.min(52, rowH * 0.58));
         } else {
           drawBeadStrand(ctx, 640, y, first.bead, 6, Math.min(15, rowH * 0.17));
         }
         ctx.textAlign = "right";
         ctx.fillStyle = INK;
-        ctx.font = `700 27px ${SANS}`;
-        ctx.fillText(`TOHO No.${first.bead.code}`, W - M, y - 6);
+        ctx.font = `700 ${px(27)}px ${SANS}`;
+        ctx.fillText(`TOHO No.${first.bead.code}`, W - M, y - lead + Math.round(10 * fz));
         ctx.fillStyle = SOFT;
-        ctx.font = `400 20px ${SANS}`;
+        ctx.font = `400 ${px(20)}px ${SANS}`;
         const finish = first.bead.finish.length > 14 ? first.bead.finish.slice(0, 14) + "…" : first.bead.finish;
-        ctx.fillText(finish, W - M, y + 24);
+        ctx.fillText(finish, W - M, y + drop - Math.round(2 * fz));
         ctx.textAlign = "left";
       }
       // 区切り線

@@ -419,7 +419,36 @@ async function run(variant = 0) {
   }
 }
 
+// ---------- オープニング ----------
+// 毎回だとくどいので、1日に1度だけ流す。
+// シェアリンクで開いたときは、目当てのパレットをすぐ見せたいので出さない。
+function setupIntro() {
+  const KEY = "csp-intro-shown";
+  const el = $("#intro");
+  if (!el) return;
+
+  const sharedLink = new URLSearchParams(location.search).has("t");
+  const today = new Date().toDateString();
+  if (sharedLink || localStorage.getItem(KEY) === today) return;
+
+  localStorage.setItem(KEY, today);
+  el.hidden = false;
+
+  const close = () => {
+    el.hidden = true;
+    $("#theme-input")?.focus();
+  };
+  // アニメーションが終わったら閉じる(念のため時間でも保険をかける)
+  el.addEventListener("animationend", e => {
+    if (e.animationName === "intro-out") close();
+  });
+  setTimeout(close, 5200);
+  $("#intro-skip").addEventListener("click", close);
+  el.addEventListener("click", close);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  setupIntro();
   refreshCounts();
   const ex = $("#examples");
   for (const name of EXAMPLES) {

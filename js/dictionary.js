@@ -761,7 +761,7 @@ const DICTIONARY = [
       { h: 290, s: 40, l: 35, name: "葡萄の紫" },
       { h: 40, s: 55, l: 55, name: "琥珀のグラス" },
     ], toneBias: ["dp", "dk"] },
-  { match: ["berry", "ベリー", "ラズベリー", "ブルーベリー"], ja: "ベリー", story: "摘みたての果実",
+  { match: ["berry", "ベリー", "ブルーベリー"], ja: "ベリー", story: "摘みたての果実",
     anchors: [
       { h: 340, s: 70, l: 45, name: "ラズベリー" },
       { h: 250, s: 40, l: 35, name: "ブルーベリー" },

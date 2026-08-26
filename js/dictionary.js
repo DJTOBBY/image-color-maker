@@ -3152,13 +3152,16 @@ function allEntries() {
 function lookupTheme(input) {
   const raw = input.trim();
   const lower = raw.toLowerCase().replace(/[_\-]+/g, " ");
+  // カタカナで書かれても引けるように、かなを寄せてから比べる
+  const kana = typeof kanaNorm === "function" ? kanaNorm(raw) : raw;
   const hits = [];
   for (const entry of allEntries()) {
     for (const m of entry.match) {
       const isAscii = /^[a-z0-9 ]+$/.test(m);
       const found = isAscii
         ? new RegExp(`(^|[^a-z0-9])${m.replace(/ /g, "\\s*")}([^a-z0-9]|$)`).test(lower)
-        : raw.includes(m);
+        : (raw.includes(m) ||
+           (typeof kanaNorm === "function" && kana.includes(kanaNorm(m))));
       if (found) { hits.push({ entry, token: m }); break; }
     }
   }

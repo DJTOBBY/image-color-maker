@@ -231,10 +231,14 @@ const WaColor = (() => {
       }
     }
     const norm = input.trim();
+    // カタカナで書かれても読みに当たるように寄せる
+    const kn = typeof kanaNorm === "function" ? kanaNorm(norm) : norm;
     let hits = ensureAlias()
       .filter(a => a.keys.some(k => {
         if (!loose && k.key !== a.w.name) return false; // 厳密のときは正式な色名だけ
-        return k.sub ? norm.includes(k.key) : norm === k.key;
+        const key = typeof kanaNorm === "function" ? kanaNorm(k.key) : k.key;
+        return k.sub ? (norm.includes(k.key) || kn.includes(key))
+                     : (norm === k.key || kn === key);
       }))
       .map(a => a.w);
     // 「桜」と「桜色」のように包含関係があるときは長い名前だけを残す

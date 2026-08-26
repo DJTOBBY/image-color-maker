@@ -62,10 +62,10 @@ def lab(hexstr):
 COLOR_RULES = [
     ("黒|漆黒",            lambda h, s, l: l < 30,                        "暗くない"),
     ("白(?!緑)|胡粉",       lambda h, s, l: l > 68,                        "明るくない"),
-    ("金(?!属)|黄金|琥珀",   lambda h, s, l: s < 12 or 15 <= h <= 62,       "黄〜橙の範囲外"),
-    ("(?<!黄)(?<!青)緑",    lambda h, s, l: s < 12 or 70 <= h <= 185,      "緑の範囲外"),
+    ("金(?![属緑])|黄金|琥珀", lambda h, s, l: s < 12 or 15 <= h <= 62,      "黄〜橙の範囲外"),
+    ("(?<![黄青苔金銀灰])緑(?!青)", lambda h, s, l: s < 12 or 70 <= h <= 195, "緑の範囲外"),
     ("藍|紺|瑠璃|群青",      lambda h, s, l: s < 12 or 195 <= h <= 265,     "青の範囲外"),
-    ("朱|緋|紅|赤(?!茶|褐)", lambda h, s, l: s < 12 or h >= 330 or h <= 25, "赤の範囲外"),
+    ("朱|緋|紅|赤(?![茶褐紫])", lambda h, s, l: s < 12 or h >= 330 or h <= 25, "赤の範囲外"),
     ("紫(?!蘇)",           lambda h, s, l: s < 12 or 240 <= h <= 335,      "紫の範囲外"),
 ]
 
@@ -224,6 +224,20 @@ def main():
     print(f"\n5色中3色以上が同じ組: {len(close)}組")
     for n, a, b in sorted(close, reverse=True)[:6]:
         print(f"  {n}色共通: {a} / {b}")
+
+    # 同じ項目の中で同じ色が二度使われていないか。
+    # 4色のはずが実質3色になってしまう。
+    inner = []
+    for e in E:
+        c = collections.Counter(e["hexes"])
+        for h, k in c.items():
+            if k > 1:
+                names = [n for n, x in zip(e["names"], e["hexes"]) if x == h]
+                inner.append((e["term"], h, names))
+    if inner:
+        print(f"\n同じ項目の中で色が重複: {len(inner)}件")
+        for t, h, ns in inner[:8]:
+            print(f"  {t}: {h} が{len(ns)}回 — {' / '.join(ns)}")
 
     mism = name_mismatch(E)
     print(f"\n色名と実際の色が食い違うもの: {len(mism)}色 / {len(all_hex)}")

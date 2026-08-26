@@ -210,6 +210,23 @@ const WaColor = (() => {
     return aliasCache;
   }
 
+  // 「グリ」「ルー」「タン」のような短いかなの色名は、長い語の中に
+  // 埋もれても substring では当たってしまう(ずぐりこまの「ぐり」、
+  // ドラゴンフルーツの「ルー」)。3文字以下のかな名は、前後がかなで
+  // ないときだけ拾う。4文字以上は語として十分長いので substring でよい。
+  const KANA = /[ぁ-ゖァ-ヶー]/;
+  function hasKanaToken(hay, needle) {
+    if (needle.length > 3 || !/^[ぁ-ゖァ-ヶー]+$/.test(needle)) return hay.includes(needle);
+    let i = hay.indexOf(needle);
+    while (i !== -1) {
+      const before = i > 0 ? hay[i - 1] : "";
+      const after = hay[i + needle.length] || "";
+      if (!KANA.test(before) && !KANA.test(after)) return true;
+      i = hay.indexOf(needle, i + 1);
+    }
+    return false;
+  }
+
   // テーマ語として伝統色・襲の色目を解決し、辞書エントリ形式で返す。
   // loose=true のときだけ言い方の揺れ(苺→苺色、すみれ→菫色)まで拾う。
   // 常に拾うと「浅葱と朱」に「朱色」が混ざり、和田三造の配色が
@@ -239,7 +256,7 @@ const WaColor = (() => {
       .filter(a => a.keys.some(k => {
         if (!loose && k.key !== a.w.name) return false; // 厳密のときは正式な色名だけ
         const key = typeof kanaNorm === "function" ? kanaNorm(k.key) : k.key;
-        return k.sub ? (norm.includes(k.key) || kn.includes(key))
+        return k.sub ? (hasKanaToken(norm, k.key) || hasKanaToken(kn, key))
                      : (norm === k.key || kn === key);
       }))
       .map(a => a.w);

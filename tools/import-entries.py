@@ -198,6 +198,16 @@ def main():
     body.append("];\n")
     open(OUT, "w", encoding="utf-8").write("\n".join(body))
     print(f"書き出し: {os.path.relpath(OUT, ROOT)}  {len(entries)}件")
+    # 取り込んだあとの2つを忘れると、次の納品の質がそのまま落ちる。
+    # 語彙一覧を渡さなかった回は72件中8件が重複して無駄になった。
+    print("""
+--- 取り込んだら、続けてこの2つを ---
+  1. node tools/dump-terms.js
+     → data/existing-terms.txt を更新(次の納品の重複を防ぐ)
+  2. docs/gpt-request-template.md を更新
+     実績表に1行 / 直っていた点はお礼として明記 /
+     新しい問題があれば追記(無ければ「新たな指摘はありません」)
+  くわしくは docs/data-intake.md の手順6""")
     return 0
 
 

@@ -2240,6 +2240,15 @@ const DICTIONARY = [
       { h: 356, s: 76, l: 45, name: "宣言の赤" },
       { h: 74, s: 70, l: 56, name: "外した黄緑" },
     ], toneBias: ["dk", "v"], matte: true, technique: "セパレーション" },
+  // Y2Kは水色と桃色のパステルだが、Y3Kはその先。
+  // 液状の金属と虚空、油膜の虹。人の肌から離れていく側の未来。
+  { match: ["y3k", "ワイスリーケー"], ja: "Y3K", story: "液状の銀と虚空、油膜が虹に割れる",
+    anchors: [
+      { h: 210, s: 8, l: 76, name: "液状の銀" },
+      { h: 255, s: 25, l: 9, name: "虚空の黒" },
+      { h: 292, s: 48, l: 52, name: "油膜の紫" },
+      { h: 186, s: 82, l: 56, name: "紫外の閃光" },
+    ], toneBias: ["p", "v", "dkg"], sparkle: true, technique: "対照トーン配色" },
   { match: ["quiet luxury", "クワイエットラグジュアリー", "静かな贅沢"], ja: "クワイエットラグジュアリー", story: "銘を見せない上等",
     anchors: [
       { h: 36, s: 18, l: 74, name: "上質な生成り" }, { h: 28, s: 16, l: 46, name: "深い駱駝" },
@@ -3146,9 +3155,9 @@ function lookupTheme(input) {
   const hits = [];
   for (const entry of allEntries()) {
     for (const m of entry.match) {
-      const isAscii = /^[a-z ]+$/.test(m);
+      const isAscii = /^[a-z0-9 ]+$/.test(m);
       const found = isAscii
-        ? new RegExp(`(^|[^a-z])${m.replace(/ /g, "\\s*")}([^a-z]|$)`).test(lower)
+        ? new RegExp(`(^|[^a-z0-9])${m.replace(/ /g, "\\s*")}([^a-z0-9]|$)`).test(lower)
         : raw.includes(m);
       if (found) { hits.push({ entry, token: m }); break; }
     }
@@ -3164,7 +3173,7 @@ function lookupColorWords(input) {
   const raw = input.trim();
   const lower = raw.toLowerCase().replace(/[_\-]+/g, " ");
   const hit = (list) => list.filter(e => e.match.some(m => /^[a-z ]+$/.test(m)
-    ? new RegExp(`(^|[^a-z])${m.replace(/ /g, "\\s*")}([^a-z]|$)`).test(lower)
+    ? new RegExp(`(^|[^a-z0-9])${m.replace(/ /g, "\\s*")}([^a-z0-9]|$)`).test(lower)
     : raw.includes(m)));
 
   // 「青緑」が「青」「緑」も拾ってしまうので、長い語のヒットを優先する

@@ -1,6 +1,7 @@
-# COLOR STORY PALETTE がすでに持っている項目(840件)
+# COLOR STORY PALETTE がすでに持っている項目(841件)
 # 納品前にこの一覧と突き合わせ、重複する語は外してください。
 # 自動生成 — node tools/dump-terms.js
+Y3K
 アーシー
 アールデコ
 アールヌーヴォー

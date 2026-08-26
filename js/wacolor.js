@@ -217,7 +217,9 @@ const WaColor = (() => {
   function lookup(input, loose = false) {
     const entries = [];
     for (const k of KASANE) {
-      if (k.match.some(m => input.includes(m))) {
+      // 1文字の襲名(松・梅・藤・菊)は、語の中に埋もれても反応してしまう。
+      // 「松川だるま」が松の襲を拾っていたので、単独で入れたときだけ拾う。
+      if (k.match.some(m => m.length >= 2 ? input.includes(m) : input.trim() === m)) {
         entries.push({
           ja: k.ja, story: k.story,
           anchors: k.colors.map((hex, i) => {

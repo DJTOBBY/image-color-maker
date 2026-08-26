@@ -1488,7 +1488,7 @@ const DICTIONARY = [
       { h: 44, s: 30, l: 84, name: "漆喰の生成り" },
       { h: 214, s: 12, l: 40, name: "石畳の灰" },
     ], toneBias: ["dp", "sf"], sparkle: true },
-  { match: ["hungary", "ハンガリー", "パプリカ"], ja: "ハンガリー", story: "パプリカと刺繍",
+  { match: ["hungary", "ハンガリー"], ja: "ハンガリー", story: "パプリカと刺繍",
     anchors: [
       { h: 6, s: 74, l: 46, name: "パプリカの赤" },
       { h: 42, s: 24, l: 92, name: "麻布の生成り" },
@@ -3165,9 +3165,13 @@ function lookupTheme(input) {
       if (found) { hits.push({ entry, token: m }); break; }
     }
   }
-  // 「夜」⊂「真夜中」のような包含ヒットは長い方だけ残す
+  // 「夜」⊂「真夜中」のような包含ヒットは長い方だけ残す。
+  // 表記が違っても入れ子とみなす。「クジャクチョウ」は
+  // 「くじゃく」(孔雀)と「ちょう」(蝶)を含むが、まとめて落としたい。
+  const norm = t => (typeof kanaNorm === "function" ? kanaNorm(t) : t).toLowerCase();
   const filtered = hits.filter(h =>
-    !hits.some(o => o !== h && o.token.length > h.token.length && o.token.includes(h.token)));
+    !hits.some(o => o !== h && o.token.length > h.token.length &&
+      (o.token.includes(h.token) || norm(o.token).includes(norm(h.token)))));
   return filtered.map(h => h.entry);
 }
 

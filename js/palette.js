@@ -121,13 +121,15 @@ function generatePalette(input, count = 6, variant = 0, locked = []) {
       ...(typeof WaColor !== "undefined" ? WaColor.lookup(input) : []),
       ...lookupTheme(input),
     ];
-    // 同じ名前のエントリ(色語の「水色」と伝統色の「水色」など)は先勝ちでひとつに
-    const seen = new Set();
-    entries = [...colorEntries, ...themeEntries].filter(e => {
-      if (seen.has(e.ja)) return false;
-      seen.add(e.ja);
-      return true;
-    });
+    // 同じ名前のエントリ(色語の「水色」と伝統色の「水色」など)はひとつに。
+    // 色数の多いほうを残す。伝統色の一色より、辞書の四色のほうが語れるため
+    // (「ヒヤシンス」は伝統色にも花の項目にもあるが、後者を採りたい)。
+    const best = new Map();
+    for (const e of [...colorEntries, ...themeEntries]) {
+      const cur = best.get(e.ja);
+      if (!cur || (e.anchors || []).length > (cur.anchors || []).length) best.set(e.ja, e);
+    }
+    entries = [...colorEntries, ...themeEntries].filter(e => best.get(e.ja) === e);
     // どれも当たらなければ、言い方の揺れまで許して伝統色をもう一度探す
     // (「苺」で「苺色」、「すみれ」で「菫色」に行き当たるように)
     if (entries.length === 0 && typeof WaColor !== "undefined") {

@@ -64,9 +64,11 @@ COLOR_RULES = [
     ("白(?!緑)|胡粉",       lambda h, s, l: l > 68,                        "明るくない"),
     ("金(?![属緑])|黄金|琥珀", lambda h, s, l: s < 12 or 15 <= h <= 62,      "黄〜橙の範囲外"),
     ("(?<![黄青苔金銀灰])緑(?!青)", lambda h, s, l: s < 12 or 70 <= h <= 195, "緑の範囲外"),
-    ("藍|紺|瑠璃|群青",      lambda h, s, l: s < 12 or 195 <= h <= 265,     "青の範囲外"),
-    ("朱|緋|紅|赤(?![茶褐紫])", lambda h, s, l: s < 12 or h >= 330 or h <= 25, "赤の範囲外"),
-    ("紫(?!蘇)",           lambda h, s, l: s < 12 or 240 <= h <= 335,      "紫の範囲外"),
+    # 日本語の「青」は緑寄りまで含む(青葉・青信号)。藍や紺より広く取る。
+    ("藍|紺|瑠璃",          lambda h, s, l: s < 12 or 195 <= h <= 265,     "青の範囲外"),
+    ("青(?![緑磁竹海])",     lambda h, s, l: s < 12 or 170 <= h <= 270,     "青の範囲外"),
+    ("朱|緋|紅|赤(?![茶褐紫])", lambda h, s, l: s < 12 or h >= 330 or h <= 30, "赤の範囲外"),
+    ("紫(?!蘇)",           lambda h, s, l: s < 12 or 228 <= h <= 335,      "紫の範囲外"),
 ]
 
 
@@ -80,10 +82,17 @@ def name_mismatch(entries):
             r, g, b = (int(hx[i:i + 2], 16) / 255 for i in (1, 3, 5))
             hh, ll, ss = colorsys.rgb_to_hls(r, g, b)
             h, sv, lv = round(hh * 360), round(ss * 100), round(ll * 100)
+            # 日本語の複合色名は後ろが主(赤琥珀は琥珀、橙赤は赤、青紫は紫)。
+            # いちばん後ろで当たった語を、その色名の芯として見る。
+            head = None
             for pat, ok, why in COLOR_RULES:
-                if re.search(pat, tail) and not ok(h, sv, lv):
-                    out.append((e["term"], nm, hx, f"H{h} S{sv} L{lv}", why))
-                    break
+                m = None
+                for m in re.finditer(pat, tail):
+                    pass
+                if m and (head is None or m.end() > head[0]):
+                    head = (m.end(), ok, why)
+            if head and not head[1](h, sv, lv):
+                out.append((e["term"], nm, hx, f"H{h} S{sv} L{lv}", head[2]))
     return out
 
 
@@ -238,6 +247,13 @@ def main():
         print(f"\n同じ項目の中で色が重複: {len(inner)}件")
         for t, h, ns in inner[:8]:
             print(f"  {t}: {h} が{len(ns)}回 — {' / '.join(ns)}")
+
+    # 無彩色が多すぎると、色みが1色しか残らない。
+    # 白い鳥のように正当な場合もあるので、数だけ知らせる。
+    heavy = [e["term"] for e in E
+             if sum(1 for h in e["hexes"] if saturation(h) < NEUTRAL_S) >= 3]
+    if heavy:
+        print(f"\n無彩色が3色以上(色みが1色だけ残る): {len(heavy)}件 — {' '.join(heavy[:6])}")
 
     mism = name_mismatch(E)
     print(f"\n色名と実際の色が食い違うもの: {len(mism)}色 / {len(all_hex)}")

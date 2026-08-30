@@ -21,7 +21,14 @@ const JpegExport = (() => {
     const [r, g, b] = hexToRgb(hex);
     return 0.299 * r + 0.587 * g + 0.114 * b;
   }
-  function drawBeadStrand(ctx, cx, cy, bead, count = 6, r = 13) {
+  // 実物写真が無い品番のための描画。
+  // 写真の帯(12粒ほどが詰まって並ぶ)と並べても浮かないよう、
+  // 同じ枠に同じ密度で詰める。以前は6粒を離して置いていたので、
+  // 写真の行と代替の行で見た目が揃わなかった。
+  function drawBeadStrand(ctx, cx, cy, bead, w, h) {
+    const r = Math.max(6, h / 2 - 2);
+    const step = r * 2 - 1;                     // わずかに重ねて連なりに見せる
+    const count = Math.max(3, Math.floor(w / step));
     const palette = (bead.p && bead.p.length ? bead.p : [[bead.hex, 100]])
       .filter(([, w]) => w >= 4);
     const sorted = [...palette].sort((a, b) => luminance(b[0]) - luminance(a[0]));
@@ -39,9 +46,14 @@ const JpegExport = (() => {
       for (const [c, w] of palette) { pick -= w; if (pick <= 0) { hex = c; break; } }
       bodies.push(hex);
     }
-    const startX = cx - ((count - 1) * (r * 2 + 2)) / 2;
+    // 枠(写真と同じ角丸)で切り抜いてから並べる
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 8);
+    ctx.clip();
+    const startX = cx - ((count - 1) * step) / 2;
     bodies.forEach((hex, i) => {
-      const x = startX + i * (r * 2 + 2);
+      const x = startX + i * step;
       // 本体
       ctx.beginPath(); ctx.arc(x, cy, r, 0, Math.PI * 2);
       ctx.fillStyle = hex; ctx.fill();
@@ -57,6 +69,12 @@ const JpegExport = (() => {
       ctx.beginPath(); ctx.arc(x, cy, r, 0, Math.PI * 2);
       ctx.strokeStyle = "rgba(0,0,0,0.12)"; ctx.stroke();
     });
+    ctx.restore();
+    // 写真の帯と同じ枠線を引いて、行ごとの見え方を揃える
+    ctx.beginPath();
+    ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 8);
+    ctx.strokeStyle = "rgba(0,0,0,0.1)";
+    ctx.stroke();
   }
 
   // 画面に埋め込んであるTOHO BEADSロゴを、書き出し用の色でCanvasに描けるようにする
@@ -223,7 +241,8 @@ const JpegExport = (() => {
         if (photos[i]) {
           drawPhotoStrip(ctx, photos[i], 640, y, Math.round(220 * fz), Math.min(52, rowH * 0.58));
         } else {
-          drawBeadStrand(ctx, 640, y, first.bead, 6, Math.min(15, rowH * 0.17));
+          drawBeadStrand(ctx, 640, y, first.bead,
+            Math.round(220 * fz), Math.min(52, rowH * 0.58));
         }
         ctx.textAlign = "right";
         ctx.fillStyle = INK;

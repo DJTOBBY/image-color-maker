@@ -516,7 +516,7 @@ const DICTIONARY = [
       { h: 15, s: 70, l: 60, name: "熱帯魚の朱" },
     ],
     toneBias: ["dp", "lt"], sparkle: true, technique: "対照トーン配色" },
-  { match: ["mode", "モード", "chic", "シック", "monochrome", "モノクロ"], ja: "モード", story: "無彩色の緊張感",
+  { match: ["mode", "モード", "chic", "シック", "モノクロ"], ja: "モード", story: "無彩色の緊張感",
     anchors: [
       { h: 0, s: 0, l: 10, name: "黒" },
       { h: 0, s: 0, l: 95, name: "白" },
@@ -3209,7 +3209,7 @@ const DICTIONARY = [
     ], toneBias: ["ltg", "sf"], matte: true, technique: "同一色相配色" },
 
   // 講座で清色と対にして扱う言葉。技法の説明としても引けるように
-  { match: ["dull tone", "濁色", "だくしょく"], ja: "濁色",
+  { match: ["濁色", "だくしょく"], ja: "濁色",
     story: "純色に灰を混ぜた側 — 清色の対",
     anchors: [
       { h: 8, s: 26, l: 52, name: "濁った赤" },
@@ -3225,6 +3225,196 @@ const DICTIONARY = [
       { h: 216, s: 74, l: 46, name: "純色の青" },
       { h: 216, s: 60, l: 22, name: "暗清色の紺" },
     ], toneBias: ["v", "p", "dp"], technique: "トーンのグラデーション" },
+  // ===== PCCSのトーン12種 =====
+  // 講座のトーン図そのもの。彩度と明度は js/pccs.js の定義から起こしている。
+  // 4色相(赤・黄・緑・青)を同じトーンで並べると、そのトーンの印象がそのまま出る。
+  { match: ["vivid tone","ビビッドトーン","ビビッドカラー"], ja: "ビビッドカラー",
+    story: "ビビッドトーン — 冴えた・鮮やかな・派手な",
+    anchors: [
+      { h: 0, s: 90, l: 50, name: "ビビッドの赤" },
+      { h: 50, s: 90, l: 50, name: "ビビッドの黄" },
+      { h: 140, s: 90, l: 50, name: "ビビッドの緑" },
+      { h: 215, s: 90, l: 50, name: "ビビッドの青" },
+    ], toneBias: ["v"], technique: "対照色相配色" },
+  { match: ["bright tone","ブライトトーン","ブライトカラー"], ja: "ブライトカラー",
+    story: "ブライトトーン — 明るい・健康的な・陽気な",
+    anchors: [
+      { h: 0, s: 75, l: 64, name: "ブライトの赤" },
+      { h: 50, s: 75, l: 64, name: "ブライトの黄" },
+      { h: 140, s: 75, l: 64, name: "ブライトの緑" },
+      { h: 215, s: 75, l: 64, name: "ブライトの青" },
+    ], toneBias: ["b"], technique: "対照色相配色" },
+  { match: ["strong tone","ストロングトーン","ストロングカラー"], ja: "ストロングカラー",
+    story: "ストロングトーン — 強い・動的な・情熱的な",
+    anchors: [
+      { h: 0, s: 68, l: 45, name: "ストロングの赤" },
+      { h: 50, s: 68, l: 45, name: "ストロングの黄" },
+      { h: 140, s: 68, l: 45, name: "ストロングの緑" },
+      { h: 215, s: 68, l: 45, name: "ストロングの青" },
+    ], toneBias: ["s"], technique: "対照色相配色" },
+  { match: ["deep tone","ディープトーン","ディープカラー"], ja: "ディープカラー",
+    story: "ディープトーン — 深い・濃い・充実した",
+    anchors: [
+      { h: 0, s: 72, l: 32, name: "ディープの赤" },
+      { h: 50, s: 72, l: 32, name: "ディープの黄" },
+      { h: 140, s: 72, l: 32, name: "ディープの緑" },
+      { h: 215, s: 72, l: 32, name: "ディープの青" },
+    ], toneBias: ["dp"], technique: "ドミナントトーン配色" },
+  { match: ["light tone","ライトトーン","ライトカラー"], ja: "ライトカラー",
+    story: "ライトトーン — 浅い・澄んだ・さわやかな",
+    anchors: [
+      { h: 0, s: 58, l: 77, name: "ライトの赤" },
+      { h: 50, s: 58, l: 77, name: "ライトの黄" },
+      { h: 140, s: 58, l: 77, name: "ライトの緑" },
+      { h: 215, s: 58, l: 77, name: "ライトの青" },
+    ], toneBias: ["lt"], technique: "ドミナントトーン配色" },
+  { match: ["soft tone","ソフトトーン","ソフトカラー"], ja: "ソフトカラー",
+    story: "ソフトトーン — 柔らかな・穏やかな・ぼんやりした",
+    anchors: [
+      { h: 0, s: 42, l: 64, name: "ソフトの赤" },
+      { h: 50, s: 42, l: 64, name: "ソフトの黄" },
+      { h: 140, s: 42, l: 64, name: "ソフトの緑" },
+      { h: 215, s: 42, l: 64, name: "ソフトの青" },
+    ], toneBias: ["sf"], matte: true, technique: "トーナル配色" },
+  { match: ["dull tone","ダルトーン","ダルカラー"], ja: "ダルカラー",
+    story: "ダルトーン — 鈍い・くすんだ・中間色の",
+    anchors: [
+      { h: 0, s: 42, l: 45, name: "ダルの赤" },
+      { h: 50, s: 42, l: 45, name: "ダルの黄" },
+      { h: 140, s: 42, l: 45, name: "ダルの緑" },
+      { h: 215, s: 42, l: 45, name: "ダルの青" },
+    ], toneBias: ["d"], matte: true, technique: "トーナル配色" },
+  { match: ["dark tone","ダークトーン","ダークカラー"], ja: "ダークカラー",
+    story: "ダークトーン — 暗い・大人っぽい・丈夫な",
+    anchors: [
+      { h: 0, s: 45, l: 24, name: "ダークの赤" },
+      { h: 50, s: 45, l: 24, name: "ダークの黄" },
+      { h: 140, s: 45, l: 24, name: "ダークの緑" },
+      { h: 215, s: 45, l: 24, name: "ダークの青" },
+    ], toneBias: ["dk"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["pale tone","ペールトーン","ペールカラー"], ja: "ペールカラー",
+    story: "ペールトーン — 薄い・軽い・優しい",
+    anchors: [
+      { h: 0, s: 30, l: 88, name: "ペールの赤" },
+      { h: 50, s: 30, l: 88, name: "ペールの黄" },
+      { h: 140, s: 30, l: 88, name: "ペールの緑" },
+      { h: 215, s: 30, l: 88, name: "ペールの青" },
+    ], toneBias: ["p"], technique: "ドミナントトーン配色" },
+  { match: ["light grayish","ライトグレイッシュトーン","ライトグレイッシュカラー"], ja: "ライトグレイッシュカラー",
+    story: "ライトグレイッシュトーン — 落ち着いた・淡い・おとなしい",
+    anchors: [
+      { h: 0, s: 18, l: 70, name: "ライトグレイッシュの赤" },
+      { h: 50, s: 18, l: 70, name: "ライトグレイッシュの黄" },
+      { h: 140, s: 18, l: 70, name: "ライトグレイッシュの緑" },
+      { h: 215, s: 18, l: 70, name: "ライトグレイッシュの青" },
+    ], toneBias: ["ltg"], matte: true, technique: "トーナル配色" },
+  { match: ["grayish tone","グレイッシュトーン","グレイッシュカラー"], ja: "グレイッシュカラー",
+    story: "グレイッシュトーン — 灰みの・濁った・地味な",
+    anchors: [
+      { h: 0, s: 18, l: 45, name: "グレイッシュの赤" },
+      { h: 50, s: 18, l: 45, name: "グレイッシュの黄" },
+      { h: 140, s: 18, l: 45, name: "グレイッシュの緑" },
+      { h: 215, s: 18, l: 45, name: "グレイッシュの青" },
+    ], toneBias: ["g"], matte: true, technique: "トーナル配色" },
+  { match: ["dark grayish","ダークグレイッシュトーン","ダークグレイッシュカラー"], ja: "ダークグレイッシュカラー",
+    story: "ダークグレイッシュトーン — 陰気な・重い・硬い",
+    anchors: [
+      { h: 0, s: 18, l: 20, name: "ダークグレイッシュの赤" },
+      { h: 50, s: 18, l: 20, name: "ダークグレイッシュの黄" },
+      { h: 140, s: 18, l: 20, name: "ダークグレイッシュの緑" },
+      { h: 215, s: 18, l: 20, name: "ダークグレイッシュの青" },
+    ], toneBias: ["dkg"], matte: true, technique: "ドミナントトーン配色" },
+
+  // ===== 色の見え方・質感をあらわす言葉 =====
+  // ビーズの加工と結びつくものを選んである。
+  // 「シアー」ならスキ、「イリデッセント」ならオーロラ、というように
+  // 質感の指定が実際の品番選びに効く。
+  { match: ["sheer color", "シアーカラー", "シアー"], ja: "シアーカラー",
+    story: "光を通す薄さ",
+    anchors: [
+      { h: 340, s: 46, l: 84, name: "透ける桃" }, { h: 48, s: 54, l: 86, name: "透ける黄" },
+      { h: 150, s: 40, l: 84, name: "透ける緑" }, { h: 200, s: 44, l: 82, name: "透ける水" },
+    ], toneBias: ["p", "lt"], technique: "類似色相配色" },
+  { match: ["iridescent", "イリデッセント", "玉虫色"], ja: "イリデッセント",
+    story: "角度で色が移り変わる",
+    anchors: [
+      { h: 170, s: 52, l: 62, name: "見る角度の青緑" }, { h: 290, s: 42, l: 62, name: "見る角度の紫" },
+      { h: 44, s: 56, l: 70, name: "見る角度の金" }, { h: 330, s: 40, l: 74, name: "見る角度の紅" },
+    ], toneBias: ["b", "lt"], sparkle: true, technique: "類似色相配色" },
+  { match: ["pearlescent", "パールセント", "パール調"], ja: "パールセント",
+    story: "内側から滲む白い光",
+    anchors: [
+      { h: 40, s: 24, l: 92, name: "真珠の白" }, { h: 330, s: 22, l: 86, name: "真珠の紅み" },
+      { h: 196, s: 24, l: 86, name: "真珠の青み" }, { h: 46, s: 28, l: 78, name: "真珠の照り" },
+    ], toneBias: ["p", "ltg"], sparkle: true, technique: "フォ・カマイユ配色" },
+  { match: ["metallic color", "メタリックカラー"], ja: "メタリックカラー",
+    story: "面で光を返す金と銀",
+    anchors: [
+      { h: 44, s: 56, l: 58, name: "金" }, { h: 210, s: 8, l: 74, name: "銀" },
+      { h: 18, s: 42, l: 46, name: "銅" }, { h: 30, s: 10, l: 20, name: "黒鉄" },
+    ], toneBias: ["b", "dk"], sparkle: true, technique: "セパレーション" },
+  { match: ["frosted color", "フロストカラー", "すりガラスの"], ja: "フロストカラー",
+    story: "表面を曇らせた静けさ",
+    anchors: [
+      { h: 196, s: 26, l: 84, name: "曇った水色" }, { h: 340, s: 22, l: 86, name: "曇った桃" },
+      { h: 120, s: 18, l: 82, name: "曇った緑" }, { h: 40, s: 12, l: 90, name: "曇った白" },
+    ], toneBias: ["p", "ltg"], matte: true, technique: "トーン・オン・トーン配色" },
+
+  // ===== 配色そのものを指す言葉 =====
+  { match: ["jewel tone", "ジュエルトーン", "ジュエルカラー"], ja: "ジュエルトーン",
+    story: "宝石の深さと冴え",
+    anchors: [
+      { h: 220, s: 66, l: 34, name: "サファイアの青" }, { h: 152, s: 62, l: 32, name: "エメラルドの緑" },
+      { h: 352, s: 70, l: 38, name: "ルビーの紅" }, { h: 278, s: 46, l: 40, name: "アメジストの紫" },
+    ], toneBias: ["dp", "v"], sparkle: true, technique: "対照色相配色" },
+  { match: ["neutral color", "ニュートラルカラー", "中性色"], ja: "ニュートラルカラー",
+    story: "主張しない色で組む",
+    anchors: [
+      { h: 30, s: 10, l: 42, name: "トープ" }, { h: 42, s: 22, l: 86, name: "エクリュ" },
+      { h: 0, s: 0, l: 78, name: "石灰の灰" }, { h: 34, s: 14, l: 62, name: "麻の生成り" },
+    ], toneBias: ["ltg", "g"], matte: true, technique: "カマイユ配色" },
+  { match: ["warm color", "ウォームカラー", "暖色"], ja: "ウォームカラー",
+    story: "近づいて見える側の色",
+    anchors: [
+      { h: 4, s: 68, l: 50, name: "暖色の赤" }, { h: 26, s: 76, l: 56, name: "暖色の橙" },
+      { h: 46, s: 78, l: 60, name: "暖色の黄" }, { h: 18, s: 44, l: 40, name: "暖色の赤茶" },
+    ], toneBias: ["s", "b"], technique: "ドミナントカラー配色" },
+  { match: ["cool color", "クールカラー", "寒色"], ja: "クールカラー",
+    story: "遠ざかって見える側の色",
+    anchors: [
+      { h: 210, s: 62, l: 46, name: "寒色の青" }, { h: 178, s: 48, l: 46, name: "寒色の青緑" },
+      { h: 262, s: 42, l: 48, name: "寒色の青紫" }, { h: 210, s: 8, l: 72, name: "寒色の銀灰" },
+    ], toneBias: ["dp", "b"], technique: "類似色相配色" },
+  { match: ["faded color", "フェードカラー", "褪せた色"], ja: "フェードカラー",
+    story: "日に晒されて抜けた色",
+    anchors: [
+      { h: 352, s: 22, l: 66, name: "褪せた紅" }, { h: 40, s: 26, l: 60, name: "褪せた黄土" },
+      { h: 190, s: 18, l: 58, name: "褪せた水色" }, { h: 26, s: 14, l: 38, name: "古びた木" },
+    ], toneBias: ["sf", "d", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["sepia color", "セピアカラー"], ja: "セピアカラー",
+    story: "古い写真の褐色ひといろ",
+    anchors: [
+      { h: 32, s: 34, l: 72, name: "セピアの淡み" }, { h: 28, s: 38, l: 48, name: "セピアの中間" },
+      { h: 24, s: 34, l: 28, name: "セピアの深み" }, { h: 40, s: 20, l: 88, name: "紙の生成り" },
+    ], toneBias: ["d", "ltg"], matte: true, technique: "トーンのグラデーション" },
+  { match: ["monochrome", "モノクローム", "モノトーン"], ja: "モノクローム",
+    story: "白から黒までの階調だけで",
+    anchors: [
+      { h: 0, s: 0, l: 96, name: "白" }, { h: 0, s: 0, l: 68, name: "明るい灰" },
+      { h: 0, s: 0, l: 40, name: "暗い灰" }, { h: 0, s: 0, l: 10, name: "黒" },
+    ], toneBias: ["p", "g", "dkg"], technique: "トーンのグラデーション" },
+  { match: ["bicolor", "バイカラー", "二色配色"], ja: "バイカラー",
+    story: "二色だけで言い切る",
+    anchors: [
+      { h: 222, s: 46, l: 26, name: "主の紺" }, { h: 42, s: 22, l: 92, name: "従の白" },
+      { h: 218, s: 40, l: 44, name: "主の中間" }, { h: 40, s: 18, l: 72, name: "従の中間" },
+    ], toneBias: ["dk", "p"], technique: "対照トーン配色" },
+  { match: ["color block", "カラーブロック"], ja: "カラーブロック",
+    story: "面で区切って置く",
+    anchors: [
+      { h: 356, s: 74, l: 50, name: "面の赤" }, { h: 212, s: 68, l: 46, name: "面の青" },
+      { h: 48, s: 82, l: 60, name: "面の黄" }, { h: 42, s: 20, l: 94, name: "区切りの白" },
+    ], toneBias: ["v", "b"], technique: "セパレーション" },
 ];
 
 // 表から取り込んだ項目(tools/import-entries.py)も、手で書いた辞書と同じに扱う

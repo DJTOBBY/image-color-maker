@@ -36,8 +36,14 @@ const MODIFIERS = [
   { match: ["light", "ライト", "明るい"], dl: 16, ds: -6 },
   { match: ["pale", "ペール", "淡い", "薄い"], dl: 20, ds: -22 },
   { match: ["vivid", "ビビッド", "鮮やか"], dl: 0, ds: 25 },
-  { match: ["dusty", "smoky", "くすんだ", "スモーキー"], dl: -4, ds: -25 },
+  // 「くすんだ」は活用形なので「くすみピンク」では当たらない。
+  // 名詞の「くすみ」と外来語の「ダスティ」も同じ扱いにする。
+  { match: ["dusty", "smoky", "くすんだ", "くすみ", "ダスティ", "スモーキー"], dl: -4, ds: -25 },
   { match: ["bright", "ブライト"], dl: 10, ds: 12 },
+  // ニュアンスはくすみより一段弱い色みを指す。彩度をさらに落とす
+  { match: ["nuance", "ニュアンス"], dl: 2, ds: -34 },
+  // 乳白を混ぜたような、明るく彩度の低い色
+  { match: ["milky", "ミルキー", "乳白の"], dl: 18, ds: -18 },
 ];
 
 const DICTIONARY = [
@@ -3140,6 +3146,85 @@ const DICTIONARY = [
       { h: 6, s: 70, l: 46, name: "三重塔の朱" }, { h: 190, s: 16, l: 90, name: "滝の白" },
       { h: 140, s: 34, l: 26, name: "原生林の緑" }, { h: 30, s: 12, l: 40, name: "濡れた岩" },
     ], toneBias: ["v", "dp"], matte: true, technique: "対照色相配色" },
+
+  // ===== くすみ・濁色まわり =====
+  // PCCSでいう濁色(色に灰を混ぜた色)。講座では清色と対にして扱う。
+  // 「くすみ○○」のような組み合わせは修飾語が受けもつので、
+  // ここは単独で入力されたときのためのもの。
+  { match: ["muted colors", "くすみカラー", "くすみ色"], ja: "くすみカラー",
+    story: "灰をひとさじ混ぜた色ばかり",
+    anchors: [
+      { h: 348, s: 26, l: 68, name: "くすみピンク" },
+      { h: 200, s: 22, l: 58, name: "くすみブルー" },
+      { h: 96, s: 18, l: 52, name: "くすみグリーン" },
+      { h: 38, s: 24, l: 74, name: "くすみベージュ" },
+    ], toneBias: ["ltg", "g", "d"], matte: true, technique: "トーナル配色" },
+  { match: ["nuance colors", "ニュアンスカラー"], ja: "ニュアンスカラー",
+    story: "名前をつけにくい中間の色",
+    anchors: [
+      { h: 30, s: 14, l: 76, name: "曖昧なベージュ" },
+      { h: 330, s: 12, l: 66, name: "灰みの藤" },
+      { h: 160, s: 10, l: 62, name: "青みの鼠" },
+      { h: 45, s: 16, l: 86, name: "生成りの白" },
+    ], toneBias: ["ltg", "g"], matte: true, technique: "トーナル配色" },
+  { match: ["smoky colors", "スモーキーカラー"], ja: "スモーキーカラー",
+    story: "煙をひと膜かけたよう",
+    anchors: [
+      { h: 210, s: 14, l: 52, name: "煙の青灰" },
+      { h: 20, s: 18, l: 46, name: "煙の褐" },
+      { h: 120, s: 12, l: 44, name: "煙の緑灰" },
+      { h: 40, s: 10, l: 74, name: "薄れた白" },
+    ], toneBias: ["g", "d"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["earth colors", "アースカラー", "土の色"], ja: "アースカラー",
+    story: "土と砂と枯葉の側",
+    anchors: [
+      { h: 20, s: 42, l: 48, name: "テラコッタ" },
+      { h: 40, s: 40, l: 58, name: "黄土" },
+      { h: 70, s: 24, l: 42, name: "オリーブ" },
+      { h: 34, s: 26, l: 78, name: "砂の生成り" },
+    ], toneBias: ["d", "sf"], matte: true, technique: "ナチュラルハーモニー" },
+  { match: ["milky colors", "ミルキーカラー"], ja: "ミルキーカラー",
+    story: "乳を混ぜたやわらかさ",
+    anchors: [
+      { h: 348, s: 40, l: 88, name: "ミルクの桃" },
+      { h: 196, s: 34, l: 86, name: "ミルクの水色" },
+      { h: 52, s: 44, l: 88, name: "ミルクの黄" },
+      { h: 140, s: 24, l: 86, name: "ミルクの緑" },
+    ], toneBias: ["p", "lt"], matte: true, technique: "ドミナントトーン配色" },
+  { match: ["greige", "グレージュ"], ja: "グレージュ",
+    story: "灰とベージュのあいだ",
+    anchors: [
+      { h: 36, s: 14, l: 74, name: "グレージュ" },
+      { h: 30, s: 10, l: 58, name: "沈んだ灰茶" },
+      { h: 40, s: 18, l: 88, name: "明るい生成り" },
+      { h: 20, s: 12, l: 40, name: "影の褐灰" },
+    ], toneBias: ["ltg", "g"], matte: true, technique: "トーンのグラデーション" },
+  { match: ["mauve", "モーヴ", "モーブ"], ja: "モーヴ",
+    story: "灰をまとった紫がかった桃",
+    anchors: [
+      { h: 330, s: 24, l: 62, name: "モーヴ" },
+      { h: 300, s: 18, l: 48, name: "沈んだ藤鼠" },
+      { h: 345, s: 30, l: 80, name: "淡いモーヴ" },
+      { h: 30, s: 12, l: 84, name: "生成りの添え" },
+    ], toneBias: ["ltg", "sf"], matte: true, technique: "同一色相配色" },
+
+  // 講座で清色と対にして扱う言葉。技法の説明としても引けるように
+  { match: ["dull tone", "濁色", "だくしょく"], ja: "濁色",
+    story: "純色に灰を混ぜた側 — 清色の対",
+    anchors: [
+      { h: 8, s: 26, l: 52, name: "濁った赤" },
+      { h: 210, s: 22, l: 50, name: "濁った青" },
+      { h: 110, s: 20, l: 48, name: "濁った緑" },
+      { h: 46, s: 24, l: 60, name: "濁った黄" },
+    ], toneBias: ["d", "g", "ltg"], matte: true, technique: "トーナル配色" },
+  { match: ["clear tone", "清色", "せいしょく"], ja: "清色",
+    story: "純色に白か黒だけを足した側 — 濁色の対",
+    anchors: [
+      { h: 4, s: 78, l: 50, name: "純色の赤" },
+      { h: 4, s: 52, l: 84, name: "明清色の淡紅" },
+      { h: 216, s: 74, l: 46, name: "純色の青" },
+      { h: 216, s: 60, l: 22, name: "暗清色の紺" },
+    ], toneBias: ["v", "p", "dp"], technique: "トーンのグラデーション" },
 ];
 
 // 表から取り込んだ項目(tools/import-entries.py)も、手で書いた辞書と同じに扱う
